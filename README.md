@@ -39,19 +39,19 @@ pyreeler/
 │   ├── logo/              # PyReeler branding assets
 │   └── showcase/          # Featured example films
 │
+├── examples/              # Example films and outputs
+│
 ├── pyreeler/              # OpenAI Codex skill
 │   ├── SKILL.md           # Core skill instructions
 │   ├── agents/openai.yaml # Codex skill metadata
 │   ├── references/        # Workflow & creative guides
-│   ├── templates/         # Audio/video starter modules
-│   └── examples/          # Skill-specific examples
+│   └── templates/         # Audio/video starter modules
 │
 ├── pyreeler-claude/       # Claude Code skill
 │   ├── SKILL.md           # Core skill instructions
 │   ├── agents/claude.yaml # Claude skill metadata
 │   ├── references/        # Workflow & creative guides
-│   ├── templates/         # Audio/video starter modules
-│   └── examples/          # Skill-specific examples
+│   └── templates/         # Audio/video starter modules
 │
 ├── local_nvidia/          # NVIDIA GPU experiments (optional)
 └── DEVLOG.md              # Development history
@@ -108,9 +108,9 @@ PyReeler has a portable path for common modern hardware:
 
 ## Example Output
 
-[![Horizon Maintenance Log poster](pyreeler/examples/horizon-maintenance-log-poster.png)](pyreeler/examples/horizon-maintenance-log.mp4)
+[![Horizon Maintenance Log poster](examples/horizon-maintenance-log-poster.png)](examples/horizon-maintenance-log.mp4)
 
-Example film: `pyreeler/examples/horizon-maintenance-log.mp4`
+Example film: `examples/horizon-maintenance-log.mp4`
 
 ## GitHub Media Notes
 

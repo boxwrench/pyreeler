@@ -32,6 +32,6 @@ Each showcase piece should include:
 - A poster/thumbnail image (`.png`, ~1280x720)
 - Optional: brief description of the piece
 
-## Skill Examples
+## Repository Examples
 
-Individual skills (`pyreeler/`, `pyreeler-claude/`) may also have their own `examples/` folders for skill-specific demos. This root `assets/showcase/` is for the repository's featured/curated showcase.
+See root `examples/` folder for sample films and loops created with PyReeler.

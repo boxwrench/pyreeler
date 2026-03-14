@@ -32,13 +32,10 @@ Use $pyreeler to make a 45 second code-generated ritual film that begins calm, b
 - `references/audio-pipeline.md`: code-first guidance for procedural sound, stem design, mixing, and FFmpeg handoff
 - `templates/`: lightweight starter modules for reusable audio structure
 - `agents/openai.yaml`: UI metadata for skill lists and chips
-- `examples/`: sample output media for the repository page
 
-## Key Differences from Claude Version
+## Examples
 
-- Invoke with `$pyreeler` (vs `/pyreeler` for Claude)
-- Codex-specific agent configuration in `agents/openai.yaml`
-- Same core workflow and templates
+See root `examples/` folder for sample output media.
 
 ## License
 

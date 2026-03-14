@@ -33,7 +33,10 @@ Invoke the skill with `/pyreeler`:
 - `templates/audio/`: starter modules for procedural foley, optional scoring, optional voice, and stem mixing
 - `templates/video/`: starter modules for portable render-runtime selection, encoder validation, and worker defaults
 - `agents/claude.yaml`: Claude Code skill metadata
-- `examples/`: sample output media for the repository page
+
+## Examples
+
+See root `examples/` folder for sample output media.
 
 ## Key Differences from Codex Version
 
