@@ -35,17 +35,23 @@ Use $pyreeler to make a 45 second code-generated ritual film that begins calm, b
 
 ```
 pyreeler/
+├── assets/                # Logo and showcase media
+│   ├── logo/              # PyReeler branding assets
+│   └── showcase/          # Featured example films
+│
 ├── pyreeler/              # OpenAI Codex skill
 │   ├── SKILL.md           # Core skill instructions
 │   ├── agents/openai.yaml # Codex skill metadata
 │   ├── references/        # Workflow & creative guides
-│   └── templates/         # Audio/video starter modules
+│   ├── templates/         # Audio/video starter modules
+│   └── examples/          # Skill-specific examples
 │
 ├── pyreeler-claude/       # Claude Code skill
 │   ├── SKILL.md           # Core skill instructions
 │   ├── agents/claude.yaml # Claude skill metadata
 │   ├── references/        # Workflow & creative guides
-│   └── templates/         # Audio/video starter modules
+│   ├── templates/         # Audio/video starter modules
+│   └── examples/          # Skill-specific examples
 │
 ├── local_nvidia/          # NVIDIA GPU experiments (optional)
 └── DEVLOG.md              # Development history
