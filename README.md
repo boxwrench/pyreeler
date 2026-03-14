@@ -35,13 +35,12 @@ Use $pyreeler to make a 45 second code-generated ritual film that begins calm, b
 
 ## Featured Example: PyReeler Emergence
 
-[![PyReeler Emergence](assets/showcase/pyreeler-emergence.mp4)](assets/showcase/pyreeler-emergence.mp4)
+## Examples & Showcase
 
-A code-generated experimental motion piece created with PyReeler.
+[**View the Showcase Gallery on GitHub Pages**](https://boxwrench.github.io/pyreeler/)
 
-### More Examples
-
-See [`assets/showcase/`](assets/showcase/) for additional films:
+You can find the generated video files in the `assets/showcase/` directory, including:
+- `pyreeler-emergence.mp4`
 - `ascii-cosmic-dragon-720p.mp4`
 - `pyreel_ghost_in_the_machine_720p_final.mp4`
 - `terminal_genesis_pro_preview.mp4`
