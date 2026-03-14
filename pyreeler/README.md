@@ -40,6 +40,10 @@ Use $pyreeler to make a 45 second code-generated ritual film that begins calm, b
 - Codex-specific agent configuration in `agents/openai.yaml`
 - Same core workflow and templates
 
+## License
+
+MIT License. See [LICENSE](../LICENSE).
+
 ## See Also
 
 - Main repository README for shared philosophy and workflow

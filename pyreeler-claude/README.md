@@ -43,6 +43,10 @@ Invoke the skill with `/pyreeler`:
 - Includes `PYREEL_WORKERS_OVERRIDE` and `PYREEL_LOCAL_FFMPEG_CANDIDATES` environment variables for local overrides
 - Additional `parallel_render.py` for multiprocess frame rendering
 
+## License
+
+MIT License. See [LICENSE](../LICENSE).
+
 ## See Also
 
 - Main repository README for shared philosophy and workflow

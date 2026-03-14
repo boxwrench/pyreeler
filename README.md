@@ -128,6 +128,6 @@ See the individual skill folders for detailed installation instructions.
 
 ## License
 
-MIT License. See `LICENSE` files in each skill folder.
+MIT License. See [LICENSE](LICENSE).
 
 If you adapt or redistribute PyReeler, please preserve the original copyright and license notice.
