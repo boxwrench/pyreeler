@@ -145,6 +145,20 @@
             border-color: var(--phosphor-green);
         }
 
+        .hero-video {
+            grid-column: 1 / -1; /* Span all columns */
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .hero-video .video-title {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 0 0 10px var(--phosphor-green);
+        }
+
         .video-wrapper {
             position: relative;
             padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
@@ -232,6 +246,17 @@
         <h2 class="glow" style="text-align: center; margin-bottom: 30px; font-size: 2.5rem;">> EXAMPLES.DIR</h2>
         <div class="gallery">
             
+            <!-- Hero Video: Emergence -->
+            <div class="video-card hero-video">
+                <div class="video-wrapper">
+                    <video controls muted preload="metadata">
+                        <source src="assets/showcase/pyreeler-emergence.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+                <div class="video-title">Emergence</div>
+            </div>
+
             <!-- Video 1 -->
             <div class="video-card">
                 <div class="video-wrapper">
@@ -252,17 +277,6 @@
                     </video>
                 </div>
                 <div class="video-title">Ghost in the Machine</div>
-            </div>
-
-            <!-- Video 3 -->
-            <div class="video-card">
-                <div class="video-wrapper">
-                    <video controls muted preload="metadata">
-                        <source src="assets/showcase/pyreeler-emergence.mp4" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
-                </div>
-                <div class="video-title">Emergence</div>
             </div>
 
             <!-- Video 4 -->
