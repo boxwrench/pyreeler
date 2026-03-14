@@ -41,9 +41,16 @@ Use $pyreeler to make a 45 second code-generated ritual film that begins calm, b
 
 You can find the generated video files in the `assets/showcase/` directory, including:
 - `pyreeler-emergence.mp4`
+- `what-the-light-kept_preview.mp4`
 - `ascii-cosmic-dragon-720p.mp4`
 - `pyreel_ghost_in_the_machine_720p_final.mp4`
 - `terminal_genesis_pro_preview.mp4`
+
+Reproducible benchmark/example materials live in `examples/`, including:
+- `what_the_light_kept_render.py`
+- `what_the_light_kept_benchmark.json`
+- `what_the_light_kept_notes.md`
+- `what_the_light_kept_effects.md`
 
 ## Repository Structure
 
