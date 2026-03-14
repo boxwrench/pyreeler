@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pyreeler Showcase</title>
+    <!-- Use a retro Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0d1117;
+            --phosphor-green: #39ff14;
+            --phosphor-dim: rgba(57, 255, 20, 0.4);
+            --scanline-color: rgba(0, 0, 0, 0.3);
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--phosphor-green);
+            font-family: 'VT323', monospace;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* CRT Scanline Overlay */
+        body::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 2;
+            background-size: 100% 4px, 6px 100%;
+            pointer-events: none;
+        }
+
+        /* Subtle flicker */
+        @keyframes flicker {
+            0% { opacity: 0.95; }
+            5% { opacity: 0.85; }
+            10% { opacity: 0.95; }
+            15% { opacity: 1; }
+            100% { opacity: 1; }
+        }
+
+        /* Text glow utility */
+        .glow {
+            text-shadow: 0 0 5px var(--phosphor-dim), 0 0 10px var(--phosphor-green);
+            animation: flicker 0.15s infinite alternate;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            z-index: 1;
+            position: relative;
+        }
+
+        .logo-container {
+            max-width: 800px;
+            margin: 0 auto 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .logo-container img {
+            max-width: 100%;
+            height: auto;
+            border: 2px solid var(--phosphor-dim);
+            border-radius: 4px;
+            box-shadow: 0 0 10px var(--phosphor-dim), 0 0 20px var(--phosphor-green) inset;
+            image-rendering: pixelated; /* Enhances the retro look if the logo suits it */
+        }
+        
+        .title-section h1 {
+            font-size: 3rem;
+            margin: 10px 0;
+            letter-spacing: 2px;
+        }
+
+        .title-section p {
+            font-size: 1.5rem;
+            max-width: 600px;
+            margin: 0 auto 20px;
+            line-height: 1.4;
+        }
+
+        .btn-retro {
+            display: inline-block;
+            color: var(--phosphor-green);
+            text-decoration: none;
+            border: 2px solid var(--phosphor-green);
+            padding: 10px 20px;
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            background-color: transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 0 5px var(--phosphor-dim);
+        }
+
+        .btn-retro:hover {
+            background-color: var(--phosphor-green);
+            color: var(--bg-color);
+            box-shadow: 0 0 15px var(--phosphor-green);
+        }
+
+        main {
+            flex: 1;
+            padding: 20px;
+            z-index: 1;
+            position: relative;
+        }
+
+        .gallery {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            justify-content: center;
+        }
+
+        .video-card {
+            border: 2px solid var(--phosphor-dim);
+            padding: 10px;
+            background-color: rgba(13, 17, 23, 0.8);
+            box-shadow: 0 0 10px rgba(57, 255, 20, 0.2);
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .video-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 20px var(--phosphor-dim);
+            border-color: var(--phosphor-green);
+        }
+
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            height: 0;
+            overflow: hidden;
+            border: 1px solid var(--phosphor-dim);
+            background-color: #000;
+        }
+
+        .video-wrapper video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .video-title {
+            margin-top: 15px;
+            font-size: 1.4rem;
+            text-align: center;
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px 20px;
+            border-top: 1px solid var(--phosphor-dim);
+            z-index: 1;
+            position: relative;
+            font-size: 1.2rem;
+            margin-top: 40px;
+        }
+        
+        .terminal-block {
+            margin-top: 40px;
+            text-align: left;
+            border: 1px solid var(--phosphor-dim);
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.6);
+            max-width: 800px;
+            margin-inline: auto;
+        }
+        
+        pre {
+            font-family: 'VT323', monospace;
+            font-size: 1.2rem;
+            white-space: pre-wrap;
+            margin: 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .gallery {
+                grid-template-columns: 1fr;
+            }
+            .title-section h1 {
+                font-size: 2.2rem;
+            }
+            .title-section p {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-container">
+            <img src="assets/logo/pyreeler_logo.png" alt="Pyreeler Logo">
+        </div>
+        <div class="title-section">
+            <h1 class="glow">PYREELER_</h1>
+            <p>A Python skill for LLMs (Gemini, Claude, Codex) to generate PNG stills and stitch them via FFmpeg into short thematic movies.</p>
+            <a href="https://github.com/boxwrench/pyreeler" class="btn-retro" target="_blank">View GitHub Repo</a>
+        </div>
+    </header>
+
+    <main>
+        <!-- Gallery Section -->
+        <h2 class="glow" style="text-align: center; margin-bottom: 30px; font-size: 2.5rem;">> EXAMPLES.DIR</h2>
+        <div class="gallery">
+            
+            <!-- Video 1 -->
+            <div class="video-card">
+                <div class="video-wrapper">
+                    <video controls muted preload="metadata">
+                        <source src="assets/showcase/ascii-cosmic-dragon-720p.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+                <div class="video-title">ASCII Cosmic Dragon</div>
+            </div>
+
+            <!-- Video 2 -->
+            <div class="video-card">
+                <div class="video-wrapper">
+                    <video controls muted preload="metadata">
+                        <source src="assets/showcase/pyreel_ghost_in_the_machine_720p_final.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+                <div class="video-title">Ghost in the Machine</div>
+            </div>
+
+            <!-- Video 3 -->
+            <div class="video-card">
+                <div class="video-wrapper">
+                    <video controls muted preload="metadata">
+                        <source src="assets/showcase/pyreeler-emergence.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+                <div class="video-title">Emergence</div>
+            </div>
+
+            <!-- Video 4 -->
+            <div class="video-card">
+                <div class="video-wrapper">
+                    <video controls muted preload="metadata">
+                        <source src="assets/showcase/pyreeler_levelcrawl_preview.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+                <div class="video-title">Levelcrawl Preview</div>
+            </div>
+            
+            <!-- Video 5 -->
+            <div class="video-card">
+                <div class="video-wrapper">
+                    <video controls muted preload="metadata">
+                        <source src="assets/showcase/terminal_genesis_pro_preview.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+                <div class="video-title">Terminal Genesis Pro</div>
+            </div>
+
+        </div>
+        
+        <div class="terminal-block">
+            <pre><span class="glow">user@system:~$</span> cat about.txt
+Pyreeler automates the creation of short conceptual films by orchestrating prompts, taking snapshots of generated scenes, and building them into cohesive video reels. Designed as a drop-in skill for advanced conversational AIs. Let your imagination compile.
+
+<span class="glow">user@system:~$</span> _</pre>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; Boxwrench | Developed for AI generation workflows</p>
+    </footer>
+
+</body>
+</html>
