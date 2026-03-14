@@ -120,17 +120,36 @@ For a repository `README`, the safest presentation is an image or GIF that links
 
 ## Installing
 
-Tested on **Windows** and **Ubuntu Linux**. macOS support is expected to work but has not been personally verified.
+**Tested on Windows and Ubuntu Linux.**  
+**macOS support is expected** (the code handles Apple Silicon and `h264_videotoolbox`) but has not been personally verified.
+
+### Prerequisites
+
+**macOS** (untested):
+```bash
+brew install ffmpeg
+# Optional: brew install fluidsynth
+```
+
+**Linux** (Ubuntu tested):
+```bash
+sudo apt-get install ffmpeg
+# Optional: sudo apt-get install fluidsynth
+```
+
+**Windows** (tested):
+- Install [FFmpeg](https://ffmpeg.org/download.html) and add to PATH
+- Optional: Install [FluidSynth](https://github.com/FluidSynth/fluidsynth/releases)
 
 ### Codex
 Copy or symlink `pyreeler-codex/` to your Codex skills directory:
-- macOS: `~/.codex/skills/`
-- Windows: `%USERPROFILE%\.codex\skills\`
+- **macOS/Linux**: `~/.codex/skills/`
+- **Windows**: `%USERPROFILE%\.codex\skills\`
 
 ### Claude Code
 Copy or symlink `pyreeler-claude/` to your Claude Code skills directory:
-- macOS: `~/.claude/skills/`
-- Windows: `%APPDATA%\Claude\skills\`
+- **macOS/Linux**: `~/.claude/skills/`
+- **Windows**: `%APPDATA%\Claude\skills\`
 
 See the individual skill folders for detailed installation instructions.
 
