@@ -1,3 +1,5 @@
+<img src="../assets/logo/pyreeler_logo.png" width="100" align="right" alt="PyReeler logo">
+
 # PyReeler for OpenAI Codex
 
 PyReeler is a portable OpenAI Codex skill for designing and delivering short code-generated films, loops, and experimental motion pieces.

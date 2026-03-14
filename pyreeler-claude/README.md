@@ -1,3 +1,5 @@
+<img src="../assets/logo/pyreeler_logo.png" width="100" align="right" alt="PyReeler logo">
+
 # PyReeler for Claude Code
 
 PyReeler is a portable Claude Code skill for designing and delivering short code-generated films, loops, and experimental motion pieces.
