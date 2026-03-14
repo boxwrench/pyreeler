@@ -31,6 +31,19 @@ Use $pyreeler to make a 45 second code-generated ritual film that begins calm, b
 /pyreeler make a 45 second code-generated ritual film that begins calm, becomes entrancing, and ends with a single rupture.
 ```
 
+## Featured Example: PyReeler Emergence
+
+[![PyReeler Emergence](assets/showcase/pyreeler-emergence.mp4)](assets/showcase/pyreeler-emergence.mp4)
+
+A code-generated experimental motion piece created with PyReeler.
+
+### More Examples
+
+See [`assets/showcase/`](assets/showcase/) for additional films:
+- `ascii-cosmic-dragon-720p.mp4`
+- `pyreel_ghost_in_the_machine_720p_final.mp4`
+- `terminal_genesis_pro_preview.mp4`
+
 ## Repository Structure
 
 ```
@@ -56,6 +69,15 @@ pyreeler/
 ├── local_nvidia/          # NVIDIA GPU experiments (optional)
 └── DEVLOG.md              # Development history
 ```
+
+## Using This Skill With Other AI Models
+
+The PyReeler skill is documented in human-readable Markdown and YAML files. Other AI models can:
+
+- **Read and adapt** the skill files (`SKILL.md`, `references/`, `templates/`) for their own skill systems
+- **Implement as a prompt** by reading the workflow guidance and creative references directly into context
+
+The skill is intentionally code-first and framework-agnostic. The core principles (preview-first, hardware-aware rendering, stem-based audio) can be applied regardless of the AI platform.
 
 ## Core Principles
 
@@ -105,12 +127,6 @@ PyReeler has a portable path for common modern hardware:
 - **Intel / Quick Sync**: prefer `h264_qsv` after validation
 - **AMD**: prefer `h264_amf` after validation
 - **Unknown/unsupported**: fall back to `libx264`
-
-## Example Output
-
-[![Horizon Maintenance Log poster](examples/horizon-maintenance-log-poster.png)](examples/horizon-maintenance-log.mp4)
-
-Example film: `examples/horizon-maintenance-log.mp4`
 
 ## GitHub Media Notes
 
