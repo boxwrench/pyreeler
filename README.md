@@ -14,7 +14,7 @@ It is built around a simple rule set:
 
 | Version | Location | Invoke With |
 |---------|----------|-------------|
-| **OpenAI Codex** | `pyreeler/` | `$pyreeler` |
+| **OpenAI Codex** | `pyreeler-codex/` | `$pyreeler` |
 | **Claude Code** | `pyreeler-claude/` | `/pyreeler` |
 
 Both versions share the same core philosophy and workflow, adapted for each AI's capabilities.
@@ -41,7 +41,7 @@ pyreeler/
 │
 ├── examples/              # Example films and outputs
 │
-├── pyreeler/              # OpenAI Codex skill
+├── pyreeler-codex/        # OpenAI Codex skill
 │   ├── SKILL.md           # Core skill instructions
 │   ├── agents/openai.yaml # Codex skill metadata
 │   ├── references/        # Workflow & creative guides
@@ -121,7 +121,7 @@ For a repository `README`, the safest presentation is an image or GIF that links
 ## Installing
 
 ### Codex
-Copy or symlink `pyreeler/` to your Codex skills directory:
+Copy or symlink `pyreeler-codex/` to your Codex skills directory:
 - macOS: `~/.codex/skills/`
 - Windows: `%USERPROFILE%\.codex\skills\`
 
