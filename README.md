@@ -115,21 +115,6 @@ PyReeler uses a tiered dependency model:
 - Surface the preview to the user before committing to an upscale
 - Export approved finals to `~/Videos`
 
-### Portability Policy
-The portable package stays conservative:
-- Prefer hardware-aware defaults over machine-specific hardcoding
-- Validate hardware encoders before assuming they work
-- Keep fallbacks reliable, especially `libx264`
-- Avoid requiring heavy dependencies for the default path
-
-### Modern Hardware Defaults
-PyReeler has a portable path for common modern hardware:
-- **NVIDIA**: prefer `h264_nvenc` after validation
-- **Apple Silicon**: prefer `h264_videotoolbox` after validation
-- **Intel / Quick Sync**: prefer `h264_qsv` after validation
-- **AMD**: prefer `h264_amf` after validation
-- **Unknown/unsupported**: fall back to `libx264`
-
 ## GitHub Media Notes
 
 GitHub supports images in Markdown and uploaded media files (`.mp4`, `.mov`, `.webm`), but browser and codec behavior can vary.
