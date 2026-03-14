@@ -120,6 +120,8 @@ For a repository `README`, the safest presentation is an image or GIF that links
 
 ## Installing
 
+Tested on **Windows** and **Ubuntu Linux**. macOS support is expected to work but has not been personally verified.
+
 ### Codex
 Copy or symlink `pyreeler-codex/` to your Codex skills directory:
 - macOS: `~/.codex/skills/`
