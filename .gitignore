@@ -46,6 +46,8 @@ Thumbs.db
 *.avi
 !examples/*.mp4
 !examples/*.png
+!assets/showcase/*.mp4
+!assets/showcase/*.png
 
 # Local NVIDIA experiments (if temporary)
 local_nvidia/__pycache__/
