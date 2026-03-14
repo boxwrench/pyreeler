@@ -2,131 +2,85 @@
 
 ## Current Repo State
 
-`C:\Github\pyreeler` has been cleaned down to the current skill packages only:
+`C:\Github\pyreeler` is the working repository for both Codex and Claude variants of the PyReeler skill:
 
-- `pyreeler-codex`
-- `pyreeler-claude`
+- `pyreeler-codex/` - OpenAI Codex skill (invoked as `$pyreeler`)
+- `pyreeler-claude/` - Claude Code skill (invoked as `/pyreeler`)
 
-Previous render outputs, frame dumps, smoke artifacts, temp skill copies, and scratch scripts were moved out of the working folder to:
+Previous render outputs, frame dumps, smoke artifacts, temp skill copies, and scratch scripts were archived to `C:\Github\pyreeler_archive_20260313`.
 
-- `C:\Github\pyreeler_archive_20260313`
+There are three relevant locations for skill development:
+- **Working repo**: `C:\Github\pyreeler` (this repository)
+- **Portable source**: `C:\Users\wests\Downloads\pyreeler` (sharable package source)
+- **Installed skill**: `C:\Users\wests\.codex\skills\pyreeler` (active Codex skill)
 
-## Context
+Development workflow: edit portable source → sync to installed skill → benchmark → validate in fresh session.
 
-This workspace contains both:
+---
 
-- the local working repo at `C:\Github\pyreeler`
-- the sharable portable skill package at `C:\Users\wests\Downloads\pyreeler`
-- the installed Codex skill copy at `C:\Users\wests\.codex\skills\pyreeler`
+## Project Direction
 
-Recent work has focused on making the portable package faster by default while keeping it safe and cross-machine compatible.
+The portable skill targets:
+- Validated hardware-aware encoder selection
+- Conservative multicore frame generation
+- Direct piping to FFmpeg over stdin
+- Clean fallback to `libx264`
 
-## Current Portable Direction
+The portable package avoids machine-specific hardcoding. Local installs can tune more aggressively.
 
-The portable skill should default to:
+---
 
-- validated hardware-aware encoder selection
-- conservative multicore frame generation
-- direct piping to FFmpeg over stdin
-- clean fallback to `libx264`
+## Implementation History
 
-The portable package should not depend on machine-specific hardcoding. Local installs can still tune more aggressively.
+### Video Runtime & Encoding
 
-## Current Guidance Added
+Added `templates/video/` modules for portable rendering:
 
-The current portable and installed guidance now requires:
+- `ffmpeg_utils.py` - host detection, encoder smoke tests, worker heuristics
+- `render_runtime.py` - one-call runtime selection (ffmpeg path, encoder, workers, video args)
+- `parallel_render.py` - ordered multiprocessing for frame generation
 
-- a pre-render hardware gate for portable Python renderers
+Guidance now requires:
+- Pre-render hardware gate for portable Python renderers
 - `detect_render_runtime()` for runtime selection
-- validated encoder selection instead of hardcoded hardware encoder assumptions
-- `runtime.workers` to drive actual frame generation, not just FFmpeg settings
-- piped FFmpeg when practical
-- a short worker-path smoke test before the first full render when `runtime.workers > 1`
-- Windows-safe multiprocessing structure
-  - top-level worker functions
-  - picklable worker inputs
-  - `if __name__ == "__main__":`
-  - `multiprocessing.freeze_support()` when needed
+- Validated encoder selection (no hardcoded hardware assumptions)
+- `runtime.workers` for actual frame generation, not just FFmpeg settings
+- Piped FFmpeg when practical
+- Worker-path smoke test before first render when `runtime.workers > 1`
+- Windows-safe multiprocessing (top-level workers, picklable inputs, `if __name__ == "__main__"`, `freeze_support()`)
 
-## Implemented In Portable Package
+### Audio Layer Fixes
 
-Added or updated in the portable package:
-
-- `templates/video/ffmpeg_utils.py`
-  - lightweight host detection
-  - encoder smoke tests
-  - conservative worker heuristics
-- `templates/video/render_runtime.py`
-  - one-call runtime selection for:
-    - ffmpeg path
-    - encoder
-    - worker count
-    - video args
-- `templates/video/parallel_render.py`
-  - ordered multiprocessing helper for frame generation
-- `README.md`
-  - benchmark note
-  - modern hardware defaults
-- `SKILL.md`
-  - explicit instruction to use `detect_render_runtime()` in portable Python renderers
-- `references/workflow.md`
-  - reinforced portable runtime guidance
-
-These changes were synced into:
-
-- `C:\Users\wests\.codex\skills\pyreeler`
-
-## Audio Fixes Applied
-
-The new audio layer in the portable package had several correctness fixes applied:
-
-- negative stem offsets now trim correctly
+Correctness fixes applied to the audio templates:
+- Negative stem offsets now trim correctly
 - NumPy motif arrays no longer break empty checks
-- zero-length signals no longer crash the low-pass fallback
-- MIDI and TTS output helpers create parent directories before writing
+- Zero-length signals no longer crash low-pass fallback
+- MIDI and TTS helpers create parent directories before writing
 
-Files updated:
+Files: `audio_engine.py`, `composer.py`, `sfx_gen.py`, `voice.py`
 
-- `templates/audio/audio_engine.py`
-- `templates/audio/composer.py`
-- `templates/audio/sfx_gen.py`
-- `templates/audio/voice.py`
+### Documentation Updates
 
-## Benchmark Method
+- `README.md` - added benchmark notes, modern hardware defaults
+- `SKILL.md` - explicit `detect_render_runtime()` instruction
+- `references/workflow.md` - reinforced portable runtime guidance
+
+---
+
+## Benchmark Methodology
 
 ### Fast Iteration Loop
 
-Use the fixed harness:
-
-- `C:\Github\pyreeler\narrative_preview_smoke.py`
-
-This harness imports from the installed portable skill and is the preferred inner-loop benchmark target.
-
-Run:
+Use `narrative_preview_smoke.py` for rapid inner-loop testing:
 
 ```powershell
 python C:\Github\pyreeler\narrative_preview_smoke.py cpu short
 python C:\Github\pyreeler\narrative_preview_smoke.py portable_auto_multi short
 ```
 
-Purpose:
+This verifies the installed portable code directly, avoiding fresh-session generation overhead.
 
-- verify the installed portable code directly
-- avoid fresh-session skill generation for every iteration
-- get a result in a few seconds
-
-The harness prints:
-
-- selected ffmpeg path
-- encoder
-- worker count
-- `verify_runtime_helper`
-- `verify_frame_parallelism`
-- `verify_ffmpeg_pipe`
-
-### Full Benchmark
-
-Run:
+### Full Benchmark Suite
 
 ```powershell
 python C:\Github\pyreeler\narrative_preview_smoke.py cpu full
@@ -136,128 +90,100 @@ python C:\Github\pyreeler\narrative_preview_smoke.py gpu full
 python C:\Github\pyreeler\narrative_preview_smoke.py gpu_multi full
 ```
 
-Purpose:
-
-- compare end-to-end preview runtime on the same deterministic scene
-- separate encoder effects from frame-generation effects
+Purpose: compare end-to-end preview runtime, separate encoder effects from frame-generation effects.
 
 ### Acceptance Test
 
-Only after the fast loop looks right:
+After fast loop passes:
+1. Open fresh Codex session
+2. Invoke `$pyreeler`
+3. Inspect generated renderer for:
+   - `detect_render_runtime()` usage
+   - Real frame parallelism
+   - Piped FFmpeg
+4. Run full render and compare wall-clock time
 
-1. Open a fresh Codex session.
-2. Invoke `$pyreeler`.
-3. Inspect the generated renderer script.
-4. Confirm it actually uses:
-   - `detect_render_runtime()`
-   - real frame parallelism
-   - piped FFmpeg
-5. Run the full render and compare wall-clock time.
+---
 
-## Benchmark Findings So Far
+## Benchmark Results
 
-### 30-second Narrative Harness
+### 30-Second Narrative Harness
 
-Representative numbers measured during this development pass:
+| Mode | Time |
+|------|------|
+| `cpu` | ~5.9s - 6.3s |
+| `gpu` (encode only) | ~6.0s |
+| `gpu_multi` | ~3.8s |
+| `portable_auto_multi` | ~3.8s - 4.3s |
+| `local_specific_multi` | ~3.7s - 4.2s |
 
-- `cpu`
-  - about `5.9s` to `6.3s`
-- `gpu`
-  - about `6.0s`
-- `gpu_multi`
-  - about `3.8s`
-- `portable_auto_multi`
-  - about `3.8s` to `4.3s`
-- `local_specific_multi`
-  - about `3.7s` to `4.2s`
-
-Meaning:
-
-- hardware encoding alone did not materially help this CPU-bound preview
-- multicore frame generation was the meaningful speedup
-- once portable used both validated hardware encode and multicore rendering, it came close to the local-specific path
+**Key finding**: Hardware encoding alone did not materially help this CPU-bound preview. Multicore frame generation was the meaningful speedup. Portable multicore came close to local-specific performance.
 
 ### Short Harness
 
-Measured:
+| Mode | Time |
+|------|------|
+| `cpu short` | 2.88s |
+| `portable_auto_multi short` | 2.38s |
 
-- `cpu short`
-  - `2.88s`
-- `portable_auto_multi short`
-  - `2.38s`
+Preferred iteration path.
 
-This is the current preferred iteration path.
+### What "GPU Mode" Actually Means
 
-## Benchmark Interpretation
+Current `gpu` mode = hardware-assisted **video encoding** only. It does **not** mean GPU-based frame synthesis. Visual rendering remains CPU-side (Python/Pillow). The GPU only accelerates FFmpeg encoding when available.
 
-Recent clean-room testing suggests:
+### Correctness Learnings
 
-- helper adoption is now happening by default
-- worker-backed rendering can be selected and verified before full render
-- some scenes may still render slowly because the frame function itself is expensive
-- heavy full-frame procedural fields and bloom are a separate performance problem from worker-path correctness
+- Helper adoption now happens by default
+- Worker-backed rendering can be verified before full render
+- Slow scenes are usually expensive frame functions, not render-path issues
+- Heavy procedural fields and bloom are separate from worker-path correctness
 
-## Important Interpretation
+---
 
-Current `gpu` mode means:
+## Generated Script Analysis
 
-- hardware-assisted video encoding
+Tested with `space_dragon_pyreeler_preview.py`:
 
-It does **not** mean:
+**Initial findings**:
+- `render_runtime.py`: not used
+- Detected encoder: not used
+- Worker count: not used (only as FFmpeg thread count)
+- Piped FFmpeg: yes ✓
+- Temp frame trees: no ✓
 
-- GPU-based frame synthesis
+**After patching to use `render_runtime.py`**:
+- Timing stayed flat because `runtime.workers` wasn't driving actual parallel frame generation
 
-Today the visual rendering is still CPU-side Python/Pillow. The GPU is only helping on the FFmpeg encode side when available.
+**Conclusion**: Portable runtime integration alone is insufficient. Generated scripts must use worker count for frame production itself.
 
-## Generated Script Findings
+---
 
-In a fresh generated script run for:
+## Known Gaps
 
-- `C:\Github\pyreeler\space_dragon_pyreeler_preview.py`
+### `space_dragon_pyreeler_preview.py`
 
-initial findings were:
+Still needs refactor to benefit from portable multicore defaults:
+- Renderer is stateful frame-to-frame
+- Must separate: precomputed simulation state + independent per-frame drawing
+- Then `parallel_render.py` or worker pools can work correctly
 
-- `render_runtime.py`: not used at first
-- detected encoder: not used at first
-- worker count: not used at first
-- piped FFmpeg: yes
-- temp frame trees: no
+### Next Steps
 
-The script was then patched to use `render_runtime.py`, but the timing stayed essentially flat because `runtime.workers` was only being used as FFmpeg thread count, not for actual parallel frame generation.
+Patch `space_dragon_pyreeler_preview.py` to:
+1. Keep `detect_render_runtime()`
+2. Use `parallel_render.py`
+3. Use worker count for actual frame generation
+4. Preserve piped FFmpeg output
 
-Conclusion:
+This is the next meaningful performance test for generated-script realism.
 
-- portable runtime integration alone is not enough
-- the generated script must use worker count for frame production itself
+---
 
-## Current Known Gap
+## Development Workflow Summary
 
-`space_dragon_pyreeler_preview.py` still needs a careful refactor if it is going to benefit from portable multicore defaults.
-
-Reason:
-
-- the renderer is stateful frame-to-frame
-- frame generation must be separated into:
-  - precomputed simulation state
-  - independent per-frame drawing
-
-Only then can `parallel_render.py` or a worker pool be used correctly.
-
-## Recommended Development Workflow
-
-1. Patch the portable package in `C:\Users\wests\Downloads\pyreeler`.
-2. Sync it into `C:\Users\wests\.codex\skills\pyreeler`.
-3. Benchmark with `narrative_preview_smoke.py` in `short` mode.
-4. Re-run in `full` mode when needed.
-5. Only then validate with a fresh session and a newly generated script.
-
-## Immediate Next Step
-
-Patch `space_dragon_pyreeler_preview.py` so it:
-
-- keeps `detect_render_runtime()`
-- uses `parallel_render.py`
-- uses worker count for actual frame generation
-- preserves piped FFmpeg output
-
-That is the next meaningful performance test for generated-script realism.
+1. Edit portable package in Downloads folder
+2. Sync to installed Codex skill
+3. Benchmark with `narrative_preview_smoke.py short`
+4. Run `full` mode when needed
+5. Validate with fresh session and newly generated script
