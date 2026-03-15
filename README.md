@@ -16,8 +16,8 @@ It is built around a simple rule set:
 
 | Version | Location | Invoke With |
 |---------|----------|-------------|
-| **OpenAI Codex** | `pyreeler-codex/` | `$pyreeler` |
-| **Claude Code** | `pyreeler-claude/` | `/pyreeler` |
+| **OpenAI Codex** | `skills/codex/` | `$pyreeler` |
+| **Claude Code** | `skills/claude/` | `/pyreeler` |
 
 Both versions share the same core philosophy and workflow, adapted for each AI's capabilities.
 
@@ -33,56 +33,50 @@ Use $pyreeler to make a 45 second code-generated ritual film that begins calm, b
 /pyreeler make a 45 second code-generated ritual film that begins calm, becomes entrancing, and ends with a single rupture.
 ```
 
-## Featured Example: PyReeler Emergence
-
-## Examples & Showcase
+## Featured Films
 
 [**View the Showcase Gallery on GitHub Pages**](https://boxwrench.github.io/pyreeler/)
 
-You can find the generated video files in the `assets/showcase/` directory, including:
-- `pyreeler-emergence.mp4`
-- `what-the-light-kept_preview.mp4`
-- `ascii-cosmic-dragon-720p.mp4`
-- `pyreel_ghost_in_the_machine_720p_final.mp4`
-- `terminal_genesis_pro_preview.mp4`
-
-Reproducible benchmark/example materials live in `examples/`, including:
-- `what_the_light_kept_render.py`
-- `what_the_light_kept_benchmark.json`
-- `what_the_light_kept_notes.md`
-- `what_the_light_kept_effects.md`
+Completed films with full source code:
+- `films/interference/` — geometric moiré patterns, 60s
+- `films/sentient-weather/` — emotional particle systems, 60s
+- `films/what-the-light-kept/` — AI memory fragment narrative, 45s
+- `films/dungeon-emergence/` — ASCII dungeon emergence, 45s
 
 ## Repository Structure
 
 ```
 pyreeler/
-├── assets/                # Logo and showcase media
-│   ├── logo/              # PyReeler branding assets
-│   └── showcase/          # Featured example films
+├── skills/                  # AI assistant skills
+│   ├── claude/              # Claude Code skill
+│   └── codex/               # OpenAI Codex skill
 │
-├── examples/              # Example films and outputs
+├── films/                   # Complete film projects
+│   ├── interference/
+│   ├── sentient-weather/
+│   ├── what-the-light-kept/
+│   └── dungeon-emergence/
 │
-├── pyreeler-codex/        # OpenAI Codex skill
-│   ├── SKILL.md           # Core skill instructions
-│   ├── agents/openai.yaml # Codex skill metadata
-│   ├── references/        # Workflow & creative guides
-│   └── templates/         # Audio/video starter modules
+├── research/                # Effects catalogs, audio timelines, notes
 │
-├── pyreeler-claude/       # Claude Code skill
-│   ├── SKILL.md           # Core skill instructions
-│   ├── agents/claude.yaml # Claude skill metadata
-│   ├── references/        # Workflow & creative guides
-│   └── templates/         # Audio/video starter modules
+├── templates/               # Shared audio/video starter modules
+│   ├── audio/               # sfx_gen.py, composer.py, audio_engine.py, voice.py
+│   └── video/               # ffmpeg_utils.py, render_runtime.py, parallel_render.py
 │
-├── local_nvidia/          # NVIDIA GPU experiments (optional)
-└── DEVLOG.md              # Development history
+├── docs/
+│   ├── specs/               # Design specifications
+│   ├── plans/               # Implementation plans
+│   └── benchmarks/          # Performance benchmarks
+│
+├── assets/                  # Logo and static media
+└── DEVLOG.md                # Development history
 ```
 
 ## Using This Skill With Other AI Models
 
 The PyReeler skill is documented in human-readable Markdown and YAML files. Other AI models can:
 
-- **Read and adapt** the skill files (`SKILL.md`, `references/`, `templates/`) for their own skill systems
+- **Read and adapt** the skill files (`skills/*/SKILL.md`, `templates/`, `research/`) for their own skill systems
 - **Implement as a prompt** by reading the workflow guidance and creative references directly into context
 
 The skill is intentionally code-first and framework-agnostic. The core principles (preview-first, hardware-aware rendering, stem-based audio) can be applied regardless of the AI platform.
@@ -121,15 +115,9 @@ PyReeler uses a tiered dependency model:
 - Surface the preview to the user before committing to an upscale
 - Export approved finals to `~/Videos`
 
-## GitHub Media Notes
-
-GitHub supports images in Markdown and uploaded media files (`.mp4`, `.mov`, `.webm`), but browser and codec behavior can vary.
-
-For a repository `README`, the safest presentation is an image or GIF that links to an MP4 in the repo, or to an external host such as YouTube or Vimeo.
-
 ## Installing
 
-**Tested on Windows and Ubuntu Linux.**  
+**Tested on Windows and Ubuntu Linux.**
 **macOS support is expected** (the code handles Apple Silicon and `h264_videotoolbox`) but has not been personally verified.
 
 ### Prerequisites
@@ -151,12 +139,12 @@ sudo apt-get install ffmpeg
 - Optional: Install [FluidSynth](https://github.com/FluidSynth/fluidsynth/releases)
 
 ### Codex
-Copy or symlink `pyreeler-codex/` to your Codex skills directory:
+Copy or symlink `skills/codex/` to your Codex skills directory:
 - **macOS/Linux**: `~/.codex/skills/`
 - **Windows**: `%USERPROFILE%\.codex\skills\`
 
 ### Claude Code
-Copy or symlink `pyreeler-claude/` to your Claude Code skills directory:
+Copy or symlink `skills/claude/` to your Claude Code skills directory:
 - **macOS/Linux**: `~/.claude/skills/`
 - **Windows**: `%APPDATA%\Claude\skills\`
 
