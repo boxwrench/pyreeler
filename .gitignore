@@ -48,6 +48,9 @@ Thumbs.db
 !examples/*.png
 !assets/showcase/*.mp4
 !assets/showcase/*.png
+# Keep only optimized versions in showcase
+assets/showcase/*_original.mp4
+assets/showcase/*_crf28.mp4
 
 # Local NVIDIA experiments (if temporary)
 local_nvidia/__pycache__/
