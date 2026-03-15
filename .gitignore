@@ -40,17 +40,11 @@ env/
 .DS_Store
 Thumbs.db
 
-# Video outputs (if large)
+# Video outputs (large files - not stored in repo)
 *.mp4
 *.mov
 *.avi
-!examples/*.mp4
-!examples/*.png
-!assets/showcase/*.mp4
-!assets/showcase/*.png
-# Keep only optimized versions in showcase
-assets/showcase/*_original.mp4
-assets/showcase/*_crf28.mp4
+assets/showcase/*.mp4
 
 # Local NVIDIA experiments (if temporary)
 local_nvidia/__pycache__/
