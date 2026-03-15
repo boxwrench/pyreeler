@@ -1,7 +1,0 @@
-interface:
-  display_name: "PyReeler"
-  short_description: "Workflow for code-generated short films."
-  default_prompt: "Use $pyreeler to design and deliver a code-generated short film with a strong preview-first workflow."
-
-policy:
-  allow_implicit_invocation: true
