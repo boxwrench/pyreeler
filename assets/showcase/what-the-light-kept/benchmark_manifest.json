@@ -1,0 +1,85 @@
+{
+  "piece_id": "what-the-light-kept",
+  "title": "What the Light Kept",
+  "status": "preview_rendered",
+  "created_date": "2026-03-14",
+  "output_directory": "C:\\Github\\pyreeler\\assets\\showcase\\what-the-light-kept",
+  "creative_mode": "lyrical glitchcore cyberpunk",
+  "narrative_goal": "A deleted AI tries to reconstruct itself from damaged memory residue.",
+  "benchmark_goal": "Demonstrate PyReeler's ability to produce an emotive short-form narrative with inspectable prompt, timing, and execution metadata.",
+  "original_user_prompt_excerpt": "use pyreeler to make a short film showcaseing its ability with special care to emotive narrative ... use particle effect ... machine voice with simple one word questions ... terminal style text ... glitchcore cyberpunk",
+  "normalized_brief": {
+    "runtime_seconds": 45,
+    "aspect_ratio": "16:9",
+    "visual_systems": [
+      "particles and swarms",
+      "text and graphic overlays",
+      "noise and texture",
+      "masks, occlusion, and reveal systems"
+    ],
+    "audio_stems": [
+      "ambience",
+      "pulse",
+      "glitches",
+      "voice",
+      "score"
+    ],
+    "voice_lines": [
+      "name?",
+      "home?",
+      "face?",
+      "why?",
+      "stay?",
+      "me?"
+    ],
+    "terminal_fragments": [
+      "RECOVER INDEX",
+      "TRACE INCOMPLETE",
+      "ARCHIVE CORRUPTED",
+      "SELF MODEL NOT FOUND",
+      "LIGHT PATTERN RETAINED"
+    ]
+  },
+  "benchmark_fields": {
+    "implementation_script": "C:\\Github\\pyreeler\\assets\\showcase\\what-the-light-kept\\render_preview.py",
+    "preview_output": "C:\\Github\\pyreeler\\assets\\showcase\\what-the-light-kept\\what-the-light-kept_preview.mp4",
+    "final_output": null,
+    "poster_output": "C:\\Github\\pyreeler\\assets\\showcase\\what-the-light-kept\\what-the-light-kept_poster.png",
+    "render_start_local": "2026-03-14 11:45:28",
+    "render_end_local": "2026-03-14 11:45:45",
+    "render_wall_clock_seconds": 16.95,
+    "preview_resolution": "960x540",
+    "preview_fps": 18,
+    "final_resolution": null,
+    "final_fps": null,
+    "encoder": "h264_nvenc",
+    "workers": 4,
+    "requested_workers": 4,
+    "parallel_mode": "thread",
+    "ffmpeg_path": "C:\\Users\\wests\\AppData\\Roaming\\Python\\Python314\\site-packages\\imageio_ffmpeg\\binaries\\ffmpeg-win-x86_64-v7.1.exe",
+    "audio_pipeline": "numpy_procedural_stems",
+    "requested_voice_pipeline": "edge_tts",
+    "voice_pipeline": "edge_tts_primary",
+    "voice_fallback_used": false,
+    "dependencies_used": [
+      "numpy",
+      "Pillow",
+      "imageio_ffmpeg"
+    ],
+    "seed": 17,
+    "hardware_notes": "NVIDIA_NVENC"
+  },
+  "review_criteria": [
+    "Does the film establish a clear emotional arc rather than a style montage?",
+    "Do repeated particle behaviors evolve in meaning over the runtime?",
+    "Does terminal text feel like system leakage instead of exposition?",
+    "Does the rupture section materially change the film's internal logic?",
+    "Does the final question land emotionally?"
+  ],
+  "public_facing_metadata": {
+    "prompt_visible": true,
+    "execution_log_visible": true,
+    "timing_plan_visible": true,
+    "technical_metadata_visible": true
+  }
+}
