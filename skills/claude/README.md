@@ -54,31 +54,46 @@ MIT License. See [LICENSE](../LICENSE).
 
 ## Performance & File Size Notes
 
+### Common File Size Killers
+| Content Type | Why It Bloates | Quick Fix |
+|--------------|----------------|-----------|
+| **Fine line patterns / moiré** | High-frequency noise, hard to compress | CRF 28, add slight blur/glow |
+| **Film grain / noise** | Random data, no temporal redundancy | Consistent seed, reduce amplitude |
+| **Fast motion** | Less frame-to-frame similarity | Lower FPS (18-24), motion blur |
+| **High contrast edges** | Sharp transitions | Anti-aliasing, glow effects |
+| **Alpha channels** | Extra data per pixel | Pre-composite before encoding |
+| **CRF 18 or lower** | Visually lossless, huge files | Use CRF 23-28 |
+
+### Common Render Time Killers
+| Issue | Why It Slows Down | Fix |
+|-------|-------------------|-----|
+| **Sequential rendering** | 1 CPU core only | Use `parallel_render.py` with `runtime.workers` |
+| **Canvas > output size** | Drawing pixels you don't see | Match canvas to viewport |
+| **Recalculating per frame** | Same math 1440 times | Cache quantized values |
+| **Python pixel loops** | Python is slow at pixel-level | Use NumPy vectorization |
+| **Temp frame files** | Disk I/O bottleneck | Pipe directly to FFmpeg |
+
 ### The Interference Film Lesson
-The **Interference** film (geometric moiré patterns) produced a 273MB file at CRF 18 — 10x larger than typical outputs. Why?
+The **Interference** film (geometric moiré patterns) produced a 273MB file at CRF 18 — 10x larger than typical.
 
-**Hard-to-compress content:**
-- Fine line grids create high-frequency moiré patterns
-- Each frame is visually noisy (hard for H.264 to compress)
-- Constant motion (rotating grids) reduces temporal redundancy
+**Optimization results:**
+- CRF 18 → CRF 28: 273MB → 99MB
+- 1920x1080 canvas → 1600x900: Faster render
+- Add angle caching: Faster + consistent
+- **Combined**: 273MB → 61MB (78% smaller)
 
-**Mitigation:**
-- Use **CRF 28** for web-friendly output (~60MB)
-- Consider lower resolution for dense geometric patterns
-- Add slight glow/blur to reduce high-frequency noise
-
-### Encoding Guidelines
-| Use Case | CRF | Size (60s 720p) |
-|----------|-----|-----------------|
+### Encoding Guidelines (60s @ 720p)
+| Use Case | CRF | Typical Size |
+|----------|-----|--------------|
 | Archive/master | 18 | 200-400 MB |
-| High quality | 23 | 50-100 MB |
-| Web sharing | 28 | 15-60 MB |
+| High quality | 20 | 80-150 MB |
+| Default balance | 23 | 40-80 MB |
+| Web sharing | 28 | 15-40 MB |
 
-### Content Types & Compression
-- **Simple shapes/colors**: Compress well (low frequency)
-- **Particles/organic**: Moderate compression
-- **Fine lines/grids/moiré**: Poor compression (high frequency)
-- **Fast motion**: Poor compression (less redundancy)
+**Rule of thumb:**
+- **Geometric/line-heavy**: CRF 25-28
+- **Organic/particles**: CRF 20-23
+- **Simple shapes**: CRF 23
 
 ## See Also
 

@@ -117,22 +117,49 @@ PyReeler uses a tiered dependency model:
 - Surface the preview to the user before committing to an upscale
 - Export approved finals to `~/Videos`
 
-### File Size Lessons
-The **Interference** film (geometric moiré patterns) taught us about compression:
+### File Size & Performance Lessons
 
-**The problem:** 273MB for a 60s 720p film — 10x larger than typical.
+The **Interference** film (geometric moiré patterns) taught us about compression — 273MB for 60s at 720p, 10x larger than typical.
 
-**Why:** Fine line grids create high-frequency moiré patterns that H.264 compresses poorly. Each frame is visually "noisy" with no temporal redundancy.
+#### Content That Bloates File Size
+| Content Type | Why It Bloates | Mitigation |
+|--------------|----------------|------------|
+| **Fine line patterns** (grids, moiré) | High-frequency noise, hard to compress | CRF 28, add slight blur/glow, lower resolution |
+| **Film grain / noise** | Random data, no temporal redundancy | Use consistent seed, reduce noise amplitude |
+| **Fast motion** | Less frame-to-frame similarity | Lower FPS (18-24), motion blur |
+| **High contrast edges** | Sharp transitions | Slight anti-aliasing, glow effects |
+| **Alpha channels** | Extra data per pixel | Pre-composite, don't render transparency |
+| **Lossless codecs** | No compression | Use H.264 with CRF 23-28 |
 
-**Solutions:**
+#### Render Time Killers
+| Issue | Why It Slows Down | Fix |
+|-------|-------------------|-----|
+| **Sequential frame rendering** | 1 CPU core only | Use `parallel_render.py` with `runtime.workers` |
+| **Canvas larger than output** | Drawing pixels you don't see | Match canvas to viewport when possible |
+| **Recalculating every frame** | Same math 1440 times | Cache quantized values, precompute static layers |
+| **Python loops over pixels** | Python is slow at pixel-level work | Use NumPy vectorization, PIL operations |
+| **Writing temp frame files** | Disk I/O bottleneck | Pipe frames directly to FFmpeg |
+
+#### Encoding Guidelines (60s @ 720p)
+| CRF | Quality | Typical Size | Use For |
+|-----|---------|--------------|---------|
+| 18 | Visually lossless | 150-400 MB | Archive masters |
+| 20 | Excellent | 80-150 MB | High-quality delivery |
+| 23 | Very good | 40-80 MB | Default balance |
+| 28 | Good | 15-40 MB | Web sharing, previews |
+
+**Rule of thumb:**
+- **Geometric/line-heavy films**: CRF 25-28
+- **Organic/particle films**: CRF 20-23
+- **Simple shapes/colors**: CRF 23
+
+#### The Interference Film Optimizations
 | Issue | Fix | Result |
 |-------|-----|--------|
-| CRF 18 (visually lossless) | Use CRF 28 | 273MB → 99MB |
-| Large canvas (1920x1080) | Use 1600x900 | Faster render |
+| CRF 18 | Use CRF 28 | 273MB → 99MB |
+| 1920x1080 canvas | Use 1600x900 | Faster render, less memory |
 | Recalculating lines | Cache quantized angles | Faster + consistent |
-| Combined optimizations | All above | 273MB → 61MB |
-
-**Rule of thumb:** Geometric/line-heavy films need CRF 25-28. Organic/particle films can use CRF 20-23.
+| Combined | All above | 273MB → 61MB (78% smaller)
 
 ## Installing
 
