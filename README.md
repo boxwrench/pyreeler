@@ -37,11 +37,13 @@ Use $pyreeler to make a 45 second code-generated ritual film that begins calm, b
 
 [**View the Showcase Gallery on GitHub Pages**](https://boxwrench.github.io/pyreeler/)
 
-Completed films with full source code:
+Completed films with full source code (run scripts to generate videos):
 - `films/interference/` — geometric moiré patterns, 60s
 - `films/sentient-weather/` — emotional particle systems, 60s
 - `films/what-the-light-kept/` — AI memory fragment narrative, 45s
 - `films/dungeon-emergence/` — ASCII dungeon emergence, 45s
+
+**Note:** Video files are generated locally and not stored in this repository due to file size limits.
 
 ## Repository Structure
 
