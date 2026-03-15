@@ -1,8 +1,13 @@
 #!/usr/bin/env python3
-"""Interference — A 60-second geometric moiré pattern film.
+"""Interference — A 60-second geometric moiré pattern film (OPTIMIZED).
 
 Multiple overlapping line grids create evolving interference patterns
 as the viewpoint drifts across a dense field.
+
+OPTIMIZATIONS:
+- CRF 28 for web-friendly file sizes
+- Quantized angle caching for grid lines
+- Smaller canvas (1600x900 vs 1920x1080)
 """
 from __future__ import annotations
 
@@ -40,12 +45,16 @@ TOTAL_FRAMES = FPS * DURATION
 W, H = 1280, 720
 
 # Virtual canvas (larger than viewport for camera movement)
-CANVAS_W, CANVAS_H = 1920, 1080
+# OPTIMIZED: Smaller canvas = faster rendering, less memory
+CANVAS_W, CANVAS_H = 1600, 900  # Was 1920x1080
 
 # Color palette
 BG_COLOR = (0, 0, 0)
 LINE_COLOR = (255, 255, 255)
 ALT_LINE_COLOR = (224, 255, 255)  # Light cyan
+
+# OPTIMIZED: Grid line cache to avoid recalculation
+_grid_line_cache: dict = {}
 
 
 # =============================================================================
@@ -70,9 +79,19 @@ def create_grid_lines(
     canvas_w: int,
     canvas_h: int
 ) -> List[Tuple[Tuple[float, float], Tuple[float, float]]]:
-    """Generate line endpoints for a grid at given angle."""
+    """Generate line endpoints for a grid at given angle.
+
+    OPTIMIZED: Uses angle quantization and caching to avoid recalculation.
+    """
+    # Quantize angle to reduce cache misses (0.5 degree precision)
+    quantized_angle = round(angle_deg * 2) / 2
+    cache_key = (quantized_angle, line_count, canvas_w, canvas_h)
+
+    if cache_key in _grid_line_cache:
+        return _grid_line_cache[cache_key]
+
     lines = []
-    angle_rad = math.radians(angle_deg)
+    angle_rad = math.radians(quantized_angle)
 
     # Diagonal to ensure lines cover entire canvas
     diagonal = math.sqrt(canvas_w**2 + canvas_h**2)
@@ -97,6 +116,8 @@ def create_grid_lines(
         end = (center_x + dx, center_y + dy)
         lines.append((start, end))
 
+    # Cache the result
+    _grid_line_cache[cache_key] = lines
     return lines
 
 
@@ -465,7 +486,8 @@ def render_film() -> None:
     # Use hardcoded FFmpeg path with libx264
     print("[0/3] Setting up encoder...")
     ffmpeg_path = FFMPEG_PATH
-    video_args = ("-c:v", "libx264", "-preset", "veryfast", "-crf", "18", "-pix_fmt", "yuv420p")
+    # OPTIMIZED: CRF 28 = web-friendly quality, much smaller files
+    video_args = ("-c:v", "libx264", "-preset", "slow", "-crf", "28", "-pix_fmt", "yuv420p")
     print(f"  FFmpeg: {ffmpeg_path}")
     print(f"  Encoder: libx264")
     print()
