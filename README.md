@@ -117,6 +117,23 @@ PyReeler uses a tiered dependency model:
 - Surface the preview to the user before committing to an upscale
 - Export approved finals to `~/Videos`
 
+### File Size Lessons
+The **Interference** film (geometric moiré patterns) taught us about compression:
+
+**The problem:** 273MB for a 60s 720p film — 10x larger than typical.
+
+**Why:** Fine line grids create high-frequency moiré patterns that H.264 compresses poorly. Each frame is visually "noisy" with no temporal redundancy.
+
+**Solutions:**
+| Issue | Fix | Result |
+|-------|-----|--------|
+| CRF 18 (visually lossless) | Use CRF 28 | 273MB → 99MB |
+| Large canvas (1920x1080) | Use 1600x900 | Faster render |
+| Recalculating lines | Cache quantized angles | Faster + consistent |
+| Combined optimizations | All above | 273MB → 61MB |
+
+**Rule of thumb:** Geometric/line-heavy films need CRF 25-28. Organic/particle films can use CRF 20-23.
+
 ## Installing
 
 **Tested on Windows and Ubuntu Linux.**

@@ -52,6 +52,34 @@ See root `examples/` folder for sample output media.
 
 MIT License. See [LICENSE](../LICENSE).
 
+## Performance & File Size Notes
+
+### The Interference Film Lesson
+The **Interference** film (geometric moiré patterns) produced a 273MB file at CRF 18 — 10x larger than typical outputs. Why?
+
+**Hard-to-compress content:**
+- Fine line grids create high-frequency moiré patterns
+- Each frame is visually noisy (hard for H.264 to compress)
+- Constant motion (rotating grids) reduces temporal redundancy
+
+**Mitigation:**
+- Use **CRF 28** for web-friendly output (~60MB)
+- Consider lower resolution for dense geometric patterns
+- Add slight glow/blur to reduce high-frequency noise
+
+### Encoding Guidelines
+| Use Case | CRF | Size (60s 720p) |
+|----------|-----|-----------------|
+| Archive/master | 18 | 200-400 MB |
+| High quality | 23 | 50-100 MB |
+| Web sharing | 28 | 15-60 MB |
+
+### Content Types & Compression
+- **Simple shapes/colors**: Compress well (low frequency)
+- **Particles/organic**: Moderate compression
+- **Fine lines/grids/moiré**: Poor compression (high frequency)
+- **Fast motion**: Poor compression (less redundancy)
+
 ## See Also
 
 - Main repository README for shared philosophy and workflow
