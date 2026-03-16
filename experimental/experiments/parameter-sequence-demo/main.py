@@ -26,9 +26,9 @@ from attractors import (
     generate_rossler,
     render_frame,
     estimate_render_time,
-    check_safety,
+    check_render_safety,
 )
-from fm_synth import fm_wave, adsr_envelope, mix_stems
+from fm_synth import fm_wave, adsr_envelope
 from parameter_sequence import ParameterSequence
 
 # ============================================================================
@@ -62,10 +62,10 @@ def create_sequences():
     lorenz_seq.record(0, 'n_particles', 30)
     lorenz_seq.record(20 * FPS, 'n_particles', 80)
     lorenz_seq.record(40 * FPS, 'n_particles', 30)
-    # Camera zoom: wide → close → wide
-    lorenz_seq.record(0, 'zoom', 0.8)
-    lorenz_seq.record(25 * FPS, 'zoom', 1.5)
-    lorenz_seq.record(50 * FPS, 'zoom', 0.8)
+    # Brightness: dim → bright → dim
+    lorenz_seq.record(0, 'brightness', 0.5)
+    lorenz_seq.record(25 * FPS, 'brightness', 1.0)
+    lorenz_seq.record(50 * FPS, 'brightness', 0.5)
 
     # --- Rössler Attractor (15-30s and 45-60s) ---
     rossler_seq = ParameterSequence()
@@ -181,7 +181,7 @@ def render_frame_with_params(trajectory, frame, seq, default_params):
         width=WIDTH,
         height=HEIGHT,
         trail_length=params['trail_length'],
-        zoom=seq.get_value(frame, 'zoom', 1.0),
+        brightness=params['brightness'],
     )
 
     # Apply brightness
@@ -220,14 +220,15 @@ def generate_audio_segment(seq, duration, is_drone=True):
                 index=index
             )
 
-            # Drone envelope - long sustain
+            # Drone envelope - long sustain (scaled to frame duration)
+            frame_dur = 1.0/FPS
             env = adsr_envelope(
-                duration=1.0/FPS,
+                duration=frame_dur,
                 sample_rate=SAMPLE_RATE,
-                attack=0.05,
-                decay=0.1,
+                attack=frame_dur*0.2,
+                decay=frame_dur*0.2,
                 sustain=0.8,
-                release=0.1
+                release=frame_dur*0.4
             )
         else:
             carrier = seq.get_value(frame, 'carrier', 220)
@@ -242,14 +243,15 @@ def generate_audio_segment(seq, duration, is_drone=True):
                 index=index
             )
 
-            # Bell envelope - sharp attack, quick decay
+            # Bell envelope - sharp attack, quick decay (scaled to frame duration)
+            frame_dur = 1.0/FPS
             env = adsr_envelope(
-                duration=1.0/FPS,
+                duration=frame_dur,
                 sample_rate=SAMPLE_RATE,
-                attack=0.001,
-                decay=0.3,
+                attack=frame_dur*0.05,
+                decay=frame_dur*0.3,
                 sustain=0.1,
-                release=1.5
+                release=frame_dur*0.65
             )
 
         frame_audio = wave * env
@@ -370,25 +372,36 @@ def main():
 
     # Encode video
     print("\n--- Encoding Video ---")
+    import shutil
     import subprocess
 
-    cmd = [
-        "ffmpeg", "-y",
-        "-framerate", str(FPS),
-        "-i", str(frames_dir / "frame_%05d.png"),
-        "-i", str(OUTPUT_DIR / "audio.wav"),
-        "-c:v", "libx264",
-        "-pix_fmt", "yuv420p",
-        "-c:a", "aac",
-        "-shortest",
-        str(OUTPUT_DIR / "demo.mp4")
-    ]
-
-    result = subprocess.run(cmd, capture_output=True, text=True)
-    if result.returncode == 0:
-        print(f"  Output: {OUTPUT_DIR / 'demo.mp4'}")
+    if not shutil.which("ffmpeg"):
+        print("  FFmpeg not found - skipping video encoding")
+        print(f"  Frames available at: {frames_dir}")
+        print(f"  Audio available at: {OUTPUT_DIR / 'audio.wav'}")
+        print("\n  To encode manually (install FFmpeg):")
+        print(f"    ffmpeg -framerate {FPS} -i {frames_dir}/frame_%05d.png")
+        print(f"         -i {OUTPUT_DIR / 'audio.wav'} -c:v libx264")
+        print(f"         -pix_fmt yuv420p -c:a aac -shortest")
+        print(f"         {OUTPUT_DIR / 'demo.mp4'}")
     else:
-        print(f"  FFmpeg error: {result.stderr}")
+        cmd = [
+            "ffmpeg", "-y",
+            "-framerate", str(FPS),
+            "-i", str(frames_dir / "frame_%05d.png"),
+            "-i", str(OUTPUT_DIR / "audio.wav"),
+            "-c:v", "libx264",
+            "-pix_fmt", "yuv420p",
+            "-c:a", "aac",
+            "-shortest",
+            str(OUTPUT_DIR / "demo.mp4")
+        ]
+
+        result = subprocess.run(cmd, capture_output=True, text=True)
+        if result.returncode == 0:
+            print(f"  Output: {OUTPUT_DIR / 'demo.mp4'}")
+        else:
+            print(f"  FFmpeg error: {result.stderr}")
 
     # Summary
     total_time = time.time() - render_start

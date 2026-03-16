@@ -27,9 +27,9 @@ One sequence file drives both visual and audio techniques simultaneously, showin
 |-----------|---------|-----------|-----------|------------|
 | `trail_length` | 100 | 400 | 400 | 100 |
 | `n_particles` | 30 | 80 | 80 | 30 |
-| `zoom` | 0.8 | 1.5 | 1.5 | 0.8 |
+| `brightness` | 0.5 | 1.0 | 1.0 | 0.5 |
 
-**Effect:** Trails grow longer and denser, camera pushes in close, then everything recedes.
+**Effect:** Trails grow longer and denser, brightness peaks at transition points, then everything recedes.
 
 ### Rössler Attractor (15-30s, 45-60s)
 
@@ -116,13 +116,15 @@ Or edit directly in `main.py` in the `create_sequences()` function.
 
 | Phase | Time | Bottleneck |
 |-------|------|------------|
-| Precomputation | ~10-20s | Lorenz trajectory generation |
-| Video render | ~20-40s | Frame rasterization |
-| Audio render | ~2-5s | FM synthesis |
-| FFmpeg encode | ~5s | Video compression |
-| **Total** | **~40-70s** | - |
+| Precomputation | ~0.6s | Lorenz trajectory generation |
+| Video render | ~18s | Frame rasterization |
+| Audio render | ~0.3s | FM synthesis |
+| FFmpeg encode | ~5s | Video compression (requires FFmpeg) |
+| **Total** | **~18-24s** | - |
 
 **Optimization:** If render is too slow, reduce `WIDTH`, `HEIGHT`, or `TOTAL_FRAMES` in `main.py`.
+
+**FFmpeg Note:** The script detects if FFmpeg is installed. If not, it outputs frames and audio separately with instructions for manual encoding. To get MP4 output, install FFmpeg and re-run.
 
 ---
 
