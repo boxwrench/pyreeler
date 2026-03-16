@@ -4,49 +4,48 @@ Chronological log of experiments, findings, and technique development.
 
 ---
 
-## 2026-03-16: ParameterSequence Demo Film COMPLETE ✓ MOVIE PRODUCED
+## 2026-03-16: Reaction-Diffusion Sampler Film COMPLETE ✓ MOVIE PRODUCED
 
 **Changes:**
-- Created `experiments/parameter-sequence-demo/` - full film demonstrating
-  cross-domain parameter automation
-  - 60 seconds, 4 techniques (Lorenz, Rössler, FM Bell, FM Drone)
-  - Moderate complexity: 3 parameters per technique
-  - ParameterSequence drives both visuals and audio simultaneously
-  - Narrative arc: emergence → orbit → chaos → resolution
-- Precomputation strategy for attractor trajectories (performance)
-- Frame-by-frame audio generation synchronized to parameter curves
-- Sequences exported as JSON for editing/sharing
-- FFmpeg detection with graceful fallback
-- **MOVIE ENCODED** using moviepy (FFmpeg not available, used Python alternative)
+- Created `experiments/rd-sampler-film/` - Gray-Scott pattern evolution
+  - 60 seconds, 4 pattern regimes (Coral → Fingerprint → Chaos → Coral)
+  - ParameterSequence morphs F (feed) and k (kill) rates over time
+  - Smooth transitions between radically different patterns
+  - False color rendering for chaos section (cyan/magenta)
+  - Audio: FM drone mapped to RD parameters
 
 **Performance (Actual):**
-- Precomputation: ~0.6s
-- Video render (1440 frames): ~18s
-- Audio render: ~0.3s
-- Movie encoding: ~30s
-- **Total: ~50s** (still faster than estimated!)
+- Pre-warm simulation: ~2s
+- Frame render (1440 frames @ 256×256): ~6s (!)
+- Audio render: ~0.1s
+- Movie encoding: ~15s
+- **Total: ~21s** (incredibly fast!)
 
 **Output Artifacts:**
-- ✅ `output/demo_final.mp4` - **3.8 MB, 60 seconds, 24fps** with audio
-- ✅ `output/audio.wav` - 5.5 MB, 60 seconds FM synthesis
-- ✅ `output/frames/*.png` - 1440 individual frames
+- ✅ `output/rd_sampler_final.mp4` - **1.2 MB, 60 seconds, 24fps** with audio
+- ✅ `output/audio.wav` - 5.5 MB, 60 seconds
 - ✅ `output/sequences/*.json` - 4 parameter sequence files
 
-**Result:** Demo runs successfully. **Movie produced.** 1440 frames + 60s audio
-generated from parameter sequences, encoded into final MP4. First film
-demonstrating ParameterSequence's core value - one sequence file defining a
-complete audio-visual experience.
+**Key Technical Win:**
+Gray-Scott RD at 256×256 runs at ~250 fps using SciPy convolution.
+No precomputation needed - simulation is real-time. Each frame is one
+simulation step, so the film IS the simulation playing out.
+
+**Pattern Journey:**
+- 0-15s: Coral growth (F=0.0545, k=0.062) - branching organic
+- 15-30s: Fingerprint stripes (F=0.037, k=0.060) - parallel lines
+- 30-45s: Chaos/turbulence (F=0.026, k=0.051) - false color
+- 45-60s: Return to coral (full circle)
 
 **Files added:**
-- NEW: `experiments/parameter-sequence-demo/main.py` (340 lines)
-- NEW: `experiments/parameter-sequence-demo/README.md`
-- NEW: `output/sequences/*.json` (4 parameter sequence files)
-- NEW: `output/demo_final.mp4` (3.8 MB - binary, not committed)
+- NEW: `experiments/rd-sampler-film/main.py` (300 lines)
+- NEW: `experiments/rd-sampler-film/README.md`
 
-**Note:** The MP4 is ~3.8MB. As a binary file, it's excluded from git via
-.gitignore. Run `python main.py` locally to regenerate.
+**Next:** Continue with next sampler film, or iterate on RD parameters.
 
-**Next:** Iterate on parameter curves, or move on to next technique.
+---
+
+## 2026-03-16: ParameterSequence Demo Film COMPLETE ✓ MOVIE PRODUCED
 
 ---
 
