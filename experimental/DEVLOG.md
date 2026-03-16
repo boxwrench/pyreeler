@@ -4,25 +4,31 @@ Chronological log of experiments, findings, and technique development.
 
 ---
 
-## 2026-03-16: Reaction-Diffusion Sampler Film COMPLETE ✓ MOVIE PRODUCED
+## 2026-03-16: Reaction-Diffusion Sampler Film COMPLETE ✓ MOVIE PRODUCED (v2)
 
 **Changes:**
 - Created `experiments/rd-sampler-film/` - Gray-Scott pattern evolution
-  - 60 seconds, 4 pattern regimes (Coral → Fingerprint → Chaos → Coral)
-  - ParameterSequence morphs F (feed) and k (kill) rates over time
-  - Smooth transitions between radically different patterns
-  - False color rendering for chaos section (cyan/magenta)
+  - 60 seconds, continuous parameter oscillation (no static holds)
+  - ParameterSequence morphs F (feed) and k (kill) rates every 2-5 seconds
+  - Pattern never stays still - coral phases have visible variation
+  - False color rendering at 15s and 50s for visual contrast
   - Audio: FM drone mapped to RD parameters
+
+**v2 Update:** Increased rate of change significantly
+- Parameters oscillate instead of holding (e.g., F: 0.050 ↔ 0.058 ↔ 0.052)
+- Transitions faster (2-3s instead of 5s)
+- More render mode switches (V → U → both → V → both → V)
+- Contrast pulses with the action for visual punch
 
 **Performance (Actual):**
 - Pre-warm simulation: ~2s
 - Frame render (1440 frames @ 256×256): ~6s (!)
 - Audio render: ~0.1s
 - Movie encoding: ~15s
-- **Total: ~21s** (incredibly fast!)
+- **Total: ~22s** (still blazing fast!)
 
 **Output Artifacts:**
-- ✅ `output/rd_sampler_final.mp4` - **1.2 MB, 60 seconds, 24fps** with audio
+- ✅ `output/rd_sampler_final.mp4` - **~1.2 MB, 60 seconds, 24fps** with audio
 - ✅ `output/audio.wav` - 5.5 MB, 60 seconds
 - ✅ `output/sequences/*.json` - 4 parameter sequence files
 
@@ -31,17 +37,16 @@ Gray-Scott RD at 256×256 runs at ~250 fps using SciPy convolution.
 No precomputation needed - simulation is real-time. Each frame is one
 simulation step, so the film IS the simulation playing out.
 
-**Pattern Journey:**
-- 0-15s: Coral growth (F=0.0545, k=0.062) - branching organic
-- 15-30s: Fingerprint stripes (F=0.037, k=0.060) - parallel lines
-- 30-45s: Chaos/turbulence (F=0.026, k=0.051) - false color
-- 45-60s: Return to coral (full circle)
+**Pattern Journey (v2):**
+- 0-10s: Coral variations (F oscillates 0.050 ↔ 0.058) - branching pulses
+- 10-20s: Rapid transition (through fingerprint to chaos edge)
+- 20-35s: Deep chaos (wild swings F: 0.026 ↔ 0.022 ↔ 0.028)
+- 35-50s: Return journey (descent from chaos toward coral)
+- 50-60s: Coral finale (still oscillating, never static)
 
-**Files added:**
-- NEW: `experiments/rd-sampler-film/main.py` (300 lines)
-- NEW: `experiments/rd-sampler-film/README.md`
-
-**Next:** Continue with next sampler film, or iterate on RD parameters.
+**Files:**
+- MOD: `experiments/rd-sampler-film/main.py` (parameter sequences)
+- MOD: `experiments/rd-sampler-film/README.md` (updated structure)
 
 ---
 

@@ -137,43 +137,86 @@ PATTERNS = {
 # ============================================================================
 
 def create_sequences():
-    """Create parameter curves for pattern evolution."""
+    """Create parameter curves for pattern evolution with faster changes."""
 
-    # F (feed rate) sequence
+    # F (feed rate) sequence - rapid oscillations + transitions
     f_seq = ParameterSequence()
-    f_seq.record(0, 'F', 0.0545)           # Coral
-    f_seq.record(10 * FPS, 'F', 0.0545)    # Hold coral
-    f_seq.record(15 * FPS, 'F', 0.037)     # Transition to fingerprint
-    f_seq.record(25 * FPS, 'F', 0.037)     # Hold fingerprint
-    f_seq.record(30 * FPS, 'F', 0.026)     # Transition to chaos
-    f_seq.record(42 * FPS, 'F', 0.026)     # Hold chaos
-    f_seq.record(45 * FPS, 'F', 0.0545)    # Return to coral
-    f_seq.record(60 * FPS, 'F', 0.0545)    # Hold coral
+    # 0-10s: Coral with variation
+    f_seq.record(0, 'F', 0.050)
+    f_seq.record(3 * FPS, 'F', 0.058)      # Oscillate
+    f_seq.record(6 * FPS, 'F', 0.052)
+    f_seq.record(10 * FPS, 'F', 0.055)     # Shift to high-coral
+    # 10-20s: Rapid transition through regimes
+    f_seq.record(12 * FPS, 'F', 0.045)     # Moving to fingerprint
+    f_seq.record(15 * FPS, 'F', 0.037)     # Fingerprint zone
+    f_seq.record(18 * FPS, 'F', 0.030)     # Moving toward chaos
+    # 20-35s: Chaos zone with wild swings
+    f_seq.record(20 * FPS, 'F', 0.026)     # Chaos
+    f_seq.record(24 * FPS, 'F', 0.022)     # Deeper chaos
+    f_seq.record(28 * FPS, 'F', 0.028)     # Back up
+    f_seq.record(32 * FPS, 'F', 0.024)     # Oscillate
+    f_seq.record(35 * FPS, 'F', 0.030)     # Leaving chaos
+    # 35-50s: Return journey with variation
+    f_seq.record(38 * FPS, 'F', 0.040)     # Through fingerprint
+    f_seq.record(42 * FPS, 'F', 0.048)     # Near coral
+    f_seq.record(46 * FPS, 'F', 0.053)     # Coral edge
+    f_seq.record(50 * FPS, 'F', 0.056)     # Classic coral
+    # 50-60s: Final coral oscillations (keeps changing!)
+    f_seq.record(53 * FPS, 'F', 0.052)
+    f_seq.record(56 * FPS, 'F', 0.057)
+    f_seq.record(60 * FPS, 'F', 0.0545)    # End value
 
-    # k (kill rate) sequence
+    # k (kill rate) sequence - correlated with F for pattern diversity
     k_seq = ParameterSequence()
-    k_seq.record(0, 'k', 0.062)            # Coral
-    k_seq.record(10 * FPS, 'k', 0.062)     # Hold
-    k_seq.record(15 * FPS, 'k', 0.06)      # Fingerprint
-    k_seq.record(25 * FPS, 'k', 0.06)      # Hold
-    k_seq.record(30 * FPS, 'k', 0.051)     # Chaos
-    k_seq.record(42 * FPS, 'k', 0.051)     # Hold
-    k_seq.record(45 * FPS, 'k', 0.062)     # Return to coral
-    k_seq.record(60 * FPS, 'k', 0.062)     # Hold
+    # 0-10s: Coral variations
+    k_seq.record(0, 'k', 0.060)
+    k_seq.record(3 * FPS, 'k', 0.064)
+    k_seq.record(6 * FPS, 'k', 0.061)
+    k_seq.record(10 * FPS, 'k', 0.063)
+    # 10-20s: Transitions
+    k_seq.record(12 * FPS, 'k', 0.062)
+    k_seq.record(15 * FPS, 'k', 0.060)     # Fingerprint
+    k_seq.record(18 * FPS, 'k', 0.056)     # Toward chaos
+    # 20-35s: Chaos with oscillation
+    k_seq.record(20 * FPS, 'k', 0.051)     # Chaos
+    k_seq.record(24 * FPS, 'k', 0.048)     # Deep chaos
+    k_seq.record(28 * FPS, 'k', 0.053)     # Up
+    k_seq.record(32 * FPS, 'k', 0.050)     # Down
+    k_seq.record(35 * FPS, 'k', 0.055)     # Leaving
+    # 35-50s: Return
+    k_seq.record(38 * FPS, 'k', 0.058)
+    k_seq.record(42 * FPS, 'k', 0.061)
+    k_seq.record(46 * FPS, 'k', 0.063)
+    k_seq.record(50 * FPS, 'k', 0.062)
+    # 50-60s: Final variation
+    k_seq.record(53 * FPS, 'k', 0.060)
+    k_seq.record(56 * FPS, 'k', 0.064)
+    k_seq.record(60 * FPS, 'k', 0.062)
 
-    # Contrast/brightness for visual punch
+    # Contrast/brightness - pulsing with the action
     contrast_seq = ParameterSequence()
-    contrast_seq.record(0, 'contrast', 1.2)
-    contrast_seq.record(15 * FPS, 'contrast', 1.0)
-    contrast_seq.record(30 * FPS, 'contrast', 1.5)   # Boost chaos
-    contrast_seq.record(45 * FPS, 'contrast', 1.1)
+    contrast_seq.record(0, 'contrast', 1.0)
+    contrast_seq.record(5 * FPS, 'contrast', 1.3)   # Boost
+    contrast_seq.record(10 * FPS, 'contrast', 1.0)
+    contrast_seq.record(15 * FPS, 'contrast', 1.2)
+    contrast_seq.record(20 * FPS, 'contrast', 1.5)  # Chaos boost
+    contrast_seq.record(25 * FPS, 'contrast', 1.8)  # Peak chaos
+    contrast_seq.record(30 * FPS, 'contrast', 1.4)
+    contrast_seq.record(35 * FPS, 'contrast', 1.6)
+    contrast_seq.record(40 * FPS, 'contrast', 1.2)
+    contrast_seq.record(45 * FPS, 'contrast', 1.4)
+    contrast_seq.record(50 * FPS, 'contrast', 1.1)
+    contrast_seq.record(55 * FPS, 'contrast', 1.3)
     contrast_seq.record(60 * FPS, 'contrast', 1.2)
 
-    # Rendering mode sequence
+    # Rendering mode - more transitions
     mode_seq = ParameterSequence()
-    mode_seq.record(0, 'mode', 'V')        # Standard activator view
-    mode_seq.record(30 * FPS, 'mode', 'both')  # False color for chaos
-    mode_seq.record(45 * FPS, 'mode', 'V')     # Back to standard
+    mode_seq.record(0, 'mode', 'V')        # Standard
+    mode_seq.record(15 * FPS, 'mode', 'U') # Inhibitor view (different!)
+    mode_seq.record(25 * FPS, 'mode', 'both')  # False color
+    mode_seq.record(40 * FPS, 'mode', 'V')     # Back to standard
+    mode_seq.record(50 * FPS, 'mode', 'both')  # Brief false color
+    mode_seq.record(60 * FPS, 'mode', 'V')
 
     return f_seq, k_seq, contrast_seq, mode_seq
 

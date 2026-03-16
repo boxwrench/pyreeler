@@ -8,12 +8,15 @@ A 60-second journey through different reaction-diffusion pattern regimes: coral 
 
 ## Film Structure
 
-| Time | Pattern | F (feed) | k (kill) | Visual Character |
-|------|---------|----------|----------|------------------|
-| 0-15s | **Coral** | 0.0545 | 0.062 | Branching organic growth |
-| 15-30s | **Fingerprint** | 0.037 | 0.060 | Parallel stripes/labyrinth |
-| 30-45s | **Chaos** | 0.026 | 0.051 | Turbulent, ever-changing |
-| 45-60s | **Coral (return)** | 0.0545 | 0.062 | Return to stability |
+| Time | Pattern Zone | Visual Character |
+|------|--------------|------------------|
+| 0-10s | **Coral Variations** | Oscillating F/k, branches pulse and shift |
+| 10-20s | **Rapid Transition** | Quick morph through fingerprint to chaos edge |
+| 20-35s | **Deep Chaos** | Wild parameter swings, turbulent patterns |
+| 35-50s | **Return Journey** | Chaotic descent back toward coral stability |
+| 50-60s | **Coral Finale** | Final oscillations, never static |
+
+**Key Change:** Parameters oscillate every 2-5 seconds instead of holding. The pattern never stays still - even "coral" phases have visible variation.
 
 **Total:** 60 seconds, 24fps, 256×256 simulation (512×512 output)
 
@@ -76,12 +79,12 @@ The magic: Different (F, k) values produce radically different patterns from the
 The film uses ParameterSequence to smoothly interpolate F and k between pattern regimes:
 
 ```python
-# Feed rate transitions
-F: 0.0545 → 0.037 → 0.026 → 0.0545
-    Coral    Stripe   Chaos    Coral
+# Feed rate - rapid oscillations + transitions
+F: 0.050 ↔ 0.058 ↔ 0.052 → 0.055 → 0.045 → 0.037 → 0.030
+     (oscillating coral)   →  transition → fingerprint → chaos edge
 
-# Kill rate follows
-k: 0.062 → 0.060 → 0.051 → 0.062
+# Kill rate - correlated oscillations
+k: 0.060 ↔ 0.064 ↔ 0.061 → 0.063 → 0.062 → 0.060 → 0.056
 ```
 
 This morphing creates smooth transitions where one pattern dissolves and another emerges from the same running simulation.
