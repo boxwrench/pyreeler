@@ -27,33 +27,15 @@ Chronological log of experiments, findings, and technique development.
 - Contrast swings: 1.0 → 1.8 → 0.8 (dramatic dips and peaks)
 - Opposing k swings for maximum pattern disruption
 
-**Performance (Actual):**
-- Pre-warm simulation: ~2s
-- Frame render (1440 frames @ 256×256): ~6s (!)
-- Audio render: ~0.1s
-- Movie encoding: ~15s
-- **Total: ~22s** (still blazing fast!)
+**Key Finding:** RD patterns have "inertia" - they take time to respond to parameter changes. Solution: combine parameter drift with instant post-processing (mode switches, contrast) for immediate visual feedback.
 
-**Output Artifacts:**
-- ✅ `output/rd_sampler_final.mp4` - **~1.2 MB, 60 seconds, 24fps** with audio
-- ✅ `output/audio.wav` - 5.5 MB, 60 seconds
-- ✅ `output/sequences/*.json` - 4 parameter sequence files
-
-**Key Technical Win:**
-Gray-Scott RD at 256×256 runs at ~250 fps using SciPy convolution.
-No precomputation needed - simulation is real-time. Each frame is one
-simulation step, so the film IS the simulation playing out.
-
-**Pattern Journey (v3):**
-- 0-5s: DRAMATIC coral ↔ fingerprint jumps every 2s
-- 5-10s: Continued rapid variation with mode switches
-- 10-20s: Rapid descent into chaos
-- 20-35s: Deep chaos (wild swings)
-- 35-60s: Return and finale
+**Performance:**
+- Total render: ~22s for 60s film
+- Grid: 256×256 at ~250 fps
 
 **Files:**
-- MOD: `experiments/rd-sampler-film/main.py` (parameter sequences v3)
-- MOD: `experiments/rd-sampler-film/README.md`
+- MOD: `experiments/rd-sampler-film/main.py`
+- NEW: `experiments/rd-sampler-film/NOTES.md` - production learnings
 
 ---
 
