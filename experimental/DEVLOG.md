@@ -4,7 +4,7 @@ Chronological log of experiments, findings, and technique development.
 
 ---
 
-## 2026-03-16: ParameterSequence Demo Film COMPLETE
+## 2026-03-16: ParameterSequence Demo Film COMPLETE ✓ MOVIE PRODUCED
 
 **Changes:**
 - Created `experiments/parameter-sequence-demo/` - full film demonstrating
@@ -17,23 +17,36 @@ Chronological log of experiments, findings, and technique development.
 - Frame-by-frame audio generation synchronized to parameter curves
 - Sequences exported as JSON for editing/sharing
 - FFmpeg detection with graceful fallback
+- **MOVIE ENCODED** using moviepy (FFmpeg not available, used Python alternative)
 
 **Performance (Actual):**
 - Precomputation: ~0.6s
 - Video render (1440 frames): ~18s
 - Audio render: ~0.3s
-- **Total: ~18-24s** (faster than estimated!)
+- Movie encoding: ~30s
+- **Total: ~50s** (still faster than estimated!)
 
-**Result:** Demo runs successfully. 1440 frames + 60s audio generated from
-parameter sequences. First film demonstrating ParameterSequence's core value -
-one sequence file defining a complete audio-visual experience.
+**Output Artifacts:**
+- ✅ `output/demo_final.mp4` - **3.8 MB, 60 seconds, 24fps** with audio
+- ✅ `output/audio.wav` - 5.5 MB, 60 seconds FM synthesis
+- ✅ `output/frames/*.png` - 1440 individual frames
+- ✅ `output/sequences/*.json` - 4 parameter sequence files
+
+**Result:** Demo runs successfully. **Movie produced.** 1440 frames + 60s audio
+generated from parameter sequences, encoded into final MP4. First film
+demonstrating ParameterSequence's core value - one sequence file defining a
+complete audio-visual experience.
 
 **Files added:**
 - NEW: `experiments/parameter-sequence-demo/main.py` (340 lines)
 - NEW: `experiments/parameter-sequence-demo/README.md`
 - NEW: `output/sequences/*.json` (4 parameter sequence files)
+- NEW: `output/demo_final.mp4` (3.8 MB - binary, not committed)
 
-**Next:** Install FFmpeg to encode final MP4, or iterate on parameter curves.
+**Note:** The MP4 is ~3.8MB. As a binary file, it's excluded from git via
+.gitignore. Run `python main.py` locally to regenerate.
+
+**Next:** Iterate on parameter curves, or move on to next technique.
 
 ---
 
