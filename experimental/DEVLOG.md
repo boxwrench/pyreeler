@@ -4,6 +4,32 @@ Chronological log of experiments, findings, and technique development.
 
 ---
 
+## 2026-03-16: ParameterSequence Implementation
+
+**Changes:**
+- Created `tools/parameter_sequence.py` - full working implementation
+  - `ParameterSequence` class with record/playback/interpolation
+  - JSON serialization for shareable "recipes"
+  - Utility presets: `ramp()`, `pulse()`, `hold()`
+  - Time scaling and sequence copying operations
+- Created `ROADMAP.md` - tracks decisions and future options
+  - Documents the 4 options from Pixel Sorting planning
+  - Decision log format for context preservation
+  - Future technique and infrastructure categories
+
+**Result:** Reproducible parameter automation now works across ALL
+techniques. The infrastructure investment enables version-controlled
+experiments and batch automation.
+
+**Files added:**
+- NEW: `tools/parameter_sequence.py` (260 lines, tested)
+- NEW: `ROADMAP.md` (options tracking)
+
+**Next:** Integrate ParameterSequence with existing tools (attractors,
+fm_synth) to demonstrate parameter sequencing in action.
+
+---
+
 ## 2026-03-16: Pixel Sorting Integration
 
 **Changes:**
