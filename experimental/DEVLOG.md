@@ -4,7 +4,7 @@ Chronological log of experiments, findings, and technique development.
 
 ---
 
-## 2026-03-16: Reaction-Diffusion Sampler Film COMPLETE ✓ MOVIE PRODUCED (v2)
+## 2026-03-16: Reaction-Diffusion Sampler Film COMPLETE ✓ MOVIE PRODUCED (v3)
 
 **Changes:**
 - Created `experiments/rd-sampler-film/` - Gray-Scott pattern evolution
@@ -19,6 +19,13 @@ Chronological log of experiments, findings, and technique development.
 - Transitions faster (2-3s instead of 5s)
 - More render mode switches (V → U → both → V → both → V)
 - Contrast pulses with the action for visual punch
+
+**v3 Update:** DRAMATIC early changes (feedback: not visible until 20s)
+- First 10s: BIG jumps between coral (F=0.0545) and fingerprint (F=0.040)
+- Parameters change every 2 seconds (not 3)
+- Mode switches at 4s and 8s (U view and false color)
+- Contrast swings: 1.0 → 1.8 → 0.8 (dramatic dips and peaks)
+- Opposing k swings for maximum pattern disruption
 
 **Performance (Actual):**
 - Pre-warm simulation: ~2s
@@ -37,16 +44,16 @@ Gray-Scott RD at 256×256 runs at ~250 fps using SciPy convolution.
 No precomputation needed - simulation is real-time. Each frame is one
 simulation step, so the film IS the simulation playing out.
 
-**Pattern Journey (v2):**
-- 0-10s: Coral variations (F oscillates 0.050 ↔ 0.058) - branching pulses
-- 10-20s: Rapid transition (through fingerprint to chaos edge)
-- 20-35s: Deep chaos (wild swings F: 0.026 ↔ 0.022 ↔ 0.028)
-- 35-50s: Return journey (descent from chaos toward coral)
-- 50-60s: Coral finale (still oscillating, never static)
+**Pattern Journey (v3):**
+- 0-5s: DRAMATIC coral ↔ fingerprint jumps every 2s
+- 5-10s: Continued rapid variation with mode switches
+- 10-20s: Rapid descent into chaos
+- 20-35s: Deep chaos (wild swings)
+- 35-60s: Return and finale
 
 **Files:**
-- MOD: `experiments/rd-sampler-film/main.py` (parameter sequences)
-- MOD: `experiments/rd-sampler-film/README.md` (updated structure)
+- MOD: `experiments/rd-sampler-film/main.py` (parameter sequences v3)
+- MOD: `experiments/rd-sampler-film/README.md`
 
 ---
 

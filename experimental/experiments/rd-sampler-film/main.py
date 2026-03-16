@@ -137,54 +137,62 @@ PATTERNS = {
 # ============================================================================
 
 def create_sequences():
-    """Create parameter curves for pattern evolution with faster changes."""
+    """Create parameter curves for MAXIMUM visual change throughout."""
 
-    # F (feed rate) sequence - rapid oscillations + transitions
+    # F (feed rate) sequence - DRAMATIC swings from frame 0
     f_seq = ParameterSequence()
-    # 0-10s: Coral with variation
-    f_seq.record(0, 'F', 0.050)
-    f_seq.record(3 * FPS, 'F', 0.058)      # Oscillate
-    f_seq.record(6 * FPS, 'F', 0.052)
-    f_seq.record(10 * FPS, 'F', 0.055)     # Shift to high-coral
-    # 10-20s: Rapid transition through regimes
-    f_seq.record(12 * FPS, 'F', 0.045)     # Moving to fingerprint
-    f_seq.record(15 * FPS, 'F', 0.037)     # Fingerprint zone
-    f_seq.record(18 * FPS, 'F', 0.030)     # Moving toward chaos
-    # 20-35s: Chaos zone with wild swings
+    # 0-5s: Immediate jumps between coral and fingerprint (BIG changes every 2s)
+    f_seq.record(0, 'F', 0.0545)           # Classic coral
+    f_seq.record(2 * FPS, 'F', 0.040)      # Jump to fingerprint zone (HUGE change)
+    f_seq.record(4 * FPS, 'F', 0.056)      # Back to high coral
+    f_seq.record(6 * FPS, 'F', 0.038)      # Deep fingerprint
+    f_seq.record(8 * FPS, 'F', 0.052)      # Back to coral
+    f_seq.record(10 * FPS, 'F', 0.042)     # Fingerprint again
+    # 10-15s: Rapid toward chaos
+    f_seq.record(12 * FPS, 'F', 0.034)     # Moving
+    f_seq.record(14 * FPS, 'F', 0.028)     # Near chaos
+    f_seq.record(16 * FPS, 'F', 0.024)     # Chaos
+    f_seq.record(18 * FPS, 'F', 0.030)     # Back up
     f_seq.record(20 * FPS, 'F', 0.026)     # Chaos
-    f_seq.record(24 * FPS, 'F', 0.022)     # Deeper chaos
-    f_seq.record(28 * FPS, 'F', 0.028)     # Back up
-    f_seq.record(32 * FPS, 'F', 0.024)     # Oscillate
-    f_seq.record(35 * FPS, 'F', 0.030)     # Leaving chaos
-    # 35-50s: Return journey with variation
-    f_seq.record(38 * FPS, 'F', 0.040)     # Through fingerprint
-    f_seq.record(42 * FPS, 'F', 0.048)     # Near coral
+    # 20-35s: Chaos zone with wild swings
+    f_seq.record(23 * FPS, 'F', 0.022)     # Deep chaos
+    f_seq.record(26 * FPS, 'F', 0.028)     # Back up
+    f_seq.record(29 * FPS, 'F', 0.024)     # Down
+    f_seq.record(32 * FPS, 'F', 0.030)     # Up
+    f_seq.record(35 * FPS, 'F', 0.026)     # Chaos
+    # 35-50s: Return journey
+    f_seq.record(38 * FPS, 'F', 0.034)     # Through fingerprint
+    f_seq.record(42 * FPS, 'F', 0.046)     # Near coral
     f_seq.record(46 * FPS, 'F', 0.053)     # Coral edge
     f_seq.record(50 * FPS, 'F', 0.056)     # Classic coral
-    # 50-60s: Final coral oscillations (keeps changing!)
-    f_seq.record(53 * FPS, 'F', 0.052)
+    # 50-60s: Final coral variations
+    f_seq.record(53 * FPS, 'F', 0.050)
     f_seq.record(56 * FPS, 'F', 0.057)
     f_seq.record(60 * FPS, 'F', 0.0545)    # End value
 
-    # k (kill rate) sequence - correlated with F for pattern diversity
+    # k (kill rate) sequence - OPPOSING swings for maximum disruption
     k_seq = ParameterSequence()
-    # 0-10s: Coral variations
-    k_seq.record(0, 'k', 0.060)
-    k_seq.record(3 * FPS, 'k', 0.064)
-    k_seq.record(6 * FPS, 'k', 0.061)
-    k_seq.record(10 * FPS, 'k', 0.063)
-    # 10-20s: Transitions
-    k_seq.record(12 * FPS, 'k', 0.062)
-    k_seq.record(15 * FPS, 'k', 0.060)     # Fingerprint
-    k_seq.record(18 * FPS, 'k', 0.056)     # Toward chaos
-    # 20-35s: Chaos with oscillation
+    # 0-5s: Wild swings
+    k_seq.record(0, 'k', 0.058)            # Low coral
+    k_seq.record(2 * FPS, 'k', 0.064)      # High coral
+    k_seq.record(4 * FPS, 'k', 0.060)      # Mid
+    k_seq.record(6 * FPS, 'k', 0.065)      # High
+    k_seq.record(8 * FPS, 'k', 0.061)      # Mid
+    k_seq.record(10 * FPS, 'k', 0.063)     # High
+    # 10-15s: Dropping toward chaos
+    k_seq.record(12 * FPS, 'k', 0.058)
+    k_seq.record(14 * FPS, 'k', 0.054)
+    k_seq.record(16 * FPS, 'k', 0.050)     # Chaos zone
+    k_seq.record(18 * FPS, 'k', 0.048)     # Deep chaos
     k_seq.record(20 * FPS, 'k', 0.051)     # Chaos
-    k_seq.record(24 * FPS, 'k', 0.048)     # Deep chaos
-    k_seq.record(28 * FPS, 'k', 0.053)     # Up
-    k_seq.record(32 * FPS, 'k', 0.050)     # Down
-    k_seq.record(35 * FPS, 'k', 0.055)     # Leaving
+    # 20-35s: Chaos oscillation
+    k_seq.record(23 * FPS, 'k', 0.047)     # Deep
+    k_seq.record(26 * FPS, 'k', 0.053)     # Up
+    k_seq.record(29 * FPS, 'k', 0.049)     # Down
+    k_seq.record(32 * FPS, 'k', 0.052)     # Up
+    k_seq.record(35 * FPS, 'k', 0.054)     # Leaving
     # 35-50s: Return
-    k_seq.record(38 * FPS, 'k', 0.058)
+    k_seq.record(38 * FPS, 'k', 0.059)
     k_seq.record(42 * FPS, 'k', 0.061)
     k_seq.record(46 * FPS, 'k', 0.063)
     k_seq.record(50 * FPS, 'k', 0.062)
@@ -193,26 +201,31 @@ def create_sequences():
     k_seq.record(56 * FPS, 'k', 0.064)
     k_seq.record(60 * FPS, 'k', 0.062)
 
-    # Contrast/brightness - pulsing with the action
+    # Contrast/brightness - DRAMATIC pulsing from start
     contrast_seq = ParameterSequence()
     contrast_seq.record(0, 'contrast', 1.0)
-    contrast_seq.record(5 * FPS, 'contrast', 1.3)   # Boost
-    contrast_seq.record(10 * FPS, 'contrast', 1.0)
-    contrast_seq.record(15 * FPS, 'contrast', 1.2)
-    contrast_seq.record(20 * FPS, 'contrast', 1.5)  # Chaos boost
-    contrast_seq.record(25 * FPS, 'contrast', 1.8)  # Peak chaos
-    contrast_seq.record(30 * FPS, 'contrast', 1.4)
-    contrast_seq.record(35 * FPS, 'contrast', 1.6)
+    contrast_seq.record(2 * FPS, 'contrast', 1.8)   # BIG boost early
+    contrast_seq.record(5 * FPS, 'contrast', 0.8)   # Dramatic dip
+    contrast_seq.record(8 * FPS, 'contrast', 1.6)   # Boost
+    contrast_seq.record(12 * FPS, 'contrast', 0.9)  # Dip
+    contrast_seq.record(16 * FPS, 'contrast', 1.7)  # Boost
+    contrast_seq.record(20 * FPS, 'contrast', 1.5)  # Chaos
+    contrast_seq.record(25 * FPS, 'contrast', 2.0)  # Peak chaos
+    contrast_seq.record(30 * FPS, 'contrast', 1.6)
+    contrast_seq.record(35 * FPS, 'contrast', 1.4)
     contrast_seq.record(40 * FPS, 'contrast', 1.2)
-    contrast_seq.record(45 * FPS, 'contrast', 1.4)
+    contrast_seq.record(45 * FPS, 'contrast', 1.3)
     contrast_seq.record(50 * FPS, 'contrast', 1.1)
-    contrast_seq.record(55 * FPS, 'contrast', 1.3)
+    contrast_seq.record(55 * FPS, 'contrast', 1.4)
     contrast_seq.record(60 * FPS, 'contrast', 1.2)
 
-    # Rendering mode - more transitions
+    # Rendering mode - EARLY and FREQUENT switches
     mode_seq = ParameterSequence()
     mode_seq.record(0, 'mode', 'V')        # Standard
-    mode_seq.record(15 * FPS, 'mode', 'U') # Inhibitor view (different!)
+    mode_seq.record(4 * FPS, 'mode', 'U')  # Inhibitor view (4s in!)
+    mode_seq.record(8 * FPS, 'mode', 'V')  # Back
+    mode_seq.record(12 * FPS, 'mode', 'both')  # False color
+    mode_seq.record(18 * FPS, 'mode', 'V')     # Back
     mode_seq.record(25 * FPS, 'mode', 'both')  # False color
     mode_seq.record(40 * FPS, 'mode', 'V')     # Back to standard
     mode_seq.record(50 * FPS, 'mode', 'both')  # Brief false color
