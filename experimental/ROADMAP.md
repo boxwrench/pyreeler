@@ -8,7 +8,18 @@ Tracking decisions and options as the experimental work evolves.
 
 | Date | Decision | Context | Chosen Option |
 |------|----------|---------|---------------|
+| 2026-03-16 | Demo film scope | 3 complexity levels, multiple techniques | **Option C (All 4, Moderate)** - Maximum demonstration value with manageable complexity |
 | 2026-03-16 | Pixel Sorting follow-up | 4 implementation paths available | **Option 3: ParameterSequence** - Enables reproducible experiments for ALL techniques |
+
+### 2026-03-16: Demo Film Design Decisions
+
+**Why all 4 techniques:** Cross-domain demonstration (visual + audio) shows ParameterSequence's real power better than single-domain examples.
+
+**Why moderate complexity:** 3 parameters per technique is the sweet spot - enough to show rich curves, not so many that editing becomes overwhelming.
+
+**Precomputation insight:** Attractor trajectories precompute once (~10-20s) then render with varying parameters. This pattern should be documented for future technique implementations.
+
+**Performance notes:** Total render ~40-70s for 60s film at 854×480. Acceptable for experimentation. 1080p would need ~4x time or quality reduction.
 
 ---
 

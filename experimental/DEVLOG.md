@@ -4,6 +4,33 @@ Chronological log of experiments, findings, and technique development.
 
 ---
 
+## 2026-03-16: ParameterSequence Demo Film Created
+
+**Changes:**
+- Created `experiments/parameter-sequence-demo/` - full film demonstrating
+  cross-domain parameter automation
+  - 60 seconds, 4 techniques (Lorenz, Rössler, FM Bell, FM Drone)
+  - Moderate complexity: 3 parameters per technique
+  - ParameterSequence drives both visuals and audio simultaneously
+  - Narrative arc: emergence → orbit → chaos → resolution
+- Precomputation strategy for attractor trajectories (performance)
+- Frame-by-frame audio generation synchronized to parameter curves
+- Sequences exported as JSON for editing/sharing
+
+**Performance:** ~40-70s total render time (854×480, 1440 frames)
+
+**Result:** First film demonstrating ParameterSequence's core value - one
+sequence file defining a complete audio-visual experience. Reproducible,
+editable, shareable.
+
+**Files added:**
+- NEW: `experiments/parameter-sequence-demo/main.py` (340 lines)
+- NEW: `experiments/parameter-sequence-demo/README.md`
+
+**Next:** Run the demo, validate output, potentially iterate on sequences.
+
+---
+
 ## 2026-03-16: ParameterSequence Implementation
 
 **Changes:**
