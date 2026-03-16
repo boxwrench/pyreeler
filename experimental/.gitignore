@@ -1,0 +1,51 @@
+# Rendered outputs
+*.mp4
+*.wav
+*.avi
+*.mov
+*.mkv
+*.mp3
+*.ogg
+*.flac
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Temporary/Generated frames
+ref_frame_*.jpg
+frame_*.png
+frame_*.jpg
+*.tmp
+*.temp
+
+# Jupyter
+.ipynb_checkpoints/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Keep documentation and templates
+!README.md
+!GUIDE.md
+!TEMPLATE.md
+!NOTES.md
+!VISUAL_REFERENCE.md
+!*.py
+!*.md
