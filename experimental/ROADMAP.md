@@ -8,6 +8,7 @@ Tracking decisions and options as the experimental work evolves.
 
 | Date | Decision | Context | Chosen Option |
 |------|----------|---------|---------------|
+| 2026-03-16 | Next sampler film | 5 options for next film | **Option 2: Reaction-Diffusion** - Organic pattern evolution, distinct from previous attractor/sampler |
 | 2026-03-16 | Demo film scope | 3 complexity levels, multiple techniques | **Option C (All 4, Moderate)** - Maximum demonstration value with manageable complexity |
 | 2026-03-16 | Pixel Sorting follow-up | 4 implementation paths available | **Option 3: ParameterSequence** - Enables reproducible experiments for ALL techniques |
 
