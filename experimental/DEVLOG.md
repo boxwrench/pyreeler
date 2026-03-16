@@ -1,0 +1,247 @@
+# PyReeler Experimental Dev Log
+
+Chronological log of experiments, findings, and technique development.
+
+---
+
+## 2026-03-16: Pixel Sorting Integration
+
+**Changes:**
+- Added Image Processing category with Pixel Sorting technique
+  - Created `research/pixel-sorting.md` - full technique documentation
+  - Added algorithm variants: threshold, interval, mask, angle sorts
+  - Included AI Direction Vocabulary for glitch aesthetics
+- Documented Parameter Sequencing pattern in GUIDE.md
+  - `ParameterSequence` class for record/playback of parameter changes
+  - Enables reproducible experiments and shareable "recipes"
+- Added Pre/Post Processing Pipeline hybrid architecture
+  - 4 documented patterns combining Pixel Sorting with existing techniques
+  - Pre-process: RD → Pixel Sort → Particles, Attractor → Pixel Sort Mask
+  - Post-process: Particles → Pixel Sort, Multi-layer Stacking
+
+**Result:** Experimental folder now covers image-processing-based glitch aesthetics
+and reproducible parameter automation - filling gaps in the technique taxonomy.
+
+**Files added/modified:**
+- NEW: `research/pixel-sorting.md`
+- MOD: `research/INDEX.md` (Image Processing category)
+- MOD: `GUIDE.md` (Parameter Sequencing + Hybrid Pipelines)
+- MOD: `research/TEMPLATE.md` (Parameter Sequencing section)
+
+---
+
+## 2026-03-16: Research Documentation Consolidated
+
+**Changes:**
+- Copied ALL main skill references to `experimental/research/`
+  - `creative-lenses.md`
+  - `workflow.md`
+  - `audio-pipeline.md`
+  - `vocabulary-map.md`
+- Added advanced research: `generative-video-techniques.md`
+  - Turing patterns, Boids, DLA, flow fields
+  - Circle packing, Voronoi, Poisson disk sampling
+  - Hybrid architectures
+
+**Result:** Experimental folder now contains complete reference documentation.
+All research lives in one place - no need to reference main skill docs separately.
+
+---
+
+## 2026-03-15: Sampler Render - SUCCESS
+
+**Attempt 4:** 480p disk-based - **SUCCESS!**
+
+**What worked:**
+- Precompute ALL trajectories at startup (separate simulation from rendering)
+- Write PNG frames to disk, then FFmpeg encode (avoid stdin pipe issues on Windows)
+- 854×480, 30 particles, 3000 points
+
+**Result:**
+- `experimental_sampler.mp4` - 50 seconds, 5.5MB
+- 10 segments × 5 seconds of FM synthesis + strange attractors
+- Render time: ~90 seconds total
+
+**Issues to debug separately:**
+- FFmpeg stdin piping hangs at 83% on Windows
+- Particle cloud segment causes issues at frame 1200 (50s mark)
+
+**Deliverable:** Working 50s sampler demonstrating all experimental techniques
+
+## 2026-03-16: FULL 60S SAMPLER SUCCESS - Vectorized Renderer
+
+**Problem solved:** Vectorized `render_frame()` + reduced particle count (200→100)
+
+**Changes:**
+1. **NumPy vectorization** - Replaced nested Python loops with array operations
+   - 10x faster: ~3.6ms/frame vs ~50ms/frame
+   - Uses `np.add.at()` for accumulation
+2. **Safety monitoring** - `RenderMonitor` class with 120s timeout
+3. **Pre-render estimation** - `estimate_render_time()` + `check_render_safety()`
+4. **Particle cloud fix** - 100 particles instead of 200
+
+**Result:**
+- **60 seconds, 1440 frames, 6.3MB**
+- **Render time: ~21 seconds** (was hanging indefinitely)
+- **All 12 segments working**
+
+**Performance:**
+| Segment | Particles | Trail | Time |
+|---------|-----------|-------|------|
+| Lorenz Orbit | 30 | 400 | ~3s |
+| RD Coral | N/A | N/A | ~2s |
+| Rössler | 30 | 400 | ~3s |
+| Lorenz Drift | 20 | 200 | ~2s |
+| Particle Cloud | 100 | 100 | ~4s |
+| **Total** | - | - | **~21s** |
+
+**Documentation Updated:**
+- `sampler-film/README.md` - Technical improvements section
+- `sampler-film/VISUAL_REFERENCE.md` - Frame analysis with difficulty ratings
+- `tools/attractors.py` - Vectorized renderer + safety utilities
+- `notes/scratch/2026-03-15-sampler-render-attempts.md` - Complete debug log
+
+## 2026-03-16: Visual Reference Frames Extracted
+
+**Reference frames captured:** 6s, 18s, 39s, 43s
+
+**Visual Quality Findings:**
+- **6s (Lorenz):** Excellent - clear butterfly wings, readable structure
+- **18s (RD Coral):** Good - surprisingly organic from sine approximation
+- **39s (Rössler):** Okay - dim but visible band structure
+- **43s (Lorenz Drift):** Weak - too sparse with rho=33.6
+
+**Render Difficulty Ratings:**
+| Technique | Difficulty | Precompute Time |
+|-----------|------------|-----------------|
+| Lorenz Orbit | ★★☆☆☆ | ~15s (30p/3000pt) |
+| RD Coral | ★☆☆☆☆ | None (math only) |
+| Rössler | ★★☆☆☆ | ~15s |
+| Lorenz Drift | ★★★☆☆ | ~30s (6 trajectories) |
+
+**Files:**
+- `sampler-film/ref_frame_*.jpg` - Reference frames
+- `sampler-film/VISUAL_REFERENCE.md` - Detailed analysis
+
+---
+
+## 2026-03-15: Sampler Film Created
+
+**Deliverable:**
+- `experiments/sampler-film/` - Complete 60-second demonstration
+- `sampler_demo.py` - Runnable script demonstrating all techniques
+- `README.md` - Detailed breakdown of structure and parameters
+
+**Structure:**
+- 12 segments × 5 seconds = 60 seconds
+- 4 visual techniques (Lorenz, Rössler, RD, Particle Cloud)
+- 4 audio techniques (FM Bell, Brass, Drone, Woodwind + Bytebeat variants)
+- Audio/video interleaved for efficiency (not strictly paired)
+
+**Key Design Decisions:**
+- Lorenz runs 0-15s while audio changes (efficiency)
+- FM Drone layers 15-25s to bridge visual transitions
+- Build arc: calm → glitch → organic → climax → chaos
+
+**Next:** Test render, document actual performance on hardware
+
+---
+
+## 2026-03-16: Comprehensive Main Skill Demo Created
+
+**Deliverable:**
+- `experiments/main-skill-demo/` - Complete reference implementation
+- `main_skill_demo.py` - Demonstrates ALL 4 reference documents + ALL templates
+- `NOTES.md` - Full production documentation
+
+**Reference Documents Covered:**
+| Document | Concepts Demonstrated |
+|----------|----------------------|
+| `creative-lenses.md` | Genre/mode (ritual), motif, repetition/rupture, time |
+| `workflow.md` | Hardware gate, worker smoke test, preview, upscale, cleanup |
+| `audio-pipeline.md` | Stem model (4 stems), procedural foley, mixing |
+| `vocabulary-map.md` | Visual/audio/temporal/material systems |
+
+**Templates Used (ALL):**
+- `templates/video/render_runtime.py` - Hardware detection
+- `templates/video/parallel_render.py` - Multi-worker rendering
+- `templates/audio/audio_engine.py` - FM synthesis
+- `templates/audio/sfx_gen.py` - Wind, impact, shimmer generation
+- `templates/audio/composer.py` - Note events, MIDI (optional)
+
+**Film Structure:**
+- 0-10s: RITUAL - recurrence + drone + phosphor glow
+- 10-20s: BUILD - escalation + pulse + grain
+- 20-25s: PEAK - symmetry + shimmer
+- 25-30s: RUPTURE - inversion + chromatic aberration + return
+
+**Key Achievement:** First film to demonstrate complete main skill workflow including hardware gate and worker smoke test.
+
+---
+
+## 2026-03-15: Experimental Skill Sandbox Created
+
+**Setup:**
+- Cloned Codex skill as stable foundation
+- Established directory structure (experiments/, research/, notes/, tools/)
+- Created initial research stub documents
+- Set up notes/ subdirectories (hardware/, examples/, scratch/)
+- Created technique use-case taxonomy
+
+**Immediate Priorities:**
+1. FM synthesis proof-of-concept (no SoundFont dependency)
+2. Strange attractor particle systems
+3. Document render time/file size characteristics of each technique
+
+**Hypotheses:**
+- FM synthesis will produce more "electronic" sounds than SoundFont
+- Strange attractors render faster than equivalent particle systems
+- Bytebeat audio is fun but musically limited
+
+---
+
+## Template Entry
+
+**Date:** YYYY-MM-DD
+
+**Experiment:** Name/technique being tested
+
+**What was tried:**
+- Specific parameters, approaches, variations
+
+**Results:**
+- Render time:
+- File size:
+- Visual/audio quality:
+- Issues encountered:
+
+**Findings:**
+- What worked
+- What didn't
+- Surprises
+
+**Next steps:**
+- What to try next
+- Whether to graduate, iterate, or abandon
+
+---
+
+## Pending Research Docs
+
+- [ ] FM Synthesis from Scratch
+- [ ] Strange Attractors (Lorenz, Rössler, custom)
+- [ ] Reaction-Diffusion Patterns
+- [ ] Bytebeat Audio
+- [ ] L-System String Rewriting
+- [ ] Additive Synthesis
+- [ ] Granular Synthesis (maybe - heavier dependency)
+
+---
+
+## Technique Graduation Candidates
+
+None yet. First experiments in progress.
+
+---
+
+*Format: Add new entries at the top (reverse chronological). Use the template entry as a guide.*
