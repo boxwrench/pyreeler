@@ -4,7 +4,7 @@ Chronological log of experiments, findings, and technique development.
 
 ---
 
-## 2026-03-16: ParameterSequence Demo Film Created
+## 2026-03-16: ParameterSequence Demo Film COMPLETE
 
 **Changes:**
 - Created `experiments/parameter-sequence-demo/` - full film demonstrating
@@ -16,18 +16,28 @@ Chronological log of experiments, findings, and technique development.
 - Precomputation strategy for attractor trajectories (performance)
 - Frame-by-frame audio generation synchronized to parameter curves
 - Sequences exported as JSON for editing/sharing
+- FFmpeg detection with graceful fallback
 
-**Performance:** ~40-70s total render time (854×480, 1440 frames)
+**Performance (Actual):**
+- Precomputation: ~0.6s
+- Video render (1440 frames): ~18s
+- Audio render: ~0.3s
+- **Total: ~18-24s** (faster than estimated!)
 
-**Result:** First film demonstrating ParameterSequence's core value - one
-sequence file defining a complete audio-visual experience. Reproducible,
-editable, shareable.
+**Result:** Demo runs successfully. 1440 frames + 60s audio generated from
+parameter sequences. First film demonstrating ParameterSequence's core value -
+one sequence file defining a complete audio-visual experience.
 
 **Files added:**
 - NEW: `experiments/parameter-sequence-demo/main.py` (340 lines)
 - NEW: `experiments/parameter-sequence-demo/README.md`
+- NEW: `output/sequences/*.json` (4 parameter sequence files)
 
-**Next:** Run the demo, validate output, potentially iterate on sequences.
+**Next:** Install FFmpeg to encode final MP4, or iterate on parameter curves.
+
+---
+
+## 2026-03-16: ParameterSequence Demo Film Created
 
 ---
 
