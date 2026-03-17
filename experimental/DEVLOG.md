@@ -4,6 +4,46 @@ Chronological log of experiments, findings, and technique development.
 
 ---
 
+## 2026-03-16: Pixel Sort Sampler Film COMPLETE ✓ MOVIE PRODUCED
+
+**Changes:**
+- Created `tools/pixel_sorting.py` - core pixel sorting implementation
+  - Threshold sort (brightness-based)
+  - Interval sort (row spacing)
+  - Masked sort (selective application)
+  - Angle support (horizontal/vertical)
+- Created `experiments/pixel-sort-sampler/` - glitch aesthetic film
+  - 60 seconds, 4 segments with different sorting variants
+  - ParameterSequence drives threshold, interval, angle parameters
+  - Generates source images with animated gradients and shapes
+  - Audio: glitchy FM synthesis mapped to sorting intensity
+
+**Film Structure:**
+- 0-15s: Threshold intensification (more sorting over time)
+- 15-30s: Interval/rhythm patterns (every Nth row)
+- 30-45s: Masked/glitch bursts (selective sorting)
+- 45-60s: Angle morphing (vertical ↔ horizontal)
+
+**Technical Notes:**
+- Pixel sorting is slower than RD (~5-10 fps vs ~250 fps)
+- Horizontal sorting (angle=0) had dimension issues - fixed with resize
+- Source image generation is key - needs high contrast for visible sorting
+
+**Performance:**
+- Frame render: ~2-3 minutes for 1440 frames
+- Audio render: ~2s
+- Total: ~3-4 minutes
+
+**Output:**
+- ✅ `output/pixel_sort_final.mp4` - **9.9 MB, 60 seconds**
+
+**Files:**
+- NEW: `tools/pixel_sorting.py`
+- NEW: `experiments/pixel-sort-sampler/main.py`
+- NEW: `experiments/pixel-sort-sampler/` (film directory)
+
+---
+
 ## 2026-03-16: Reaction-Diffusion Sampler Film COMPLETE ✓ MOVIE PRODUCED (v3)
 
 **Changes:**
