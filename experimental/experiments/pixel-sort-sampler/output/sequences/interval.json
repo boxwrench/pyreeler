@@ -1,0 +1,37 @@
+[
+  [
+    0,
+    "interval",
+    0
+  ],
+  [
+    360,
+    "interval",
+    0
+  ],
+  [
+    384,
+    "interval",
+    20
+  ],
+  [
+    480,
+    "interval",
+    10
+  ],
+  [
+    600,
+    "interval",
+    5
+  ],
+  [
+    720,
+    "interval",
+    0
+  ],
+  [
+    1440,
+    "interval",
+    0
+  ]
+]
