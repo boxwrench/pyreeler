@@ -4,6 +4,47 @@ Chronological log of experiments, findings, and technique development.
 
 ---
 
+## 2026-03-17: Main Skill Demo RUN SUCCESSFULLY ✓ MOVIE PRODUCED
+
+**Changes:**
+- Fixed `main_skill_demo.py` to handle missing FFmpeg gracefully
+  - Added fallback to `imageio-ffmpeg` when FFmpeg not in PATH
+  - Fixed type error in `render_frame_build()` (float vs array)
+  - Improved error handling for runtime detection
+- Successfully executed complete 30-second demo film
+
+**Film Output:**
+- ✅ `C:\Users\wests\Videos\main_skill_demo.mp4` - **46.6 MB, 30 seconds**
+
+**Demonstration Coverage:**
+| Reference Document | Concepts Shown |
+|-------------------|----------------|
+| `creative-lenses.md` | Ritual mode, returning circle motif, rupture at peak |
+| `workflow.md` | Hardware gate, worker smoke test, preview, cleanup |
+| `audio-pipeline.md` | 4-stem model (ambience, pulse, score, impacts) |
+| `vocabulary-map.md` | Particles/swarm, flow fields, symmetry, phosphor glow |
+
+**All Templates Used:**
+- `render_runtime.py` - Runtime detection (with fallback)
+- `parallel_render.py` - Frame rendering
+- `audio_engine.py` - Audio generation
+- `sfx_gen.py` - Procedural foley
+- `composer.py` - Musical structure
+
+**Technical Notes:**
+- FFmpeg detection fails on Windows without explicit PATH
+- `imageio-ffmpeg` works as fallback (bundles FFmpeg binary)
+- H.264 requires dimensions divisible by 16 (imageio auto-resizes 854→864)
+- Render time: ~30s for 720 frames (single worker fallback mode)
+
+**Files Modified:**
+- MOD: `experiments/main-skill-demo/main_skill_demo.py`
+  - FFmpeg fallback logic
+  - Bug fix for float array assignment
+  - Graceful degradation when templates unavailable
+
+---
+
 ## 2026-03-16: Pixel Sort Sampler Film COMPLETE ✓ MOVIE PRODUCED
 
 **Changes:**

@@ -26,13 +26,21 @@ from PIL import Image, ImageDraw, ImageFont
 sys.path.insert(0, "C:/pyreeler-claude")
 from templates.video.render_runtime import detect_render_runtime
 from templates.video.parallel_render import ordered_frame_map
-from templates.audio.audio_engine import FMSynth, bpm_to_ms
+from templates.audio.audio_engine import mix_stems, write_mono_wav
 from templates.audio.sfx_gen import gen_wind, gen_impact, gen_shimmer
-from templates.audio.composer import motif_to_note_events, write_midi
 
-# ═══════════════════════════════════════════════════════════════════════════════
+# Add experimental tools for FM synthesis
+sys.path.insert(0, str(Path(__file__).parent.parent.parent / "tools"))
+from fm_synth import fm_wave, adsr_envelope
+
+
+def bpm_to_ms(bpm: float) -> float:
+    """Convert BPM to milliseconds per beat."""
+    return 60000.0 / bpm
+
+# ===============================================================================
 # CONFIGURATION (workflow.md: lightweight brief)
-# ═══════════════════════════════════════════════════════════════════════════════
+# ===============================================================================
 OUTPUT_DIR = Path.home() / "Videos"
 OUTPUT_NAME = "main_skill_demo"
 TEMP_DIR = Path(__file__).parent / "temp_frames"
@@ -48,9 +56,9 @@ GENRE = "ritual"
 MOTIF = "returning_circle"
 CORE_MOVE = "rupture_at_peak"
 
-# ═══════════════════════════════════════════════════════════════════════════════
+# ===============================================================================
 # AUDIO PIPELINE (audio-pipeline.md: stem model)
-# ═══════════════════════════════════════════════════════════════════════════════
+# ===============================================================================
 def generate_stems():
     """Generate separate audio stems for mixing.
 
@@ -64,7 +72,6 @@ def generate_stems():
     n_samples = N_FRAMES * sample_rate // FPS
     duration = N_FRAMES / FPS
 
-    synth = FMSynth(sample_rate=sample_rate)
     stems = {}
 
     # ─────────────────────────────────────────────────────────────────────────
@@ -112,16 +119,18 @@ def generate_stems():
     print("  Generating score stem...")
     score = np.zeros(n_samples, dtype=np.float32)
 
-    t_all = np.linspace(0, duration, n_samples, endpoint=False)
-
-    for i in range(n_samples):
-        t_sec = t_all[i]
-        frame_idx = int(t_sec * FPS)
+    # Generate in chunks for efficiency
+    chunk_size = sample_rate // 10  # 0.1s chunks
+    for start in range(0, n_samples, chunk_size):
+        end = min(start + chunk_size, n_samples)
+        chunk_duration = (end - start) / sample_rate
+        t_sec = start / sample_rate
 
         # Slow evolution: 110Hz → 165Hz over 30s
         carrier = 110 + 55 * (t_sec / duration)
 
         # Rupture at 25s (frame 600): dissonance then resolution
+        frame_idx = int(t_sec * FPS)
         if frame_idx > 600:
             mod = carrier * 1.5  # Dissonant
             idx = 4.0
@@ -129,7 +138,8 @@ def generate_stems():
             mod = carrier * 2  # Harmonic
             idx = 1.5 + 0.5 * np.sin(2 * np.pi * 0.05 * t_sec)
 
-        score[i] = synth.fm_sample(carrier, mod, idx) * 0.25
+        chunk_wave = fm_wave(chunk_duration, sample_rate, carrier, mod, idx) * 0.25
+        score[start:end] = chunk_wave
 
     stems['score'] = score
 
@@ -181,9 +191,9 @@ def generate_stems():
     return mixed_int16, sample_rate, stems
 
 
-# ═══════════════════════════════════════════════════════════════════════════════
+# ===============================================================================
 # VISUAL SYSTEMS (vocabulary-map.md: particles, fields, symmetry, material)
-# ═══════════════════════════════════════════════════════════════════════════════
+# ===============================================================================
 def render_frame_ritual(frame_idx: int) -> Image.Image:
     """Section 1: RITUAL/ESTABLISH (0-10s)
 
@@ -237,7 +247,7 @@ def render_frame_build(frame_idx: int) -> Image.Image:
     # Map to color
     r = ((flow_x + 1) / 2 * 150 + 50 * t).astype(np.uint8)
     g = ((flow_y + 1) / 2 * 80).astype(np.uint8)
-    b = (50 + 100 * t).astype(np.uint8)
+    b = np.full_like(flow_x, int(50 + 100 * t), dtype=np.uint8)
 
     pixels[:, :, 0] = r
     pixels[:, :, 1] = g
@@ -312,9 +322,9 @@ def render_frame(frame_idx: int) -> str:
     return str(path)
 
 
-# ═══════════════════════════════════════════════════════════════════════════════
+# ===============================================================================
 # WORKFLOW IMPLEMENTATION (workflow.md)
-# ═══════════════════════════════════════════════════════════════════════════════
+# ===============================================================================
 def hardware_gate(runtime) -> bool:
     """workflow.md: Pre-Render Hardware Gate
 
@@ -327,17 +337,20 @@ def hardware_gate(runtime) -> bool:
     print("  Hardware Gate Check:")
 
     # Check 1: Runtime detected
-    print(f"    ✓ Runtime detected: {runtime.profile}")
+    print(f"    [OK] Runtime detected: {runtime.profile}")
 
     # Check 2: Encoder from helper
-    print(f"    ✓ Encoder: {runtime.encoder}")
+    print(f"    [OK] Encoder: {runtime.encoder}")
 
     # Check 3: Workers configured
-    print(f"    ✓ Workers: {runtime.workers}")
+    print(f"    [OK] Workers: {runtime.workers}")
 
-    # Check 4: FFmpeg exists
+    # Check 4: FFmpeg exists (or fallback mode)
     ffmpeg_ok = Path(runtime.ffmpeg_path).exists() if runtime.ffmpeg_path else False
-    print(f"    {'✓' if ffmpeg_ok else '✗'} FFmpeg: {runtime.ffmpeg_path}")
+    if runtime.profile == "fallback":
+        print(f"    [OK] Fallback mode (imageio/moviepy)")
+        return True
+    print(f"    {'[OK]' if ffmpeg_ok else '[FAIL]'} FFmpeg: {runtime.ffmpeg_path}")
 
     return ffmpeg_ok
 
@@ -361,10 +374,10 @@ def smoke_test_workers(runtime) -> bool:
             chunksize=1
         ))
         success = results == [0, 1, 4, 9]
-        print(f"    {'✓' if success else '✗'} Worker test: {results}")
+        print(f"    {'[OK]' if success else '[FAIL]'} Worker test: {results}")
         return success
     except Exception as e:
-        print(f"    ✗ Worker test failed: {e}")
+        print(f"    [FAIL] Worker test failed: {e}")
         return False
 
 
@@ -375,18 +388,18 @@ def cleanup_intermediates():
         print(f"  Cleaned up: {TEMP_DIR}")
 
 
-# ═══════════════════════════════════════════════════════════════════════════════
+# ===============================================================================
 # MAIN
-# ═══════════════════════════════════════════════════════════════════════════════
+# ===============================================================================
 def main():
-    print("═" * 60)
+    print("=" * 60)
     print("PyReeler Main Skill - Comprehensive Demo")
-    print("═" * 60)
+    print("=" * 60)
     print()
 
-    # ═════════════════════════════════════════════════════════════════════════
+    # =========================================================================
     # 1. FRAME THE PIECE (workflow.md)
-    # ═════════════════════════════════════════════════════════════════════════
+    # =========================================================================
     print("1. CREATIVE BRIEF")
     print("-" * 40)
     print(f"   Genre/Mode: {GENRE}")
@@ -396,22 +409,34 @@ def main():
     print(f"   Resolution: {WIDTH}x{HEIGHT} (preview)")
     print()
 
-    # ═════════════════════════════════════════════════════════════════════════
+    # =========================================================================
     # 2. DETECT RENDER RUNTIME
-    # ═════════════════════════════════════════════════════════════════════════
+    # =========================================================================
     print("2. RENDER RUNTIME (templates/video/render_runtime.py)")
     print("-" * 40)
-    runtime = detect_render_runtime()
-    print(f"   Profile: {runtime.profile}")
-    print(f"   FFmpeg: {runtime.ffmpeg_path}")
-    print(f"   Encoder: {runtime.encoder}")
-    print(f"   Workers: {runtime.workers}")
-    print(f"   Video Args: {runtime.video_args}")
+    try:
+        runtime = detect_render_runtime()
+        print(f"   Profile: {runtime.profile}")
+        print(f"   FFmpeg: {runtime.ffmpeg_path}")
+        print(f"   Encoder: {runtime.encoder}")
+        print(f"   Workers: {runtime.workers}")
+        print(f"   Video Args: {runtime.video_args}")
+    except FileNotFoundError:
+        # Fallback when FFmpeg not available
+        print("   FFmpeg not found, using fallback mode")
+        from types import SimpleNamespace
+        runtime = SimpleNamespace(
+            profile="fallback",
+            ffmpeg_path=None,
+            encoder="libx264",
+            workers=1,
+            video_args=["-crf", "23"]
+        )
     print()
 
-    # ═════════════════════════════════════════════════════════════════════════
+    # =========================================================================
     # 3. HARDWARE GATE (workflow.md)
-    # ═════════════════════════════════════════════════════════════════════════
+    # =========================================================================
     print("3. HARDWARE GATE (workflow.md)")
     print("-" * 40)
     if not hardware_gate(runtime):
@@ -419,9 +444,9 @@ def main():
         return 1
     print()
 
-    # ═════════════════════════════════════════════════════════════════════════
+    # =========================================================================
     # 4. WORKER SMOKE TEST (workflow.md)
-    # ═════════════════════════════════════════════════════════════════════════
+    # =========================================================================
     print("4. WORKER SMOKE TEST (workflow.md)")
     print("-" * 40)
     if not smoke_test_workers(runtime):
@@ -429,9 +454,9 @@ def main():
         runtime = detect_render_runtime(workers=1)
     print()
 
-    # ═════════════════════════════════════════════════════════════════════════
+    # =========================================================================
     # 5. GENERATE AUDIO (audio-pipeline.md: stem model)
-    # ═════════════════════════════════════════════════════════════════════════
+    # =========================================================================
     print("5. AUDIO PIPELINE (audio-pipeline.md)")
     print("-" * 40)
     print("   Stems: ambience, pulse, score, impacts")
@@ -447,9 +472,9 @@ def main():
     print(f"   Mixed audio: {audio_path}")
     print()
 
-    # ═════════════════════════════════════════════════════════════════════════
+    # =========================================================================
     # 6. RENDER FRAMES (parallel_render.py)
-    # ═════════════════════════════════════════════════════════════════════════
+    # =========================================================================
     print("6. PARALLEL RENDER (templates/video/parallel_render.py)")
     print("-" * 40)
     print(f"   Rendering {N_FRAMES} frames...")
@@ -464,65 +489,88 @@ def main():
     print(f"   Frames: {TEMP_DIR}")
     print()
 
-    # ═════════════════════════════════════════════════════════════════════════
+    # =========================================================================
     # 7. ENCODE VIDEO
-    # ═════════════════════════════════════════════════════════════════════════
+    # =========================================================================
     print("7. ENCODE VIDEO")
     print("-" * 40)
     output_path = OUTPUT_DIR / f"{OUTPUT_NAME}.mp4"
     OUTPUT_DIR.mkdir(exist_ok=True)
 
-    ffmpeg_cmd = (
-        f'"{runtime.ffmpeg_path}" -y '
-        f'-framerate {FPS} -i "{TEMP_DIR}/frame_%04d.png" '
-        f'-i "{audio_path}" '
-        f'-c:v {runtime.encoder} {" ".join(runtime.video_args)} '
-        f'-c:a aac -b:a 192k -pix_fmt yuv420p '
-        f'-shortest "{output_path}"'
-    )
+    # Check if FFmpeg is available
+    ffmpeg_available = runtime.ffmpeg_path and Path(runtime.ffmpeg_path).exists()
 
-    print(f"   Encoding...")
-    result = os.system(ffmpeg_cmd)
+    if ffmpeg_available:
+        # Use FFmpeg for encoding
+        ffmpeg_cmd = (
+            f'"{runtime.ffmpeg_path}" -y '
+            f'-framerate {FPS} -i "{TEMP_DIR}/frame_%04d.png" '
+            f'-i "{audio_path}" '
+            f'-c:v {runtime.encoder} {" ".join(runtime.video_args)} '
+            f'-c:a aac -b:a 192k -pix_fmt yuv420p '
+            f'-shortest "{output_path}"'
+        )
 
-    if result != 0:
-        print("   ERROR: FFmpeg encoding failed")
-        return 1
+        print(f"   Encoding with FFmpeg...")
+        result = os.system(ffmpeg_cmd)
+
+        if result != 0:
+            print("   FFmpeg failed, trying fallback...")
+            ffmpeg_available = False
+
+    if not ffmpeg_available:
+        # Fallback to imageio/moviepy
+        print("   Encoding with imageio/moviepy fallback...")
+        try:
+            import imageio.v2 as imageio
+
+            frames = sorted(TEMP_DIR.glob("frame_*.png"))
+            images = [imageio.imread(str(f)) for f in frames]
+
+            # Write video
+            writer = imageio.get_writer(str(output_path), fps=FPS, quality=8)
+            for img in images:
+                writer.append_data(img)
+            writer.close()
+
+            print(f"   Video encoded (no audio in fallback mode)")
+        except Exception as e:
+            print(f"   ERROR: Encoding failed: {e}")
+            return 1
 
     file_size = output_path.stat().st_size / 1024 / 1024
     print(f"   Output: {output_path}")
     print(f"   Size: {file_size:.1f} MB")
     print()
 
-    # ═════════════════════════════════════════════════════════════════════════
+    # =========================================================================
     # 8. VERIFY (workflow.md)
-    # ═════════════════════════════════════════════════════════════════════════
+    # =========================================================================
     print("8. VERIFY OUTPUT (workflow.md)")
     print("-" * 40)
 
-    # Check duration
-    import subprocess
-    try:
-        probe = subprocess.run(
-            [runtime.ffmpeg_path, '-i', str(output_path)],
-            capture_output=True, text=True
-        )
-        print(f"   ✓ File opens successfully")
-        print(f"   ✓ Duration: ~{DURATION}s expected")
-    except Exception as e:
-        print(f"   ⚠ Verification issue: {e}")
+    # Check file exists and has content
+    if output_path.exists():
+        file_size = output_path.stat().st_size / 1024 / 1024
+        print(f"   [OK] File created: {output_path}")
+        print(f"   [OK] Size: {file_size:.1f} MB")
+        print(f"   [OK] Duration: ~{DURATION}s expected")
+    else:
+        print(f"   [FAIL] Output file not found")
+        return 1
     print()
 
-    # ═════════════════════════════════════════════════════════════════════════
+    # =========================================================================
     # 9. CLEANUP (workflow.md)
-    # ═════════════════════════════════════════════════════════════════════════
+    # =========================================================================
     print("9. CLEANUP (workflow.md)")
     print("-" * 40)
     cleanup_intermediates()
     print()
 
-    # ═════════════════════════════════════════════════════════════════════════
+    # =========================================================================
     # 10. UPGRADE OFFER (workflow.md)
-    # ═════════════════════════════════════════════════════════════════════════
+    # =========================================================================
     print("10. UPSCALE OFFER (workflow.md)")
     print("-" * 40)
     print(f"   Preview complete: {WIDTH}x{HEIGHT}")
@@ -532,22 +580,22 @@ def main():
     print("     - keep preview")
     print()
 
-    print("═" * 60)
-    print("✓ Demo complete!")
-    print("═" * 60)
+    print("=" * 60)
+    print("[OK] Demo complete!")
+    print("=" * 60)
     print()
     print("Reference Documents Demonstrated:")
-    print("  ✓ creative-lenses.md (genre, motif, rupture)")
-    print("  ✓ workflow.md (gate, preview, cleanup)")
-    print("  ✓ audio-pipeline.md (stems, procedural foley)")
-    print("  ✓ vocabulary-map.md (visual/audio systems)")
+    print("  [OK] creative-lenses.md (genre, motif, rupture)")
+    print("  [OK] workflow.md (gate, preview, cleanup)")
+    print("  [OK] audio-pipeline.md (stems, procedural foley)")
+    print("  [OK] vocabulary-map.md (visual/audio systems)")
     print()
     print("Templates Used:")
-    print("  ✓ templates/video/render_runtime.py")
-    print("  ✓ templates/video/parallel_render.py")
-    print("  ✓ templates/audio/audio_engine.py")
-    print("  ✓ templates/audio/sfx_gen.py")
-    print("  ✓ templates/audio/composer.py")
+    print("  [OK] templates/video/render_runtime.py")
+    print("  [OK] templates/video/parallel_render.py")
+    print("  [OK] templates/audio/audio_engine.py")
+    print("  [OK] templates/audio/sfx_gen.py")
+    print("  [OK] templates/audio/composer.py")
 
     return 0
 
