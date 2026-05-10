@@ -20,7 +20,7 @@ def test_arc_state_at_t0_is_void():
 def test_arc_state_act2_peak():
     s = cc.arc_state(15.0)
     assert s["cube_alpha"] == 1.0
-    assert 0.4 <= s["lens_K"] <= 0.6
+    assert abs(s["lens_K"] - 0.275) < 0.01
     assert s["particle_density"] == 1.0
     assert s["infall"] == 0.0
     assert s["text_alpha"] == 1.0
@@ -41,3 +41,10 @@ def test_arc_state_text_fade_window():
     assert s_before["text_alpha"] == 1.0
     assert 0.3 < s_mid["text_alpha"] < 0.7
     assert s_after["text_alpha"] == 0.0
+
+
+def test_arc_state_lens_K_monotonic_in_act2():
+    t_values = [8.5, 12, 16, 20, 21.5]
+    lens_K_values = [cc.arc_state(t)["lens_K"] for t in t_values]
+    for i in range(len(lens_K_values) - 1):
+        assert lens_K_values[i + 1] > lens_K_values[i]

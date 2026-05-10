@@ -58,15 +58,13 @@ def arc_state(t: float) -> dict:
     # Cube: invisible until t=4, fully visible by t=8
     cube_alpha = smoothstep(4.0, 8.0, t)
 
-    # Lens K: 0 in act 1, ramps to ~0.5 by t=16, holds, then spikes to ~0.95 by t=29
+    # Lens K: 0 in act 1, ramps to ~0.55 by t=22, then spikes to ~0.95 by t=29
     if t < 8.0:
         lens_K = 0.0
-    elif t < 16.0:
-        lens_K = 0.5 * smoothstep(8.0, 16.0, t)
     elif t < 22.0:
-        lens_K = 0.5
+        lens_K = 0.55 * smoothstep(8.0, 22.0, t)
     else:
-        lens_K = lerp(0.5, 0.95, smoothstep(22.0, 29.0, t))
+        lens_K = lerp(0.55, 0.95, smoothstep(22.0, 29.0, t))
 
     # Particles: 0 in act 1, full by t=12, hold through act 2 and 3
     particle_density = smoothstep(8.0, 12.0, t)
