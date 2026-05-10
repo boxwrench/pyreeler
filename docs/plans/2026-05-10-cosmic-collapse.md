@@ -48,8 +48,11 @@ Create `experimental/experiments/test_cosmic_collapse.py`:
 ```python
 """Unit tests for cosmic_collapse film generator."""
 import math
+import numpy as np
 import pytest
-from experimental.experiments import cosmic_collapse as cc
+from PIL import Image
+
+import cosmic_collapse as cc
 
 
 def test_arc_state_at_t0_is_void():
@@ -204,10 +207,7 @@ if __name__ == "__main__":
         print("Full render not yet wired — see later tasks")
 ```
 
-Also create `experimental/experiments/__init__.py` if it doesn't exist (empty file, makes the package importable):
-
-```python
-```
+No `__init__.py` is needed — pytest auto-prepends the test file's directory to sys.path, so `import cosmic_collapse as cc` resolves directly.
 
 - [ ] **Step 4: Run tests to verify they pass**
 
@@ -217,7 +217,7 @@ Expected: 4 passing tests.
 - [ ] **Step 5: Commit**
 
 ```bash
-git add experimental/experiments/cosmic_collapse.py experimental/experiments/test_cosmic_collapse.py experimental/experiments/__init__.py
+git add experimental/experiments/cosmic_collapse.py experimental/experiments/test_cosmic_collapse.py
 git commit -m "feat(cosmic-collapse): scaffold script + arc_state controller with tests"
 ```
 
@@ -1415,7 +1415,7 @@ Expected: all tests still pass.
 Quick listen — write the audio to a wav and play it:
 
 ```bash
-python -c "import wave; from experimental.experiments import cosmic_collapse as cc; sr, s = cc.compose_audio(); w = wave.open('experimental/cosmic_collapse_audio_preview.wav','wb'); w.setnchannels(1); w.setsampwidth(2); w.setframerate(sr); w.writeframes(s.tobytes()); w.close(); print('wrote preview wav')"
+python -c "import sys; sys.path.insert(0, 'experimental/experiments'); import wave, cosmic_collapse as cc; sr, s = cc.compose_audio(); w = wave.open('experimental/cosmic_collapse_audio_preview.wav','wb'); w.setnchannels(1); w.setsampwidth(2); w.setframerate(sr); w.writeframes(s.tobytes()); w.close(); print('wrote preview wav')"
 ```
 
 Listen to `experimental/cosmic_collapse_audio_preview.wav`. Confirm: drone throughout, shimmer pad lifts in act 2, lens-burst blips around 12–21s, swell + sub-bass impact at 28s.
@@ -1489,7 +1489,7 @@ class SelfHealer:
 
 - [ ] **Step 2: Confirm it imports cleanly**
 
-Run: `python -c "from experimental.experiments import cosmic_collapse as cc; print(cc.SelfHealer)"`
+Run: `python -c "import sys; sys.path.insert(0, 'experimental/experiments'); import cosmic_collapse as cc; print(cc.SelfHealer)"`
 Expected: prints the class.
 
 - [ ] **Step 3: Commit**
