@@ -132,7 +132,7 @@ OUTPUT_VIDEO = REPO_ROOT / "experimental" / "cosmic_collapse.mp4"
 TEMP_FRAMES_DIR = REPO_ROOT / "experimental" / "cosmic_collapse_frames"
 TEMP_AUDIO = REPO_ROOT / "experimental" / "cosmic_collapse_audio.wav"
 
-STAR_SEED = 0xC05M1C
+STAR_SEED = 0xC05A1C
 STAR_COUNT = 3000
 PARTICLE_COUNT = 15000
 
