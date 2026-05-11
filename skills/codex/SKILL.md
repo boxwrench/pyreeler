@@ -15,13 +15,15 @@ Keep only the workflow rules that reliably improve the result: make a full-durat
 2. Read `references/creative-lenses.md` before locking structure. Decide what would make this specific kind of piece compelling.
 3. Read `references/vocabulary-map.md` when choosing or inventing visual, audio, temporal, textual, or transition strategies.
 4. Read `references/audio-pipeline.md` before implementation when the piece has meaningful sound design, score, voice, or sync requirements.
-5. Read `references/workflow.md` before implementation and follow the production rules exactly.
-6. For Python-based video renders, prefer `templates/video/render_runtime.py` to obtain the ffmpeg path, validated encoder choice, and conservative worker count. Do not hardcode `h264_nvenc`, `h264_qsv`, or fixed worker pools in portable scripts when the runtime helper can be used instead.
-7. Before implementation, verify that the chosen renderer or template actually supports the brief fields and behaviors you plan to rely on. Patch the implementation or narrow the brief before rendering if there is a mismatch.
-8. Build the fastest credible full-duration preview first. Do not jump straight to a high-resolution final.
-9. Review the preview with the user, focusing on arc, motif development, pacing, and whether the final move lands. If the piece is flat, repetitive, or off-mode, change structure or behavior before raising fidelity.
-10. After preview approval, offer an upscale choice instead of assuming final resolution.
-11. Export approved final outputs to `~/Videos`.
+5. Read `references/three-d-and-lensing.md` when the piece involves perceived depth, rotating geometry, per-face textures, or gravitational-lensing effects.
+6. Read `references/workflow.md` before implementation and follow the production rules exactly.
+7. For Python-based video renders, prefer `templates/video/render_runtime.py` to obtain the ffmpeg path, validated encoder choice, and conservative worker count. Do not hardcode `h264_nvenc`, `h264_qsv`, or fixed worker pools in portable scripts when the runtime helper can be used instead.
+8. Before implementation, verify that the chosen renderer or template actually supports the brief fields and behaviors you plan to rely on. Patch the implementation or narrow the brief before rendering if there is a mismatch.
+9. For multi-act pieces (>15s), prefer a single `arc_state(t)` timeline consumed by both visuals and audio. Gate the first preview render with `templates/video/self_healing.py` when the renderer relies on randomized parameters.
+10. Build the fastest credible full-duration preview first. Do not jump straight to a high-resolution final.
+11. Review the preview with the user, focusing on arc, motif development, pacing, and whether the final move lands. If the piece is flat, repetitive, or off-mode, change structure or behavior before raising fidelity.
+12. After preview approval, offer an upscale choice instead of assuming final resolution.
+13. Export approved final outputs to `~/Videos`.
 
 ## Creative Standard
 
@@ -78,9 +80,14 @@ Keep only the workflow rules that reliably improve the result: make a full-durat
 
 ## References
 
-- `references/workflow.md`: production loop, export rules, preview/upscale policy, and cleanup behavior.
+- `references/workflow.md`: production loop, timeline-driven structure, self-healing quality gate, export rules, preview/upscale policy, and cleanup behavior.
 - `references/creative-lenses.md`: genre-sensitive decision making, motif logic, repetition, rupture, and surprise.
 - `references/vocabulary-map.md`: broader creative vocabulary across image, sound, time, text, materiality, transition, and narrative function.
 - `references/audio-pipeline.md`: guidance for procedural foley, stem design, SoundFont scoring, mixing, and FFmpeg handoff.
+- `references/three-d-and-lensing.md`: lean 3D math, perspective per-face texturing, gravitational lensing, and the `find_coeffs` direction gotcha.
 - `templates/audio/`: starter modules for procedural foley, optional scoring, optional voice, and stem mixing.
 - `templates/video/`: starter modules for portable render-runtime selection, encoder validation, and worker defaults.
+  - `geometry_3d.py`: rotation matrices, perspective projection, and `find_coeffs` for PIL.PERSPECTIVE (output→input convention).
+  - `lensing.py`: `apply_lensing` Schwarzschild-style radial warp for starfields and backgrounds.
+  - `text_track.py`: terminal-style narration timeline (typed lines, scrolling, isolated punchline, keystroke events for audio sync).
+  - `self_healing.py`: multi-sample-frame contrast audit with parameter re-rolling. Use as a pre-render gate for randomized renderers.
