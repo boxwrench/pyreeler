@@ -75,14 +75,27 @@
   - temporary video-only mux files
   - preview artifacts that are no longer needed once the final is approved
 
-## 9. Preserve flexibility
+## 9. Timeline-driven structure (recommended for multi-act pieces)
+
+- For any piece longer than ~15 seconds, consider authoring a single `arc_state(t)` function that returns all time-varying parameters (alphas, intensities, lens strengths, particle density, text fade, audio intensity) for a given `t`.
+- Both the visual renderer and the audio mixer should consume the same `arc_state` curves so that on-screen and audible peaks are guaranteed in sync rather than coincidentally aligned.
+- Drive discrete events (text-track keystrokes, sub-bass impacts, swell starts) from a single timeline data structure consumed by both layers. `templates/video/text_track.py` is an example: its `keystroke_events()` provides the times the audio mixer should use for click samples.
+
+## 10. Pre-render quality audit (self-healing)
+
+- When the renderer depends on randomized parameters (chaotic attractor constants, palette draws, seed-driven layouts), a single bad roll can produce a blank, low-contrast, or flat preview.
+- Use `templates/video/self_healing.py` to render a small number of sample frames spread across the piece's arc and re-roll the random inputs until every sample passes a per-frame check (default: mean per-channel stddev).
+- One sample frame is not enough for a multi-act piece — a roll can look fine in act 1 and collapse in act 3. Spread samples across the arc with per-sample thresholds.
+- Treat this as a pre-render gate, not a per-frame correction. It should run once, in seconds, before committing to the full render.
+
+## 11. Preserve flexibility
 
 - Use an existing template only when it helps the piece.
 - If a bespoke structure will produce a better film, build the bespoke structure.
 - The process is repeatable; the results should not feel templated.
 - Reuse compositional behaviors or workflow patterns when useful, but do not let named scene shortcuts become the default creative answer.
 
-## 10. Audio implementation notes
+## 12. Audio implementation notes
 
 - Prefer modular helpers or macros over embedding all DSP directly in the main film script.
 - Keep stems in memory when practical and hand the final mix to `ffmpeg`.
@@ -90,7 +103,7 @@
 - If voice is present, prioritize intelligibility over score density.
 - If the piece needs silence, give it real negative space instead of leaving low-level noise under everything.
 
-## 11. Portable hardware-aware defaults
+## 13. Portable hardware-aware defaults
 
 - Assume many users have modern hardware, but do not assume they know which encoder to request.
 - Prefer a lightweight host probe with standard-library tools such as `platform`, `subprocess`, `shutil`, and `os`.
@@ -100,7 +113,7 @@
 - Separate portable-safe detection from machine-specific tuning. The shared package should auto-help most people; local installs can still push harder.
 - Treat `detect_render_runtime()` as the preferred portable entry point when generating new Python video scripts from this skill.
 
-## 12. Local Hardware Profile Example: N150
+## 14. Local Hardware Profile Example: N150
 
 Use this as a local-install tuning example, not as a portable-skill default. On an N150-powered NucBox G2 Plus, prefer a piped FFmpeg workflow and treat Quick Sync as an optimization to validate, not a requirement to assume.
 

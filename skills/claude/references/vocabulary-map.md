@@ -5,6 +5,9 @@ Use this file as a map of creative territory, not a restrictive effects list.
 ## Visual systems
 
 - geometry
+- 3D geometry, perspective projection, and per-face texturing
+- gravitational lensing and other radial-displacement warps
+- chaotic attractors and procedural nebulae
 - particles and swarms
 - fields and flow
 - noise and texture
@@ -13,6 +16,7 @@ Use this file as a map of creative territory, not a restrictive effects list.
 - text and graphic overlays
 - symmetry, mirrors, and kaleidoscopic structure
 - masks, occlusion, and reveal systems
+- shader-style accretion disks, coronae, and glow textures
 
 ## Audio systems
 
@@ -36,6 +40,7 @@ Use this file as a map of creative territory, not a restrictive effects list.
 - rupture
 - return
 - fade, bleed, cut, collapse
+- multi-act arc driven by a single `arc_state(t)` timeline shared by visuals and audio
 
 ## Narrative functions
 
@@ -64,12 +69,14 @@ Use this file as a map of creative territory, not a restrictive effects list.
 
 - title cards
 - terminal language
+- god's-CLI / creation-log narration (shell prompts + scripture cadence, one line per visible beat)
 - captions
 - fragments
 - poetry
 - warnings
 - machine readouts
 - symbolic recurrence
+- typewriter-revealed lines synced to events on screen
 
 ## Use rule
 

@@ -65,6 +65,28 @@ Files: `audio_engine.py`, `composer.py`, `sfx_gen.py`, `voice.py`
 - `SKILL.md` - explicit `detect_render_runtime()` instruction
 - `references/workflow.md` - reinforced portable runtime guidance
 
+### Cosmic Collapse — 3D, Lensing, Self-Healing, Text Track (2026-05-10)
+
+Produced `experimental/experiments/cosmic_collapse.py` (30s three-act piece) and extracted its reusable patterns into the main skill:
+
+- `templates/video/geometry_3d.py` — `get_rotation_matrix`, `project_points`, and `find_coeffs` for PIL.PERSPECTIVE. Documents the `find_coeffs(target_pb, src_pa)` direction convention. (Older `cosmic_experiment.py` calls it with reversed arguments; that bug produces tiny corner-clipped textures.)
+- `templates/video/lensing.py` — `apply_lensing` Schwarzschild-style radial warp. Pure NumPy, ~200ms per 1280×720 frame.
+- `templates/video/text_track.py` — terminal-style narration timeline with typed lines, scrolling, isolated punchline, and `keystroke_events()` for audio sync.
+- `templates/video/self_healing.py` — multi-sample-frame contrast audit with parameter re-rolling. Generic replacement for the per-renderer `SelfHealer` pattern.
+
+New reference: `references/three-d-and-lensing.md` — lean-3D math, perspective per-face texturing recipe, lensing usage, and the find_coeffs gotcha.
+
+Workflow additions (`references/workflow.md`):
+- Section 9 (Timeline-driven structure): one `arc_state(t)` consumed by both visuals and audio, so peaks are guaranteed in sync.
+- Section 10 (Pre-render quality audit): use `self_healing.py` with samples spread across the arc before committing to a full render.
+
+Vocabulary additions (`references/vocabulary-map.md`):
+- Visual: 3D geometry / perspective projection, gravitational lensing, chaotic attractors, accretion-disk textures.
+- Temporal: multi-act arc with shared timeline.
+- Textual: god's-CLI / creation-log narration; typewriter-revealed lines synced to events.
+
+Mirrored to `skills/codex/` and top-level `templates/`.
+
 ---
 
 ## Benchmark Methodology
