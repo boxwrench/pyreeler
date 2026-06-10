@@ -96,6 +96,9 @@ Core functions:
 ## Future Option Categories
 
 ### Technique Implementation
+- [ ] 3D Perspective Projection (geometry_3d.py) - from [demoscene_inspiration.md](../research/demoscene_inspiration.md)
+- [ ] Autonomous Validation Loop (smoke_test) - self-healing scripts
+- [ ] Retro Terminal UI Overlays (scanlines, terminal text)
 - [ ] Differential Growth (from generative-video-techniques.md)
 - [ ] Space Colonization Algorithm
 - [ ] Diffusion-Limited Aggregation (DLA)

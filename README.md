@@ -59,7 +59,7 @@ pyreeler/
 │   ├── what-the-light-kept/
 │   └── dungeon-emergence/
 │
-├── research/                # Effects catalogs, audio timelines, notes
+├── research/                # [Research Index](research/INDEX.md) — Effects, timelines, inspiration
 │
 ├── templates/               # Shared audio/video starter modules
 │   ├── audio/               # sfx_gen.py, composer.py, audio_engine.py, voice.py
