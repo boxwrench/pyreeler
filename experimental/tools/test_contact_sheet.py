@@ -95,3 +95,17 @@ def test_empty_values_raises():
 def test_bad_cols_raises():
     with pytest.raises(ValueError):
         sweep(lambda v: np.zeros((2, 2, 3), np.uint8), "v", [1], cols=0)
+
+
+def test_labels_increase_height():
+    render = lambda v: np.zeros((20, 20, 3), dtype=np.uint8)
+    no_labels = sweep(render, "v", [1, 2], labels=False, pad=0)
+    with_labels = sweep(render, "v", [1, 2], labels=True, pad=0)
+    assert with_labels.height > no_labels.height
+
+
+def test_title_increases_height():
+    render = lambda v: np.zeros((20, 20, 3), dtype=np.uint8)
+    without = sweep(render, "v", [1, 2], labels=False, pad=0)
+    withtitle = sweep(render, "v", [1, 2], labels=False, pad=0, title="sweep")
+    assert withtitle.height > without.height

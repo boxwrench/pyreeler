@@ -102,17 +102,28 @@ def sweep(
     cell_w = max(img.width for img in frames)
     cell_h = max(img.height for img in frames)
 
+    caption_h = 16 if labels else 0
+    full_cell_h = cell_h + caption_h
+    title_h = 20 if title else 0
+
     sheet_w = pad + cols * (cell_w + pad)
-    sheet_h = pad + rows * (cell_h + pad)
+    sheet_h = pad + title_h + rows * (full_cell_h + pad)
 
     sheet = Image.new("RGB", (sheet_w, sheet_h), bg)
+    draw = ImageDraw.Draw(sheet)
 
-    for i, img in enumerate(frames):
+    if title:
+        draw.text((pad, pad // 2), title, fill=(255, 255, 255))
+
+    for i, (value, img) in enumerate(zip(values, frames)):
         r = i // cols
         c = i % cols
         box_x = pad + c * (cell_w + pad)
-        box_y = pad + r * (cell_h + pad)
+        box_y = pad + title_h + r * (full_cell_h + pad)
         _paste_centered(sheet, img, box_x, box_y, cell_w, cell_h)
+        if labels:
+            caption = label_fmt.format(param=param, value=value)
+            draw.text((box_x, box_y + cell_h + 2), caption, fill=(255, 255, 255))
 
     if out is not None:
         sheet.save(out)
