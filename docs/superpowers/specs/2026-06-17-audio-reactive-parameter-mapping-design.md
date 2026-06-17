@@ -1,7 +1,7 @@
 # Audio-Reactive Parameter Mapping — Design
 
 **Date:** 2026-06-17
-**Status:** Drafted — ready for implementation plan
+**Status:** Implemented — portable v1 landed in commit `e894a0a`
 **Location of artifact:** `templates/audio/audio_reactive.py` (+ synced skill copies)
 
 ---

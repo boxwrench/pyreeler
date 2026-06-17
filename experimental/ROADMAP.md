@@ -12,6 +12,10 @@ Tracking decisions and options as the experimental work evolves.
 | 2026-03-16 | Demo film scope | 3 complexity levels, multiple techniques | **Option C (All 4, Moderate)** - Maximum demonstration value with manageable complexity |
 | 2026-03-16 | Pixel Sorting follow-up | 4 implementation paths available | **Option 3: ParameterSequence** - Enables reproducible experiments for ALL techniques |
 | 2026-06-17 | Experiment comparison tooling | Project review future directions | **Single-axis contact sheet delivered** - `contact_sheet.sweep()` compares one parameter across values |
+| 2026-06-17 | Template graduation gate | Project review future directions | **Graduation manifest + CI gate delivered** - `template_graduation.toml` and `graduation_check.py` define proof points |
+| 2026-06-17 | Audio-reactive mapping | Project review future directions | **Portable v1 delivered** - `templates/audio/audio_reactive.py` maps RMS envelopes to visual parameters |
+| 2026-06-17 | Local GPU frame synthesis | Project review future directions | **Runtime hardening delivered** - `docs/hardware-experiments/wgpu_runtime.py` is import-safe and CI-covered without GPU hardware |
+| 2026-06-17 | Provider skill core | Project review future directions | **Shared reference source delivered** - `skills/_shared/references/` feeds self-contained provider skill copies |
 
 ### 2026-03-16: Demo Film Design Decisions
 
@@ -77,19 +81,21 @@ Core functions:
 ---
 
 #### Option 4: Graduate Experimental Work
-**Status:** Available
+**Status:** Partially implemented — graduation is now gated by manifest + CI
 **Effort:** High
 **Impact:** Production-ready capabilities in main skill
 **Work involved:**
 - Review which techniques meet graduation criteria
-- Update main skill SKILL.md
-- Create graduation proposals
+- Add or update `template_graduation.toml` entries
+- Keep `sync.py --check` and `graduation_check.py` clean
+- Update main skill docs and provider copies
 
 **Graduation criteria:**
 - Reliable across hardware
 - Well-documented
 - Has working example film
 - Clean API
+- Declared in `template_graduation.toml` with test/example proof points
 
 **When to choose:** Experimental techniques have matured and proven useful
 
@@ -112,13 +118,17 @@ Core functions:
 - [ ] Batch rendering system using ParameterSequence
 - [x] Experiment comparison tools — `tools/contact_sheet.py` supports single-axis sweeps
 - [ ] 2D contact-sheet grids and parallel variant rendering
+- [x] Template graduation gate — `template_graduation.toml` + `graduation_check.py` enforce proof points in CI
+- [x] Provider-agnostic shared references — `skills/_shared/references/` is synced into provider skill folders
 - [ ] Automated visual regression testing
 - [ ] Render farm distribution
 
 ### Integration
 - [ ] Hybrid RD → Pixel Sort → Particles pipeline
 - [ ] Multi-layer stacking system
-- [ ] Audio-reactive parameter mapping
+- [x] Audio-reactive parameter mapping — portable RMS envelope/scalar mapping helper delivered
+- [ ] Audio-reactive band-specific envelopes and beat detection
+- [ ] GPU frame synthesis shader render base class / benchmark output
 - [ ] Real-time preview mode
 
 ---

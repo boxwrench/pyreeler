@@ -1,7 +1,7 @@
 # Template Graduation Gate — Design
 
 **Date:** 2026-06-17
-**Status:** Drafted — ready for implementation plan
+**Status:** Implemented — CI graduation gate landed through commit `20b4a14`
 **Location of artifact:** `graduation_check.py` + `template_graduation.toml`
 
 ---

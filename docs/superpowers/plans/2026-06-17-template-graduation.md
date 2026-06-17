@@ -8,6 +8,8 @@
 `template_graduation.toml` declares each template's tests/examples, and
 `graduation_check.py` validates the declaration plus `sync.py` coverage.
 
+**Status:** Completed through commit `20b4a14`; CI now enforces the gate.
+
 **Architecture:** A standalone stdlib-only checker. It reads TOML via
 `tomllib` (Python 3.11+) or falls back to `tomli` only if already installed. If
 Python 3.10 support must be strict with no optional dependency, use a constrained
@@ -36,13 +38,13 @@ line parser for the manifest format. The checker imports `sync.py` to reuse
 - Create: `graduation_check.py`
 - Create: `tests/test_graduation_check.py`
 
-- [ ] **Step 1: Write failing parser tests**
+- [x] **Step 1: Write failing parser tests**
 
 Add tests that create a temporary manifest with one `[[template]]` entry and assert
 the checker returns a parsed template record with `path`, `kind`, `status`, `tests`,
 `examples`, and `notes`.
 
-- [ ] **Step 2: Implement manifest loading**
+- [x] **Step 2: Implement manifest loading**
 
 Implement:
 
@@ -54,7 +56,7 @@ def load_manifest(path: Path) -> list[TemplateEntry]:
 Use a small dataclass for `TemplateEntry`. Keep validation separate from parsing so
 tests can target each layer.
 
-- [ ] **Step 3: Add initial manifest entries**
+- [x] **Step 3: Add initial manifest entries**
 
 Declare every current Python template under:
 
@@ -65,7 +67,7 @@ Use existing tests/examples where possible. `tests/test_sync.py` is acceptable a
 baseline maintenance coverage for v1, but each entry should also list at least one
 real example/demo path from `films/` or `experimental/experiments/` when available.
 
-- [ ] **Step 4: Run focused tests**
+- [x] **Step 4: Run focused tests**
 
 Run:
 
@@ -73,7 +75,7 @@ Run:
 python3 -m pytest tests/test_graduation_check.py -q
 ```
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add template_graduation.toml graduation_check.py tests/test_graduation_check.py
@@ -88,7 +90,7 @@ git commit -m "feat(build): add template graduation manifest parser"
 - Modify: `graduation_check.py`
 - Modify: `tests/test_graduation_check.py`
 
-- [ ] **Step 1: Write failing validation tests**
+- [x] **Step 1: Write failing validation tests**
 
 Cover:
 
@@ -101,7 +103,7 @@ Cover:
 - missing manifest entry for a template file
 - template not covered by `sync.py` file pairs
 
-- [ ] **Step 2: Implement validation**
+- [x] **Step 2: Implement validation**
 
 Implement:
 
@@ -113,7 +115,7 @@ def validate(entries: list[TemplateEntry], repo_root: Path) -> list[str]:
 Return human-readable problem strings. Do not exit inside validation; keep CLI
 behavior thin.
 
-- [ ] **Step 3: Add CLI**
+- [x] **Step 3: Add CLI**
 
 Implement:
 
@@ -124,7 +126,7 @@ python3 graduation_check.py --manifest template_graduation.toml
 
 Exit `0` if there are no problems, otherwise print all problems and exit `1`.
 
-- [ ] **Step 4: Run checker and tests**
+- [x] **Step 4: Run checker and tests**
 
 Run:
 
@@ -133,7 +135,7 @@ python3 graduation_check.py
 python3 -m pytest tests/test_graduation_check.py -q
 ```
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add graduation_check.py tests/test_graduation_check.py
@@ -149,7 +151,7 @@ git commit -m "feat(build): validate graduated template declarations"
 - Modify: `README.md`
 - Modify: `docs/plans/2026-06-17-review-improvements.md`
 
-- [ ] **Step 1: Wire CI**
+- [x] **Step 1: Wire CI**
 
 Add the graduation check after `sync.py --check` and before pytest:
 
@@ -157,7 +159,7 @@ Add the graduation check after `sync.py --check` and before pytest:
 python3 graduation_check.py
 ```
 
-- [ ] **Step 2: Document the graduation gate**
+- [x] **Step 2: Document the graduation gate**
 
 In README's Development section, add the definition of a graduated template and the
 local verification command sequence:
@@ -168,12 +170,12 @@ python3 graduation_check.py
 python3 -m pytest -q
 ```
 
-- [ ] **Step 3: Mark future direction as specified**
+- [x] **Step 3: Mark future direction as specified**
 
 Update `docs/plans/2026-06-17-review-improvements.md` item 1 to link to this spec
 and plan.
 
-- [ ] **Step 4: Run full verification**
+- [x] **Step 4: Run full verification**
 
 Run:
 
@@ -183,7 +185,7 @@ python3 graduation_check.py
 python3 -m pytest -q
 ```
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add .github/workflows/ci.yml README.md docs/plans/2026-06-17-review-improvements.md

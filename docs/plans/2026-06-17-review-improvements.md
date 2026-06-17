@@ -1,7 +1,7 @@
 # Project Review — Improvements, Merges & Future Directions
 
 **Date:** 2026-06-17
-**Status:** In progress — 4 improvements landed in working tree (uncommitted), several proposed items pending your call.
+**Status:** Current through commit `9096383`. Five follow-up improvements are landed, committed, and passing the full gate.
 **Purpose:** Pickup/handoff doc. Safe to clear context and resume from here.
 
 ---
@@ -10,16 +10,18 @@
 
 ```bash
 cd ~/Desktop/github/pyreeler
-git status                 # see the uncommitted work described below
+git status                 # should be clean after the latest committed task
 python3 sync.py --check    # should print "in sync"
-pytest -q                  # should be 8 passed
+python3 graduation_check.py
+python3 -m pytest -q       # should be 52 passed
 ```
 
-Nothing has been committed yet. The changes below live in the working tree.
+Current worktree expectation: clean. The implementation history is commit-backed;
+use the roadmap below to choose the next task.
 
 ---
 
-## DONE (this session, uncommitted)
+## DONE (earlier review cleanup)
 
 ### 1. Template de-duplication + sync guard ✅
 **Problem:** `templates/`, `skills/claude/templates/`, `skills/codex/templates/` held
@@ -48,13 +50,46 @@ byte-identical copies with no sync mechanism — already drifting.
 - `pytest.ini` — testpaths = `tests/` + `experimental/experiments/test_cosmic_collapse.py`
   (sampler-film tests excluded by default: hardcoded relative paths + perf monitors).
 - `.github/workflows/ci.yml` — on push/PR: `sync.py --check` then `pytest -q`.
-- Current: **8 passed**.
+- Superseded by the current full gate below.
 
-**Suggested commit grouping** (when you're ready — not yet committed):
-1. `chore: untrack scratch artifacts + extend experimental gitignore`
-2. `feat(build): add sync.py to dedupe templates across skill folders + tests`
-3. `ci: add pytest config and GitHub Actions workflow`
-4. `docs: reconcile README/DEVLOG with committed media and add dev workflow`
+---
+
+## DONE (follow-up implementation run)
+
+### 1. Contact-sheet sweep tool ✅
+**Commits:** `53216e3` through `eb6fa94`, plus docs in `04b3eed` and roadmap refresh in `2ae06ec`.
+**Delivered:** `experimental/tools/contact_sheet.py`, co-located tests, runnable demo,
+pytest wiring, optional contact-sheet and individual frame outputs.
+
+### 2. Template graduation gate ✅
+**Commits:** `c0287ec`, `21ae885`, `b807842`, `20b4a14`.
+**Delivered:** `template_graduation.toml`, `graduation_check.py`, tests, README docs,
+and CI enforcement after `sync.py --check`.
+
+### 3. Audio-reactive parameter mapping ✅
+**Commits:** `09f85d3`, `e894a0a`.
+**Delivered:** `templates/audio/audio_reactive.py`, synced provider copies, tests,
+README docs, and graduation manifest entry.
+
+### 4. Local GPU frame synthesis runtime hardening ✅
+**Commits:** `f71bff5`, `12d2644`, `f245aaa`, `5025e3d`.
+**Delivered:** import-safe optional `wgpu`, fake-adapter tests, local FFmpeg candidate
+resolution, docs distinguishing GPU encoding from GPU frame synthesis.
+
+### 5. Provider-agnostic shared skill core ✅
+**Commits:** `38c7e1b`, `d24fe6c`, `9096383`.
+**Delivered:** `skills/_shared/references/` as the canonical shared-reference source,
+`sync.py` updates, sync tests, and README/docs updates.
+
+### Current verification ✅
+
+```bash
+python3 sync.py --check
+python3 graduation_check.py
+python3 -m pytest -q
+```
+
+Latest result: **52 passed**.
 
 ---
 
@@ -84,7 +119,7 @@ low-risk path).
 
 ---
 
-## FUTURE DIRECTIONS (prioritized — beyond ROADMAP.md)
+## CURRENT ROADMAP STATUS (prioritized)
 
 1. **Formalize template "graduation"** (ROADMAP Option 4). Graduation currently = manual
    copy. Make it: passing tests + an example film + `sync.py`. Turns a copy-paste ritual
@@ -115,6 +150,17 @@ low-risk path).
    Spec/plan:
    `docs/superpowers/specs/2026-06-17-provider-agnostic-skill-core-design.md` and
    `docs/superpowers/plans/2026-06-17-provider-agnostic-skill-core.md`.
+
+## NEXT TASK CANDIDATES
+
+1. **Contact-sheet v2:** add 2D parameter grids and/or parallel variant rendering.
+2. **Audio-reactive v2:** add band-specific envelopes and beat/onset helpers.
+3. **GPU synthesis v2:** add a shader render base class, benchmark output, or CPU
+   fallback contract while keeping CI GPU-free.
+4. **Provider core v2:** generate provider wrappers/shared SKILL fragments instead
+   of maintaining duplicated prose manually.
+5. **Experimental roadmap:** implement `ParameterSequence` batch rendering or visual
+   regression testing.
 
 ---
 

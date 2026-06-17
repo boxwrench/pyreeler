@@ -7,6 +7,9 @@
 synthesis path is import-safe, testable, and clearly distinct from portable
 encoding/runtime helpers.
 
+**Status:** Completed through commit `5025e3d`; actual shader rendering remains
+local-only future work.
+
 **Architecture:** Lazy optional import for `wgpu`, fake-adapter tests for selection
 logic, and docs that clarify current status. Actual shader demos stay in
 `docs/hardware-experiments/`.
@@ -30,7 +33,7 @@ logic, and docs that clarify current status. Actual shader demos stay in
 - Modify: `docs/hardware-experiments/wgpu_runtime.py`
 - Create: `tests/test_wgpu_runtime.py`
 
-- [ ] **Step 1: Write failing tests**
+- [x] **Step 1: Write failing tests**
 
 Cover:
 
@@ -39,7 +42,7 @@ Cover:
 - `pick_discrete_adapter(wgpu_module=None)` raises a clear install message when
   `wgpu` is missing
 
-- [ ] **Step 2: Implement lazy import**
+- [x] **Step 2: Implement lazy import**
 
 Remove module-level `import wgpu`. Add:
 
@@ -51,13 +54,13 @@ def is_wgpu_available() -> bool:
     ...
 ```
 
-- [ ] **Step 3: Run tests**
+- [x] **Step 3: Run tests**
 
 ```bash
 python3 -m pytest tests/test_wgpu_runtime.py -q
 ```
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add docs/hardware-experiments/wgpu_runtime.py tests/test_wgpu_runtime.py
@@ -72,7 +75,7 @@ git commit -m "test(gpu): make local wgpu runtime import-safe"
 - Modify: `docs/hardware-experiments/wgpu_runtime.py`
 - Modify: `tests/test_wgpu_runtime.py`
 
-- [ ] **Step 1: Write failing tests**
+- [x] **Step 1: Write failing tests**
 
 Cover:
 
@@ -82,7 +85,7 @@ Cover:
 - adapter picking falls back to any discrete adapter
 - adapter picking can fall back to any adapter with `require_discrete=False`
 
-- [ ] **Step 2: Implement behavior**
+- [x] **Step 2: Implement behavior**
 
 Update:
 
@@ -97,13 +100,13 @@ def pick_discrete_adapter(wgpu_module=None, *, require_discrete=True):
 Keep existing local Windows candidate paths as defaults, but make overrides
 possible for tests and future local tuning.
 
-- [ ] **Step 3: Run tests**
+- [x] **Step 3: Run tests**
 
 ```bash
 python3 -m pytest tests/test_wgpu_runtime.py -q
 ```
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add docs/hardware-experiments/wgpu_runtime.py tests/test_wgpu_runtime.py
@@ -118,7 +121,7 @@ git commit -m "feat(gpu): harden local shader runtime selection"
 - Modify: `docs/hardware-experiments/README.md`
 - Modify: `docs/plans/2026-06-17-review-improvements.md`
 
-- [ ] **Step 1: Document current GPU synthesis status**
+- [x] **Step 1: Document current GPU synthesis status**
 
 Clarify:
 
@@ -127,12 +130,12 @@ Clarify:
 - no portable skill dependency yet
 - how to run the shader demo locally
 
-- [ ] **Step 2: Mark future direction as advanced**
+- [x] **Step 2: Mark future direction as advanced**
 
 Update review-improvements item 4 to note that the local runtime is import-safe and
 test-covered; portable graduation remains future work.
 
-- [ ] **Step 3: Run full verification**
+- [x] **Step 3: Run full verification**
 
 ```bash
 python3 sync.py --check
@@ -140,7 +143,7 @@ python3 graduation_check.py
 python3 -m pytest -q
 ```
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add docs/hardware-experiments/README.md docs/plans/2026-06-17-review-improvements.md

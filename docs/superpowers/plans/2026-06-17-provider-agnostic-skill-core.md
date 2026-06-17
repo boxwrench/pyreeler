@@ -7,6 +7,9 @@
 that are byte-identical across provider skills, and update `sync.py`/tests/docs to
 use that source instead of treating `skills/claude` as the lead provider.
 
+**Status:** Completed through commit `9096383`; generated provider wrappers remain
+future work.
+
 **Spec:** `docs/superpowers/specs/2026-06-17-provider-agnostic-skill-core-design.md`
 
 ---
@@ -30,17 +33,17 @@ use that source instead of treating `skills/claude` as the lead provider.
 - Modify: `sync.py`
 - Modify: `tests/test_sync.py`
 
-- [ ] **Step 1: Write failing sync tests**
+- [x] **Step 1: Write failing sync tests**
 
 Add assertions that `sync.REFERENCE_SOURCE_DIR` points at
 `skills/_shared/references` and that every shared reference is copied from there
 into both provider folders.
 
-- [ ] **Step 2: Create shared reference files**
+- [x] **Step 2: Create shared reference files**
 
 Copy the current byte-identical reference files into `skills/_shared/references/`.
 
-- [ ] **Step 3: Update sync.py**
+- [x] **Step 3: Update sync.py**
 
 Replace `REFERENCE_SOURCE = "claude"` with a concrete source path:
 
@@ -50,14 +53,14 @@ REFERENCE_SOURCE_DIR = REPO_ROOT / "skills" / "_shared" / "references"
 
 Copy each `SHARED_REFERENCES` file into every provider skill folder.
 
-- [ ] **Step 4: Run verification**
+- [x] **Step 4: Run verification**
 
 ```bash
 python3 sync.py --check
 python3 -m pytest tests/test_sync.py -q
 ```
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add skills/_shared/references sync.py tests/test_sync.py
@@ -72,17 +75,17 @@ git commit -m "feat(build): add shared reference source for provider skills"
 - Modify: `README.md`
 - Modify: `docs/plans/2026-06-17-review-improvements.md`
 
-- [ ] **Step 1: Document shared core**
+- [x] **Step 1: Document shared core**
 
 Update README's repository structure and Development section to mention
 `skills/_shared/references/`.
 
-- [ ] **Step 2: Mark future direction as advanced**
+- [x] **Step 2: Mark future direction as advanced**
 
 Update review-improvements item 5 to note that shared reference source exists;
 generated provider wrappers remain future work.
 
-- [ ] **Step 3: Run full verification**
+- [x] **Step 3: Run full verification**
 
 ```bash
 python3 sync.py --check
@@ -90,7 +93,7 @@ python3 graduation_check.py
 python3 -m pytest -q
 ```
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add README.md docs/plans/2026-06-17-review-improvements.md
