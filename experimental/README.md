@@ -24,11 +24,6 @@ The main PyReeler skill prioritizes stability, portability, and reproducibility.
 
 ```
 experimental/
-├── skills/codex/          # Base skill copy (working foundation)
-│   ├── SKILL.md
-│   ├── references/
-│   └── templates/
-│
 ├── experiments/           # Film projects live HERE permanently
 │   ├── sampler-film/      # 60s technique demonstration
 │   ├── main-skill-demo/   # Comprehensive reference implementation
@@ -164,7 +159,7 @@ Use the experimental PyReeler skill to make a 30s film using strange attractor v
 ## Creating an Experimental Film
 
 1. **Create folder:** `experiments/my-film-name/`
-2. **Copy templates:** From `tools/` or `skills/codex/templates/`
+2. **Copy templates:** From `tools/` or the canonical skill at `../skills/codex/templates/` (or repo-root `../templates/`)
 3. **Develop:** Iterate on your machine with your tuning
 4. **Document:** Create `NOTES.md` in your film folder with:
    - Hardware used

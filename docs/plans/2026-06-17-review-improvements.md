@@ -58,16 +58,18 @@ byte-identical copies with no sync mechanism — already drifting.
 
 ---
 
-## PENDING — needs your decision
+## RESOLVED
 
-### A. Stale `experimental/skills/codex/` copy — DO NOT DELETE without deciding
-Originally flagged as a "stale trap" (missing `three-d-and-lensing.md` + the 4 newer
-video templates). BUT `experimental/GUIDE.md` calls it a "Frozen skill copy (reference
-only)" and `experimental/README.md` documents it as a foundation users copy from.
-So the staleness may be intentional.
-**Options:** (a) leave as frozen reference; (b) refresh it once via sync and re-freeze;
-(c) delete and update GUIDE/README to point at top-level `skills/codex/`.
-**Recommendation:** (b) or (c) — an *incomplete* freeze is more confusing than either.
+### A. Stale `experimental/skills/codex/` copy ✅ (2026-06-17)
+**Resolution: deleted (option c).** The copy was documentation-only (no code imported
+it — verified) and meaningfully stale (missing the 4 newer video templates,
+`three-d-and-lensing.md`, `agents/`). Keeping a 4th drifting copy contradicted the
+single-source `sync.py` model. Removed it and repointed the three doc references in
+`experimental/README.md` and `experimental/GUIDE.md` to the canonical top-level
+`skills/codex/` (and repo-root `templates/`). `main-skill-demo`'s references already
+point at the canonical skill, so they stayed valid.
+
+## PENDING — needs your decision
 
 ### B. Committed showcase media (~78 MB, 85% of repo)
 8 `.mp4`s are force-committed (gitignore lists `*.mp4`) to power GitHub Pages.
