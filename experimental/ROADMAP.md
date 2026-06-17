@@ -2,6 +2,9 @@
 
 Tracking decisions and options as the experimental work evolves.
 
+Current implementation backlog:
+`docs/plans/2026-06-17-remaining-roadmap-implementation.md`.
+
 ---
 
 ## Decision Log
