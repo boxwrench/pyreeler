@@ -10,6 +10,7 @@ Use them when a film script needs a reusable audio backbone without turning the 
 - `composer.py`: motif-to-MIDI helpers and optional SoundFont workflow
 - `voice.py`: optional `edge-tts` helper for narration or machine voice
 - `audio_engine.py`: stem placement, ducking, mastering, and WAV export
+- `audio_reactive.py`: per-frame RMS envelopes and scalar parameter mapping
 
 ## Dependency Tiers
 
@@ -38,7 +39,8 @@ Optional voice:
 2. Generate `score` events with `composer.py` if the piece needs melodic or harmonic motion.
 3. Render `voice` only if speech materially helps the piece.
 4. Place and mix stems with `audio_engine.py`.
-5. Hand the final WAV to `ffmpeg`.
+5. Use `audio_reactive.py` when visual parameters should respond to stem or mix energy.
+6. Hand the final WAV to `ffmpeg`.
 
 ## Design Rule
 

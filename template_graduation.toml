@@ -7,6 +7,14 @@ examples = ["films/what-the-light-kept/render_preview.py", "films/dungeon-emerge
 notes = "Stem placement, ducking, mixing, and WAV export used by completed films."
 
 [[template]]
+path = "templates/audio/audio_reactive.py"
+kind = "audio"
+status = "graduated"
+tests = ["tests/test_audio_reactive.py"]
+examples = ["docs/superpowers/specs/2026-06-17-audio-reactive-parameter-mapping-design.md"]
+notes = "Per-frame audio envelopes for mapping stem or mix energy into visual parameters."
+
+[[template]]
 path = "templates/audio/composer.py"
 kind = "audio"
 status = "graduated"
