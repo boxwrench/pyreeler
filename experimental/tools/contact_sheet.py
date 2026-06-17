@@ -134,3 +134,18 @@ def sweep(
         sheet.save(out)
 
     return sheet
+
+
+if __name__ == "__main__":
+    # Demo: sweep a brightness ramp and write a sample contact sheet.
+    def _demo_render(brightness):
+        return np.full((80, 120, 3), brightness, dtype=np.uint8)
+
+    sheet = sweep(
+        _demo_render,
+        "brightness",
+        [0, 64, 128, 192, 255],
+        out="contact_sheet_demo.png",
+        title="brightness sweep",
+    )
+    print(f"Wrote contact_sheet_demo.png ({sheet.width}x{sheet.height})")
