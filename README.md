@@ -119,6 +119,7 @@ The `templates/` folder provides lightweight starters, not a full framework:
 - `composer.py`: motif-to-MIDI helpers and optional SoundFont rendering path
 - `voice.py`: optional `edge-tts` helper
 - `audio_engine.py`: simple stem placement, ducking, mastering, and WAV export
+- `audio_reactive.py`: per-frame RMS envelopes for audio-driven visual parameters
 - `ffmpeg_utils.py`: host-profile detection, encoder smoke tests, and conservative worker heuristics
 - `render_runtime.py`: one-call portable render defaults for encoder, ffmpeg path, and worker count
 - `parallel_render.py`: multiprocess frame rendering with ordered output (Claude version)
