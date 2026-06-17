@@ -1,7 +1,7 @@
 # Contact-Sheet Sweep Tool — Design
 
 **Date:** 2026-06-17
-**Status:** Approved (design) — ready for implementation plan
+**Status:** Implemented — single-axis sweep v1 landed through commit `eb6fa94`
 **Location of artifact:** `experimental/tools/contact_sheet.py` (+ co-located tests)
 
 ---

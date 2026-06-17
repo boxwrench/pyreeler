@@ -8,6 +8,8 @@
 mono audio signal into a normalized per-frame envelope and maps that envelope into
 visual parameter values.
 
+**Status:** Completed in commit `e894a0a`; full gate passed with 52 tests.
+
 **Architecture:** Pure functions, no file I/O, no runtime dependencies beyond
 NumPy. The helper lives in root `templates/audio/`, is synced into both skill
 folders, and is declared in `template_graduation.toml`.
@@ -35,7 +37,7 @@ folders, and is declared in `template_graduation.toml`.
 - Create: `templates/audio/audio_reactive.py`
 - Create: `tests/test_audio_reactive.py`
 
-- [ ] **Step 1: Write failing tests**
+- [x] **Step 1: Write failing tests**
 
 Cover:
 
@@ -44,18 +46,18 @@ Cover:
 - a loud second half produces larger envelope values than a quiet first half
 - invalid `sample_rate`, `fps`, `frame_count`, or `window_sec` raises `ValueError`
 
-- [ ] **Step 2: Implement `rms_envelope`**
+- [x] **Step 2: Implement `rms_envelope`**
 
 Use local RMS around each frame's corresponding sample index. Normalize by the
 maximum RMS value, then apply one-pole attack/release smoothing.
 
-- [ ] **Step 3: Run focused tests**
+- [x] **Step 3: Run focused tests**
 
 ```bash
 python3 -m pytest tests/test_audio_reactive.py -q
 ```
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add templates/audio/audio_reactive.py tests/test_audio_reactive.py
@@ -70,7 +72,7 @@ git commit -m "feat(audio): add per-frame RMS envelope helper"
 - Modify: `templates/audio/audio_reactive.py`
 - Modify: `tests/test_audio_reactive.py`
 
-- [ ] **Step 1: Write failing tests**
+- [x] **Step 1: Write failing tests**
 
 Cover:
 
@@ -80,18 +82,18 @@ Cover:
 - `reactive_value(..., mode="multiply")`
 - unknown mode raises `ValueError`
 
-- [ ] **Step 2: Implement `map_range` and `reactive_value`**
+- [x] **Step 2: Implement `map_range` and `reactive_value`**
 
 Keep the API scalar/array friendly and deterministic. Clip normalized values to
 `0..1` before mapping.
 
-- [ ] **Step 3: Run focused tests**
+- [x] **Step 3: Run focused tests**
 
 ```bash
 python3 -m pytest tests/test_audio_reactive.py -q
 ```
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add templates/audio/audio_reactive.py tests/test_audio_reactive.py
@@ -109,30 +111,30 @@ git commit -m "feat(audio): map audio envelopes to visual parameters"
 - Modify: synced skill template copies via `python3 sync.py`
 - Modify: `docs/plans/2026-06-17-review-improvements.md`
 
-- [ ] **Step 1: Run sync**
+- [x] **Step 1: Run sync**
 
 ```bash
 python3 sync.py
 ```
 
-- [ ] **Step 2: Add graduation manifest entry**
+- [x] **Step 2: Add graduation manifest entry**
 
 Declare `templates/audio/audio_reactive.py` with:
 
 - `tests = ["tests/test_audio_reactive.py"]`
 - `examples = ["docs/superpowers/specs/2026-06-17-audio-reactive-parameter-mapping-design.md"]`
 
-- [ ] **Step 3: Document the helper**
+- [x] **Step 3: Document the helper**
 
 Add short entries to README's Template Layer and `templates/audio/README.md`.
 
-- [ ] **Step 4: Mark the future direction as delivered**
+- [x] **Step 4: Mark the future direction as delivered**
 
 Update `docs/plans/2026-06-17-review-improvements.md` item 3 to note that the
 portable v1 helper is delivered; band-specific and beat-detection mappings remain
 future work.
 
-- [ ] **Step 5: Run full verification**
+- [x] **Step 5: Run full verification**
 
 ```bash
 python3 sync.py --check
@@ -140,7 +142,7 @@ python3 graduation_check.py
 python3 -m pytest -q
 ```
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add README.md templates/audio/README.md template_graduation.toml \

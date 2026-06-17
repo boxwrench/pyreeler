@@ -1,7 +1,7 @@
 # Provider-Agnostic Skill Core — Design
 
 **Date:** 2026-06-17
-**Status:** Drafted — ready for implementation plan
+**Status:** Implemented — shared reference source landed through commit `9096383`
 **Location of artifact:** `skills/_shared/`
 
 ---

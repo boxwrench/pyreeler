@@ -1,7 +1,7 @@
 # GPU Frame Synthesis Runtime — Design
 
 **Date:** 2026-06-17
-**Status:** Drafted — ready for implementation plan
+**Status:** Implemented — local runtime hardening landed through commit `5025e3d`
 **Location of artifact:** `docs/hardware-experiments/wgpu_runtime.py`
 
 ---
