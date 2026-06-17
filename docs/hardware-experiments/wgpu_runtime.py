@@ -22,8 +22,9 @@ class LocalShaderRuntime:
     video_args: tuple[str, ...]
 
 
-def resolve_local_ffmpeg_candidates():
-    candidates = [
+def resolve_local_ffmpeg_candidates(extra_candidates=None):
+    candidates = list(extra_candidates or [])
+    candidates += [
         Path(r"C:\pinokio\api\facefusion-pinokio.git\.env\Library\bin\ffmpeg.exe"),
         Path(r"C:\pinokio\api\wan2gp.git\app\ffmpeg_bins\ffmpeg.exe"),
     ]
@@ -62,11 +63,13 @@ def is_wgpu_available() -> bool:
     return True
 
 
-def pick_discrete_adapter(wgpu_module=None):
+def pick_discrete_adapter(wgpu_module=None, *, require_discrete: bool = True):
     wgpu_module = wgpu_module or _load_wgpu()
     adapters = wgpu_module.gpu.enumerate_adapters_sync()
     discrete = [a for a in adapters if a.info.get("adapter_type") == "DiscreteGPU"]
     if not discrete:
+        if not require_discrete and adapters:
+            return adapters[0]
         raise RuntimeError("No discrete GPU adapter found for local shader runtime.")
 
     nvidia = [a for a in discrete if "NVIDIA" in str(a.info.get("vendor", "")).upper() or "NVIDIA" in str(a.info.get("device", "")).upper()]
