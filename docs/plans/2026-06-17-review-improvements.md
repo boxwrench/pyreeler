@@ -97,6 +97,9 @@ low-risk path).
    sweeps. 2D grids and parallel variant rendering remain future work.
 3. **Audio-reactive parameter mapping** — let audio envelopes drive visual params via the
    existing shared `arc_state(t)` timeline. Builds on existing infra, no new deps.
+   Spec/plan drafted in
+   `docs/superpowers/specs/2026-06-17-audio-reactive-parameter-mapping-design.md`
+   and `docs/superpowers/plans/2026-06-17-audio-reactive-parameter-mapping.md`.
 4. **GPU frame *synthesis*** (not just encoding). Seed: `docs/hardware-experiments/wgpu_runtime.py`.
    Keep in `experimental/` until portable. DEVLOG is honest that "GPU mode" today = encode only.
 5. **Provider-agnostic skill core** — a `skills/_shared/` consumed by thin per-provider
