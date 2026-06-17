@@ -19,7 +19,6 @@ Graduation to the main skill happens when a technique proves **reliable, portabl
 
 ```
 experimental/
-├── skills/codex/          # Frozen skill copy (reference only)
 ├── experiments/           # Your film projects (stay here)
 ├── research/              # Technique documentation
 ├── tools/                 # Reusable code modules
