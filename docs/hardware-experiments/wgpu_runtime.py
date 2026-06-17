@@ -2,11 +2,11 @@ from __future__ import annotations
 
 import sys
 from dataclasses import dataclass
+from typing import Any
 from pathlib import Path
 
-import wgpu
-
-SKILL_TEMPLATES = Path(r"C:\Github\pyreeler\pyreeler\templates")
+REPO_ROOT = Path(__file__).resolve().parents[2]
+SKILL_TEMPLATES = REPO_ROOT / "templates"
 if str(SKILL_TEMPLATES) not in sys.path:
     sys.path.insert(0, str(SKILL_TEMPLATES))
 
@@ -22,8 +22,9 @@ class LocalShaderRuntime:
     video_args: tuple[str, ...]
 
 
-def resolve_local_ffmpeg_candidates():
-    candidates = [
+def resolve_local_ffmpeg_candidates(extra_candidates=None):
+    candidates = list(extra_candidates or [])
+    candidates += [
         Path(r"C:\pinokio\api\facefusion-pinokio.git\.env\Library\bin\ffmpeg.exe"),
         Path(r"C:\pinokio\api\wan2gp.git\app\ffmpeg_bins\ffmpeg.exe"),
     ]
@@ -46,10 +47,29 @@ def detect_local_ffmpeg_runtime():
     return detect_render_runtime()
 
 
-def pick_discrete_adapter():
-    adapters = wgpu.gpu.enumerate_adapters_sync()
+def _load_wgpu() -> Any:
+    try:
+        import wgpu
+    except ModuleNotFoundError as exc:
+        raise RuntimeError("Install wgpu to use local shader rendering.") from exc
+    return wgpu
+
+
+def is_wgpu_available() -> bool:
+    try:
+        _load_wgpu()
+    except RuntimeError:
+        return False
+    return True
+
+
+def pick_discrete_adapter(wgpu_module=None, *, require_discrete: bool = True):
+    wgpu_module = wgpu_module or _load_wgpu()
+    adapters = wgpu_module.gpu.enumerate_adapters_sync()
     discrete = [a for a in adapters if a.info.get("adapter_type") == "DiscreteGPU"]
     if not discrete:
+        if not require_discrete and adapters:
+            return adapters[0]
         raise RuntimeError("No discrete GPU adapter found for local shader runtime.")
 
     nvidia = [a for a in discrete if "NVIDIA" in str(a.info.get("vendor", "")).upper() or "NVIDIA" in str(a.info.get("device", "")).upper()]
@@ -57,7 +77,7 @@ def pick_discrete_adapter():
     return chosen
 
 
-def detect_local_shader_runtime() -> tuple[LocalShaderRuntime, wgpu.GPUAdapter]:
+def detect_local_shader_runtime() -> tuple[LocalShaderRuntime, Any]:
     runtime = detect_local_ffmpeg_runtime()
     adapter = pick_discrete_adapter()
     info = adapter.info

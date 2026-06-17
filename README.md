@@ -50,6 +50,7 @@ Completed films with full source code (run scripts to generate videos):
 ```
 pyreeler/
 ├── skills/                  # AI assistant skills
+│   ├── _shared/             # Canonical shared reference docs used by sync.py
 │   ├── claude/              # Claude Code skill
 │   └── codex/               # OpenAI Codex skill
 │
@@ -78,16 +79,23 @@ pyreeler/
 
 ## Development
 
-`templates/` (repo root) is the single source of truth for template code. Each
-skill must ship self-contained, so its templates are physical copies. After
-editing anything under `templates/` — or one of the shared reference docs —
-redistribute the copies:
+`templates/` (repo root) is the single source of truth for template code.
+`skills/_shared/references/` is the source for reference docs that are
+byte-identical across providers. Each skill must ship self-contained, so these
+files are physical copies in `skills/claude/` and `skills/codex/`. After editing
+either source tree, redistribute the copies:
 
 ```bash
 python3 sync.py          # copy canonical files into skills/claude and skills/codex
 python3 sync.py --check  # verify nothing has drifted (used in CI)
-pytest                   # run the test suite
+python3 graduation_check.py  # verify graduated templates are declared/tested/proven
+python3 -m pytest -q     # run the test suite
 ```
+
+A graduated template is a portable helper whose canonical source lives in
+`templates/`, is declared in `template_graduation.toml`, is distributed into both
+skill folders by `sync.py`, has at least one test path, and has at least one
+example film/demo or documented usage path.
 
 ## Using This Skill With Other AI Models
 
@@ -113,6 +121,7 @@ The `templates/` folder provides lightweight starters, not a full framework:
 - `composer.py`: motif-to-MIDI helpers and optional SoundFont rendering path
 - `voice.py`: optional `edge-tts` helper
 - `audio_engine.py`: simple stem placement, ducking, mastering, and WAV export
+- `audio_reactive.py`: per-frame RMS envelopes for audio-driven visual parameters
 - `ffmpeg_utils.py`: host-profile detection, encoder smoke tests, and conservative worker heuristics
 - `render_runtime.py`: one-call portable render defaults for encoder, ffmpeg path, and worker count
 - `parallel_render.py`: multiprocess frame rendering with ordered output (Claude version)

@@ -40,8 +40,8 @@ SHARED_REFERENCES = (
     "audio-pipeline.md",
 )
 
-# Canonical source for the shared references (the richer, lead platform).
-REFERENCE_SOURCE = "claude"
+# Canonical source for references that are byte-identical across providers.
+REFERENCE_SOURCE_DIR = REPO_ROOT / "skills" / "_shared" / "references"
 
 
 def _file_pairs() -> list[tuple[Path, Path]]:
@@ -55,13 +55,10 @@ def _file_pairs() -> list[tuple[Path, Path]]:
             for src in sorted(src_dir.glob("*.py")):
                 pairs.append((src, dst_dir / src.name))
 
-    src_ref_dir = REPO_ROOT / "skills" / REFERENCE_SOURCE / "references"
     for skill in SKILL_DIRS:
-        if skill == REFERENCE_SOURCE:
-            continue
         dst_ref_dir = REPO_ROOT / "skills" / skill / "references"
         for name in SHARED_REFERENCES:
-            pairs.append((src_ref_dir / name, dst_ref_dir / name))
+            pairs.append((REFERENCE_SOURCE_DIR / name, dst_ref_dir / name))
 
     return pairs
 

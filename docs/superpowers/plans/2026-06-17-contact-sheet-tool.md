@@ -1,8 +1,10 @@
 # Contact-Sheet Sweep Tool Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox syntax for tracking.
 
 **Goal:** Add `experimental/tools/contact_sheet.py` — a `sweep()` function that renders one frame per parameter value and tiles them into a single contact-sheet image for side-by-side comparison.
+
+**Status:** Completed through commit `eb6fa94`; follow-up docs landed in `04b3eed`.
 
 **Architecture:** A pure library (import-and-use, like the other `experimental/tools/` modules). `sweep(render, param, values, ...)` calls a user-supplied `render(value)` callable for each value, normalizes each result (PIL image or `HxWx3 uint8` numpy array) to a PIL image, then composes a grid with optional per-cell captions and a title. Sequential only (no multiprocessing — render callables are usually unpicklable closures).
 
@@ -28,7 +30,7 @@ All three files follow existing repo conventions: tool docstring-with-Usage head
 - Create: `experimental/tools/contact_sheet.py`
 - Create: `experimental/tools/test_contact_sheet.py`
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 Create `experimental/tools/test_contact_sheet.py`:
 
@@ -76,12 +78,12 @@ def test_to_image_rejects_wrong_type():
         _to_image("not an image", value=7)
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `python3 -m pytest experimental/tools/test_contact_sheet.py -q`
 Expected: FAIL — `ImportError: cannot import name '_to_image'` (module/file does not exist yet).
 
-- [ ] **Step 3: Write minimal implementation**
+- [x] **Step 3: Write minimal implementation**
 
 Create `experimental/tools/contact_sheet.py`:
 
@@ -130,12 +132,12 @@ def _to_image(obj: Any, value: Any) -> Image.Image:
     )
 ```
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 Run: `python3 -m pytest experimental/tools/test_contact_sheet.py -q`
 Expected: PASS (4 passed).
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add experimental/tools/contact_sheet.py experimental/tools/test_contact_sheet.py
@@ -154,7 +156,7 @@ Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
 
 This task builds the grid composition (no labels/title/file-writing yet — those land in Tasks 3–4). All tests here pass `labels=False` so they stay valid after Task 3 adds caption height.
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 Append to `experimental/tools/test_contact_sheet.py`:
 
@@ -215,12 +217,12 @@ def test_bad_cols_raises():
         sweep(lambda v: np.zeros((2, 2, 3), np.uint8), "v", [1], cols=0)
 ```
 
-- [ ] **Step 2: Run tests to verify they fail**
+- [x] **Step 2: Run tests to verify they fail**
 
 Run: `python3 -m pytest experimental/tools/test_contact_sheet.py -q`
 Expected: FAIL — `ImportError: cannot import name 'sweep'`.
 
-- [ ] **Step 3: Write minimal implementation**
+- [x] **Step 3: Write minimal implementation**
 
 Append to `experimental/tools/contact_sheet.py`:
 
@@ -303,12 +305,12 @@ def sweep(
     return sheet
 ```
 
-- [ ] **Step 4: Run tests to verify they pass**
+- [x] **Step 4: Run tests to verify they pass**
 
 Run: `python3 -m pytest experimental/tools/test_contact_sheet.py -q`
 Expected: PASS (10 passed total).
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add experimental/tools/contact_sheet.py experimental/tools/test_contact_sheet.py
@@ -325,7 +327,7 @@ Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
 - Modify: `experimental/tools/contact_sheet.py`
 - Modify: `experimental/tools/test_contact_sheet.py`
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 Append to `experimental/tools/test_contact_sheet.py`:
 
@@ -344,12 +346,12 @@ def test_title_increases_height():
     assert withtitle.height > without.height
 ```
 
-- [ ] **Step 2: Run tests to verify they fail**
+- [x] **Step 2: Run tests to verify they fail**
 
 Run: `python3 -m pytest experimental/tools/test_contact_sheet.py -q`
 Expected: FAIL — `test_labels_increase_height` and `test_title_increases_height` fail (heights equal: caption/title not yet reserved).
 
-- [ ] **Step 3: Write minimal implementation**
+- [x] **Step 3: Write minimal implementation**
 
 In `experimental/tools/contact_sheet.py`, replace the body of `sweep()` from the
 `cell_w = ...` line through the `return sheet` line with this version (adds caption
@@ -388,13 +390,13 @@ and title height + drawing):
     return sheet
 ```
 
-- [ ] **Step 4: Run tests to verify they pass**
+- [x] **Step 4: Run tests to verify they pass**
 
 Run: `python3 -m pytest experimental/tools/test_contact_sheet.py -q`
 Expected: PASS (12 passed). The Task 2 layout tests still pass because they use
 `labels=False` and no `title`, so `caption_h` and `title_h` are both 0.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add experimental/tools/contact_sheet.py experimental/tools/test_contact_sheet.py
@@ -414,7 +416,7 @@ Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
 `out` writing already exists from Task 2. This task adds `frames_dir` dumping and
 verifies both output paths.
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 Append to `experimental/tools/test_contact_sheet.py`:
 
@@ -435,13 +437,13 @@ def test_writes_individual_frames(tmp_path):
     assert written == ["thr_000.png", "thr_001.png", "thr_002.png"]
 ```
 
-- [ ] **Step 2: Run tests to verify they fail**
+- [x] **Step 2: Run tests to verify they fail**
 
 Run: `python3 -m pytest experimental/tools/test_contact_sheet.py -q`
 Expected: `test_writes_out_png` PASSES already (out implemented in Task 2);
 `test_writes_individual_frames` FAILS — `frames_dir` directory is never created.
 
-- [ ] **Step 3: Write minimal implementation**
+- [x] **Step 3: Write minimal implementation**
 
 In `experimental/tools/contact_sheet.py`, immediately after the
 `frames = [_to_image(render(v), v) for v in values]` line, insert the frame-dump block:
@@ -456,12 +458,12 @@ In `experimental/tools/contact_sheet.py`, immediately after the
 
 ```
 
-- [ ] **Step 4: Run tests to verify they pass**
+- [x] **Step 4: Run tests to verify they pass**
 
 Run: `python3 -m pytest experimental/tools/test_contact_sheet.py -q`
 Expected: PASS (14 passed).
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add experimental/tools/contact_sheet.py experimental/tools/test_contact_sheet.py
@@ -478,7 +480,7 @@ Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
 - Modify: `experimental/tools/contact_sheet.py`
 - Modify: `pytest.ini`
 
-- [ ] **Step 1: Add the runnable demo**
+- [x] **Step 1: Add the runnable demo**
 
 Append to `experimental/tools/contact_sheet.py`:
 
@@ -498,12 +500,12 @@ if __name__ == "__main__":
     print(f"Wrote contact_sheet_demo.png ({sheet.width}x{sheet.height})")
 ```
 
-- [ ] **Step 2: Verify the demo runs**
+- [x] **Step 2: Verify the demo runs**
 
 Run: `cd experimental/tools && python3 contact_sheet.py && rm -f contact_sheet_demo.png && cd -`
 Expected: prints `Wrote contact_sheet_demo.png (NNNxNNN)` with no traceback.
 
-- [ ] **Step 3: Wire the test into pytest testpaths**
+- [x] **Step 3: Wire the test into pytest testpaths**
 
 In `pytest.ini`, change:
 
@@ -522,13 +524,13 @@ testpaths =
     experimental/tools/test_contact_sheet.py
 ```
 
-- [ ] **Step 4: Run the full default suite + sync drift guard**
+- [x] **Step 4: Run the full default suite + sync drift guard**
 
 Run: `python3 sync.py --check && python3 -m pytest -q`
 Expected: sync prints in-sync; pytest collects the existing suite **plus** the 14
 new contact-sheet tests, all passing.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add experimental/tools/contact_sheet.py pytest.ini
@@ -545,7 +547,7 @@ Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
 - Modify: `experimental/README.md`
 - Modify: `docs/plans/2026-06-17-review-improvements.md`
 
-- [ ] **Step 1: Document the tool in the experimental README**
+- [x] **Step 1: Document the tool in the experimental README**
 
 In `experimental/README.md`, under the `### Visual` techniques table area or the
 tools listing, add a short entry describing `contact_sheet.sweep` (parameter sweep →
@@ -557,14 +559,14 @@ under a "Tools" mention:
   and tiles them into a single comparison image. Fast "which value looks best?" loop.
 ```
 
-- [ ] **Step 2: Mark the future direction as delivered**
+- [x] **Step 2: Mark the future direction as delivered**
 
 In `docs/plans/2026-06-17-review-improvements.md`, in the FUTURE DIRECTIONS list,
 update item 2 (ParameterSequence-driven batch render / contact-sheet tool) to note
 it is delivered as `experimental/tools/contact_sheet.py` (single-axis sweep; 2D
 grids and parallel variants remain future work).
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add experimental/README.md docs/plans/2026-06-17-review-improvements.md
