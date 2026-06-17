@@ -89,8 +89,9 @@ low-risk path).
 1. **Formalize template "graduation"** (ROADMAP Option 4). Graduation currently = manual
    copy. Make it: passing tests + an example film + `sync.py`. Turns a copy-paste ritual
    into a verifiable gate.
-2. **ParameterSequence-driven batch render + comparison/contact-sheet tool.** Highest
-   multiplier for exploration (precedent: `docs/benchmarks/n150_contact_sheet.png`).
+2. **ParameterSequence-driven batch render + comparison/contact-sheet tool.** Contact-sheet
+   comparison is delivered as `experimental/tools/contact_sheet.py` for single-axis
+   sweeps. 2D grids and parallel variant rendering remain future work.
 3. **Audio-reactive parameter mapping** — let audio envelopes drive visual params via the
    existing shared `arc_state(t)` timeline. Builds on existing infra, no new deps.
 4. **GPU frame *synthesis*** (not just encoding). Seed: `docs/hardware-experiments/wgpu_runtime.py`.
