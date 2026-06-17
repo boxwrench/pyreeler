@@ -153,6 +153,9 @@ low-risk path).
 
 ## NEXT TASK CANDIDATES
 
+Detailed backlog:
+`docs/plans/2026-06-17-remaining-roadmap-implementation.md`.
+
 1. **Contact-sheet v2:** add 2D parameter grids and/or parallel variant rendering.
 2. **Audio-reactive v2:** add band-specific envelopes and beat/onset helpers.
 3. **GPU synthesis v2:** add a shader render base class, benchmark output, or CPU
