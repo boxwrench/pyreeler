@@ -69,13 +69,18 @@ single-source `sync.py` model. Removed it and repointed the three doc references
 `skills/codex/` (and repo-root `templates/`). `main-skill-demo`'s references already
 point at the canonical skill, so they stayed valid.
 
-## PENDING — needs your decision
+## RESOLVED (cont.)
 
-### B. Committed showcase media (~78 MB, 85% of repo)
-8 `.mp4`s are force-committed (gitignore lists `*.mp4`) to power GitHub Pages.
-README now describes this accurately, but the long-term fix is still open:
-**Options:** Git LFS for `assets/showcase/`; or move media to a `gh-pages` branch /
-GitHub Releases; or accept it as-is. Not actioned this session.
+### B. Committed showcase media ✅ (2026-06-17)
+**Resolution: re-encoded in place, kept in main.** Git LFS was rejected because
+GitHub Pages does not serve LFS objects — `index.html` loads the 9 clips directly,
+so LFS would serve pointer text and break the gallery. Instead re-encoded all clips
+with `libx264 -crf 28 -preset slow -movflags +faststart` (no resolution change; they
+were already ≤720p). **Result: 76 MB → 29 MB (~62% smaller)**, faststart added for
+better web streaming, durations/resolutions preserved, all decode cleanly, terminal
+text and detail spot-checked. No force-push / history rewrite (full-clone history
+still holds the old blobs; only the checkout shrinks — acceptable per the chosen
+low-risk path).
 
 ---
 
