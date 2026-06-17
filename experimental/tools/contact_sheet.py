@@ -94,6 +94,11 @@ def sweep(
 
     frames = [_to_image(render(v), v) for v in values]
 
+    if frames_dir is not None:
+        os.makedirs(frames_dir, exist_ok=True)
+        for i, img in enumerate(frames):
+            img.save(os.path.join(frames_dir, f"{param}_{i:03d}.png"))
+
     n = len(frames)
     if cols is None:
         cols = math.ceil(math.sqrt(n))
