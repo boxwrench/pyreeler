@@ -1,0 +1,151 @@
+"""Contact-sheet sweep tool for PyReeler experimental.
+
+Render one frame per parameter value and tile them into a single image for
+side-by-side visual comparison — turning "which value looks best?" into one call.
+
+Usage:
+    from experimental.tools.contact_sheet import sweep
+
+    def render(threshold):
+        return my_pixel_sort(img, threshold)   # PIL.Image or HxWx3 uint8 array
+
+    sweep(render, "threshold", [50, 100, 150, 200], out="sheet.png")
+"""
+from __future__ import annotations
+
+import math
+import os
+from typing import Any, Callable, Sequence
+
+import numpy as np
+from PIL import Image, ImageDraw
+
+
+def _to_image(obj: Any, value: Any) -> Image.Image:
+    """Normalize a render result to an RGB PIL image.
+
+    Accepts a PIL.Image or an HxWx3 uint8 numpy array. Raises TypeError with a
+    message naming the offending value otherwise.
+    """
+    if isinstance(obj, Image.Image):
+        return obj.convert("RGB")
+    if isinstance(obj, np.ndarray):
+        if obj.ndim == 3 and obj.shape[2] == 3 and obj.dtype == np.uint8:
+            return Image.fromarray(obj, mode="RGB")
+        raise TypeError(
+            f"render({value!r}) returned a numpy array of shape {obj.shape} "
+            f"dtype {obj.dtype}; expected HxWx3 uint8"
+        )
+    raise TypeError(
+        f"render({value!r}) returned {type(obj).__name__}; "
+        f"expected PIL.Image or HxWx3 uint8 numpy array"
+    )
+
+
+def _paste_centered(canvas: Image.Image, img: Image.Image,
+                    box_x: int, box_y: int, box_w: int, box_h: int) -> None:
+    """Paste img centered inside the (box_x, box_y, box_w, box_h) cell.
+
+    Centering (rather than resizing) avoids distorting images whose size differs
+    from the cell — the comparison stays honest.
+    """
+    off_x = box_x + (box_w - img.width) // 2
+    off_y = box_y + (box_h - img.height) // 2
+    canvas.paste(img, (off_x, off_y))
+
+
+def sweep(
+    render: Callable[[Any], Any],
+    param: str,
+    values: Sequence[Any],
+    out: str | None = None,
+    *,
+    cols: int | None = None,
+    labels: bool = True,
+    label_fmt: str = "{param}={value}",
+    frames_dir: str | None = None,
+    title: str | None = None,
+    pad: int = 8,
+    bg: tuple[int, int, int] = (0, 0, 0),
+) -> Image.Image:
+    """Render one frame per value and tile them into a contact sheet.
+
+    Args:
+        render: Callable taking a value, returning a PIL.Image or HxWx3 uint8 array.
+        param: Parameter name (used in captions).
+        values: Candidate values to sweep.
+        out: If given, write the assembled sheet PNG to this path.
+        cols: Grid columns; defaults to ceil(sqrt(n)) for a square-ish grid.
+        labels: Draw a "param=value" caption under each cell.
+        label_fmt: Caption format string; receives param= and value=.
+        frames_dir: If given, also write each individual frame here.
+        title: Optional title strip across the top.
+        pad: Pixels of padding around and between cells.
+        bg: Background RGB color.
+
+    Returns:
+        The assembled PIL.Image (also written to `out` if provided).
+    """
+    values = list(values)
+    if not values:
+        raise ValueError("values must be non-empty")
+    if cols is not None and cols < 1:
+        raise ValueError("cols must be >= 1")
+
+    frames = [_to_image(render(v), v) for v in values]
+
+    if frames_dir is not None:
+        os.makedirs(frames_dir, exist_ok=True)
+        for i, img in enumerate(frames):
+            img.save(os.path.join(frames_dir, f"{param}_{i:03d}.png"))
+
+    n = len(frames)
+    if cols is None:
+        cols = math.ceil(math.sqrt(n))
+    rows = math.ceil(n / cols)
+
+    cell_w = max(img.width for img in frames)
+    cell_h = max(img.height for img in frames)
+
+    caption_h = 16 if labels else 0
+    full_cell_h = cell_h + caption_h
+    title_h = 20 if title else 0
+
+    sheet_w = pad + cols * (cell_w + pad)
+    sheet_h = pad + title_h + rows * (full_cell_h + pad)
+
+    sheet = Image.new("RGB", (sheet_w, sheet_h), bg)
+    draw = ImageDraw.Draw(sheet)
+
+    if title:
+        draw.text((pad, pad // 2), title, fill=(255, 255, 255))
+
+    for i, (value, img) in enumerate(zip(values, frames)):
+        r = i // cols
+        c = i % cols
+        box_x = pad + c * (cell_w + pad)
+        box_y = pad + title_h + r * (full_cell_h + pad)
+        _paste_centered(sheet, img, box_x, box_y, cell_w, cell_h)
+        if labels:
+            caption = label_fmt.format(param=param, value=value)
+            draw.text((box_x, box_y + cell_h + 2), caption, fill=(255, 255, 255))
+
+    if out is not None:
+        sheet.save(out)
+
+    return sheet
+
+
+if __name__ == "__main__":
+    # Demo: sweep a brightness ramp and write a sample contact sheet.
+    def _demo_render(brightness):
+        return np.full((80, 120, 3), brightness, dtype=np.uint8)
+
+    sheet = sweep(
+        _demo_render,
+        "brightness",
+        [0, 64, 128, 192, 255],
+        out="contact_sheet_demo.png",
+        title="brightness sweep",
+    )
+    print(f"Wrote contact_sheet_demo.png ({sheet.width}x{sheet.height})")

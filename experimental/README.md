@@ -45,6 +45,7 @@ experimental/
 ├── tools/                 # Reusable experimental utilities
 │   ├── fm_synth.py
 │   ├── attractors.py
+│   ├── contact_sheet.py
 │   └── TEMPLATE.py
 │
 ├── notes/                 # Three types of notes (see below)
@@ -110,6 +111,10 @@ Content:
 | Strange Attractors | NumPy, Pillow | **Ready** | Lorenz, Rössler - **vectorized 14x speedup** |
 | Reaction-Diffusion | NumPy, SciPy | Ready | Gray-Scott patterns |
 | L-Systems | NumPy | Planned | String rewriting growth |
+
+### Tools
+- `contact_sheet.py` — `sweep(render, param, values)` renders one frame per value
+  and tiles them into a single comparison image. Fast "which value looks best?" loop.
 
 ### Completed Films
 
