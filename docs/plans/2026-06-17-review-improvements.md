@@ -104,7 +104,8 @@ low-risk path).
    and `docs/superpowers/plans/2026-06-17-audio-reactive-parameter-mapping.md`.
 4. **GPU frame *synthesis*** (not just encoding). Seed: `docs/hardware-experiments/wgpu_runtime.py`.
    Keep in `experimental/` until portable. DEVLOG is honest that "GPU mode" today = encode only.
-   Spec/plan drafted in
+   Local runtime is now import-safe without `wgpu` and CI-covered for adapter/FFmpeg
+   selection behavior; actual shader rendering remains local-only. Spec/plan:
    `docs/superpowers/specs/2026-06-17-gpu-frame-synthesis-runtime-design.md` and
    `docs/superpowers/plans/2026-06-17-gpu-frame-synthesis-runtime.md`.
 5. **Provider-agnostic skill core** — a `skills/_shared/` consumed by thin per-provider
