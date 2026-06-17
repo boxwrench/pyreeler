@@ -109,8 +109,10 @@ low-risk path).
    `docs/superpowers/specs/2026-06-17-gpu-frame-synthesis-runtime-design.md` and
    `docs/superpowers/plans/2026-06-17-gpu-frame-synthesis-runtime.md`.
 5. **Provider-agnostic skill core** — a `skills/_shared/` consumed by thin per-provider
-   wrappers, so adding a 3rd AI provider is trivial. `sync.py` is the first step toward this.
-   Spec/plan drafted in
+   wrappers, so adding a 3rd AI provider is trivial. `skills/_shared/references/`
+   now provides the canonical source for byte-identical references, and `sync.py`
+   copies those into each provider skill. Generated provider wrappers remain future work.
+   Spec/plan:
    `docs/superpowers/specs/2026-06-17-provider-agnostic-skill-core-design.md` and
    `docs/superpowers/plans/2026-06-17-provider-agnostic-skill-core.md`.
 
