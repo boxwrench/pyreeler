@@ -21,5 +21,8 @@ jobs:
       - name: Verify skill files are in sync with canonical sources
         run: python sync.py --check
 
+      - name: Verify graduated templates have proof points
+        run: python graduation_check.py
+
       - name: Run test suite
         run: pytest -q
