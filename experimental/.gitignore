@@ -27,6 +27,11 @@ frame_*.jpg
 *.tmp
 *.temp
 
+# Scratch/debug artifacts (base64 dumps, debug frames, smoke renders)
+_*.txt
+*_debug.png
+*_smoke*.png
+
 # Jupyter
 .ipynb_checkpoints/
 
