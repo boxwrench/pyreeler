@@ -1,0 +1,87 @@
+[[template]]
+path = "templates/audio/audio_engine.py"
+kind = "audio"
+status = "graduated"
+tests = ["tests/test_sync.py"]
+examples = ["films/what-the-light-kept/render_preview.py", "films/dungeon-emergence/dungeon_emergence_production.py"]
+notes = "Stem placement, ducking, mixing, and WAV export used by completed films."
+
+[[template]]
+path = "templates/audio/composer.py"
+kind = "audio"
+status = "graduated"
+tests = ["tests/test_sync.py"]
+examples = ["experimental/experiments/main-skill-demo/README.md"]
+notes = "Optional score composition helpers documented by the main skill demo."
+
+[[template]]
+path = "templates/audio/sfx_gen.py"
+kind = "audio"
+status = "graduated"
+tests = ["tests/test_sync.py"]
+examples = ["experimental/experiments/main-skill-demo/main_skill_demo.py", "docs/hardware-experiments/pyreel_ghost_machine_shader.py"]
+notes = "Procedural foley generators used by demos and hardware experiments."
+
+[[template]]
+path = "templates/audio/voice.py"
+kind = "audio"
+status = "graduated"
+tests = ["tests/test_sync.py"]
+examples = ["films/dungeon-emergence/dungeon_emergence_production.py"]
+notes = "Optional edge-tts wrapper used by the dungeon-emergence film."
+
+[[template]]
+path = "templates/video/ffmpeg_utils.py"
+kind = "video"
+status = "graduated"
+tests = ["tests/test_sync.py"]
+examples = ["templates/video/render_runtime.py", "README.md"]
+notes = "Portable FFmpeg detection and encoder argument helpers used by render_runtime."
+
+[[template]]
+path = "templates/video/geometry_3d.py"
+kind = "video"
+status = "graduated"
+tests = ["tests/test_sync.py"]
+examples = ["experimental/experiments/cosmic_collapse.py", "skills/codex/references/three-d-and-lensing.md"]
+notes = "Perspective projection and transform helpers documented for 3D/lensing work."
+
+[[template]]
+path = "templates/video/lensing.py"
+kind = "video"
+status = "graduated"
+tests = ["tests/test_sync.py"]
+examples = ["experimental/experiments/cosmic_collapse.py", "skills/codex/references/three-d-and-lensing.md"]
+notes = "Schwarzschild-style radial displacement documented for cosmic-collapse style renders."
+
+[[template]]
+path = "templates/video/parallel_render.py"
+kind = "video"
+status = "graduated"
+tests = ["tests/test_sync.py"]
+examples = ["experimental/experiments/main-skill-demo/main_skill_demo.py"]
+notes = "Ordered multiprocess frame rendering used by the main skill demo."
+
+[[template]]
+path = "templates/video/render_runtime.py"
+kind = "video"
+status = "graduated"
+tests = ["tests/test_sync.py"]
+examples = ["films/what-the-light-kept/render_preview.py", "films/dungeon-emergence/dungeon_emergence_production.py", "experimental/experiments/main-skill-demo/main_skill_demo.py"]
+notes = "Portable render defaults used by completed films and the main skill demo."
+
+[[template]]
+path = "templates/video/self_healing.py"
+kind = "video"
+status = "graduated"
+tests = ["tests/test_sync.py"]
+examples = ["skills/codex/references/workflow.md"]
+notes = "Workflow gate for randomized renders; currently documented as guidance."
+
+[[template]]
+path = "templates/video/text_track.py"
+kind = "video"
+status = "graduated"
+tests = ["tests/test_sync.py"]
+examples = ["experimental/experiments/cosmic_collapse.py", "docs/plans/2026-05-10-cosmic-collapse.md"]
+notes = "Terminal-style timed text model used by cosmic-collapse planning and implementation."
