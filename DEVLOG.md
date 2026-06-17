@@ -1,5 +1,13 @@
 # PyReeler Devlog
 
+> **Historical note:** This devlog records development as it happened on the
+> original Windows authoring machine, so paths below (`C:\Github\pyreeler`,
+> `C:\Users\wests\...`) and the `narrative_preview_smoke.py` benchmark harness
+> are **not part of this repository**. The benchmark numbers are kept for
+> reference; they are not reproducible from a fresh clone. For the current,
+> runnable workflow see the **Development** section of `README.md`
+> (`python3 sync.py`, `pytest`).
+
 ## Current Repo State
 
 `C:\Github\pyreeler` is the working repository for both Codex and Claude variants of the PyReeler skill:
@@ -90,6 +98,11 @@ Mirrored to `skills/codex/` and top-level `templates/`.
 ---
 
 ## Benchmark Methodology
+
+> The `narrative_preview_smoke.py` harness referenced below lived on the
+> original authoring machine and is not committed here. Treat this section as a
+> record of the methodology used to produce the benchmark numbers, not as
+> instructions runnable from this repo.
 
 ### Fast Iteration Loop
 

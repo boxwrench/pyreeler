@@ -43,7 +43,7 @@ Completed films with full source code (run scripts to generate videos):
 - `films/what-the-light-kept/` — AI memory fragment narrative, 45s
 - `films/dungeon-emergence/` — ASCII dungeon emergence, 45s
 
-**Note:** Video files are generated locally and not stored in this repository due to file size limits.
+**Note:** A small set of low-bitrate showcase clips is committed under `assets/showcase/` to power the gallery above. Full-resolution finals and preview renders are *not* tracked — `.gitignore` excludes `*.mp4`/`*.mov`/`*.avi` by default, so generate those locally and export approved finals to `~/Videos`.
 
 ## Repository Structure
 
@@ -71,7 +71,22 @@ pyreeler/
 │   └── benchmarks/          # Performance benchmarks
 │
 ├── assets/                  # Logo and static media
+├── tests/                   # Test suite (run with `pytest`)
+├── sync.py                  # Distributes canonical templates into the skill folders
 └── DEVLOG.md                # Development history
+```
+
+## Development
+
+`templates/` (repo root) is the single source of truth for template code. Each
+skill must ship self-contained, so its templates are physical copies. After
+editing anything under `templates/` — or one of the shared reference docs —
+redistribute the copies:
+
+```bash
+python3 sync.py          # copy canonical files into skills/claude and skills/codex
+python3 sync.py --check  # verify nothing has drifted (used in CI)
+pytest                   # run the test suite
 ```
 
 ## Using This Skill With Other AI Models
