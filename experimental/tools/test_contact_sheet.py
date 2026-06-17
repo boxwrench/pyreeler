@@ -109,3 +109,19 @@ def test_title_increases_height():
     without = sweep(render, "v", [1, 2], labels=False, pad=0)
     withtitle = sweep(render, "v", [1, 2], labels=False, pad=0, title="sweep")
     assert withtitle.height > without.height
+
+
+def test_writes_out_png(tmp_path):
+    render = lambda v: np.zeros((20, 20, 3), dtype=np.uint8)
+    out = tmp_path / "sheet.png"
+    sweep(render, "thr", [10, 20, 30], out=str(out))
+    assert out.exists()
+    Image.open(out).verify()  # raises if not a valid image
+
+
+def test_writes_individual_frames(tmp_path):
+    render = lambda v: np.zeros((20, 20, 3), dtype=np.uint8)
+    frames = tmp_path / "frames"
+    sweep(render, "thr", [10, 20, 30], frames_dir=str(frames))
+    written = sorted(os.listdir(frames))
+    assert written == ["thr_000.png", "thr_001.png", "thr_002.png"]
