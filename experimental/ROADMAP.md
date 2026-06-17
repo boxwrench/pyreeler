@@ -11,6 +11,7 @@ Tracking decisions and options as the experimental work evolves.
 | 2026-03-16 | Next sampler film | 5 options for next film | **Option 2: Reaction-Diffusion** - Organic pattern evolution, distinct from previous attractor/sampler |
 | 2026-03-16 | Demo film scope | 3 complexity levels, multiple techniques | **Option C (All 4, Moderate)** - Maximum demonstration value with manageable complexity |
 | 2026-03-16 | Pixel Sorting follow-up | 4 implementation paths available | **Option 3: ParameterSequence** - Enables reproducible experiments for ALL techniques |
+| 2026-06-17 | Experiment comparison tooling | Project review future directions | **Single-axis contact sheet delivered** - `contact_sheet.sweep()` compares one parameter across values |
 
 ### 2026-03-16: Demo Film Design Decisions
 
@@ -29,10 +30,10 @@ Tracking decisions and options as the experimental work evolves.
 ### From Pixel Sorting Integration (2026-03-16)
 
 #### Option 1: Implement Pixel Sorting Tool
-**Status:** Available
+**Status:** Done
 **Effort:** Medium
 **Impact:** Working code for glitch aesthetics
-**Files to create:** `tools/pixel_sorting.py`
+**Files created:** `tools/pixel_sorting.py`
 
 Core functions:
 - `brightness_sort_row()` - core sorting function
@@ -44,25 +45,26 @@ Core functions:
 ---
 
 #### Option 2: Create Pixel Sorting Experiment
-**Status:** Available
+**Status:** Done
 **Effort:** Medium
 **Impact:** Visual proof-of-concept film
-**Files to create:**
-- `experiments/pixel-sort-demo/main.py`
-- Test all 4 algorithm variants
-- Generate reference frames
+**Files created:**
+- `experiments/pixel-sort-sampler/main.py`
+- `experiments/pixel-sort-sampler/output/sequences/*.json`
 
 **When to choose:** Want to see the technique in action in a complete film
 
 ---
 
 #### Option 3: Implement ParameterSequence Class ✅ SELECTED
-**Status:** IN PROGRESS
+**Status:** Done
 **Effort:** Low-Medium
 **Impact:** Infrastructure for reproducible experiments
-**Files to create:**
+**Files created:**
 - ✅ `tools/parameter_sequence.py` - Core implementation
-- Integration examples with existing techniques
+- ✅ `experiments/parameter-sequence-demo/` - Cross-domain demo film
+- ✅ `experiments/rd-sampler-film/` - Reaction-diffusion integration
+- ✅ `experiments/pixel-sort-sampler/` - Pixel-sorting integration
 
 **Benefits:**
 - Unlocks reproducible experiments for ALL techniques, not just Pixel Sorting
@@ -108,7 +110,8 @@ Core functions:
 
 ### Infrastructure
 - [ ] Batch rendering system using ParameterSequence
-- [ ] Experiment comparison tools
+- [x] Experiment comparison tools — `tools/contact_sheet.py` supports single-axis sweeps
+- [ ] 2D contact-sheet grids and parallel variant rendering
 - [ ] Automated visual regression testing
 - [ ] Render farm distribution
 
@@ -135,4 +138,4 @@ Core functions:
 
 ---
 
-*Last updated: 2026-03-16*
+*Last updated: 2026-06-17*
