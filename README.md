@@ -50,6 +50,7 @@ Completed films with full source code (run scripts to generate videos):
 ```
 pyreeler/
 ├── skills/                  # AI assistant skills
+│   ├── _shared/             # Canonical shared reference docs used by sync.py
 │   ├── claude/              # Claude Code skill
 │   └── codex/               # OpenAI Codex skill
 │
@@ -78,10 +79,11 @@ pyreeler/
 
 ## Development
 
-`templates/` (repo root) is the single source of truth for template code. Each
-skill must ship self-contained, so its templates are physical copies. After
-editing anything under `templates/` — or one of the shared reference docs —
-redistribute the copies:
+`templates/` (repo root) is the single source of truth for template code.
+`skills/_shared/references/` is the source for reference docs that are
+byte-identical across providers. Each skill must ship self-contained, so these
+files are physical copies in `skills/claude/` and `skills/codex/`. After editing
+either source tree, redistribute the copies:
 
 ```bash
 python3 sync.py          # copy canonical files into skills/claude and skills/codex
