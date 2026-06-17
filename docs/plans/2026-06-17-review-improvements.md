@@ -1,0 +1,99 @@
+# Project Review — Improvements, Merges & Future Directions
+
+**Date:** 2026-06-17
+**Status:** In progress — 4 improvements landed in working tree (uncommitted), several proposed items pending your call.
+**Purpose:** Pickup/handoff doc. Safe to clear context and resume from here.
+
+---
+
+## How to resume
+
+```bash
+cd ~/Desktop/github/pyreeler
+git status                 # see the uncommitted work described below
+python3 sync.py --check    # should print "in sync"
+pytest -q                  # should be 8 passed
+```
+
+Nothing has been committed yet. The changes below live in the working tree.
+
+---
+
+## DONE (this session, uncommitted)
+
+### 1. Template de-duplication + sync guard ✅
+**Problem:** `templates/`, `skills/claude/templates/`, `skills/codex/templates/` held
+byte-identical copies with no sync mechanism — already drifting.
+**Done:**
+- `sync.py` (new) — `templates/` (root) is canonical; copies into both skill folders.
+  Also syncs the 3 byte-identical reference docs (`three-d-and-lensing.md`,
+  `creative-lenses.md`, `audio-pipeline.md`). Leaves `workflow.md` /
+  `vocabulary-map.md` alone — those legitimately differ per platform.
+  - `python3 sync.py` to distribute; `python3 sync.py --check` for CI drift guard.
+- `tests/test_sync.py` (new) — verifies faithful copy + that divergent files are excluded.
+
+### 2. Untracked scratch artifacts ✅
+- `git rm --cached` on `experimental/_b64_part*.txt`, `_mobile_b64.txt`,
+  `_*_debug.png`, `cosmic_collapse_smoke*.png` (files kept on disk, just untracked).
+- `experimental/.gitignore` extended with `_*.txt`, `*_debug.png`, `*_smoke*.png`.
+
+### 3. README + DEVLOG contradictions fixed ✅
+- README "videos not stored" line corrected — small showcase clips *are* committed
+  for the gallery; finals/previews are gitignored and go to `~/Videos`.
+- README: new **Development** section (sync.py / pytest) + structure tree updated.
+- DEVLOG: header + benchmark section flagged as historical (Windows paths and the
+  `narrative_preview_smoke.py` harness are not in this repo / not reproducible).
+
+### 4. Tests + CI ✅
+- `pytest.ini` — testpaths = `tests/` + `experimental/experiments/test_cosmic_collapse.py`
+  (sampler-film tests excluded by default: hardcoded relative paths + perf monitors).
+- `.github/workflows/ci.yml` — on push/PR: `sync.py --check` then `pytest -q`.
+- Current: **8 passed**.
+
+**Suggested commit grouping** (when you're ready — not yet committed):
+1. `chore: untrack scratch artifacts + extend experimental gitignore`
+2. `feat(build): add sync.py to dedupe templates across skill folders + tests`
+3. `ci: add pytest config and GitHub Actions workflow`
+4. `docs: reconcile README/DEVLOG with committed media and add dev workflow`
+
+---
+
+## PENDING — needs your decision
+
+### A. Stale `experimental/skills/codex/` copy — DO NOT DELETE without deciding
+Originally flagged as a "stale trap" (missing `three-d-and-lensing.md` + the 4 newer
+video templates). BUT `experimental/GUIDE.md` calls it a "Frozen skill copy (reference
+only)" and `experimental/README.md` documents it as a foundation users copy from.
+So the staleness may be intentional.
+**Options:** (a) leave as frozen reference; (b) refresh it once via sync and re-freeze;
+(c) delete and update GUIDE/README to point at top-level `skills/codex/`.
+**Recommendation:** (b) or (c) — an *incomplete* freeze is more confusing than either.
+
+### B. Committed showcase media (~78 MB, 85% of repo)
+8 `.mp4`s are force-committed (gitignore lists `*.mp4`) to power GitHub Pages.
+README now describes this accurately, but the long-term fix is still open:
+**Options:** Git LFS for `assets/showcase/`; or move media to a `gh-pages` branch /
+GitHub Releases; or accept it as-is. Not actioned this session.
+
+---
+
+## FUTURE DIRECTIONS (prioritized — beyond ROADMAP.md)
+
+1. **Formalize template "graduation"** (ROADMAP Option 4). Graduation currently = manual
+   copy. Make it: passing tests + an example film + `sync.py`. Turns a copy-paste ritual
+   into a verifiable gate.
+2. **ParameterSequence-driven batch render + comparison/contact-sheet tool.** Highest
+   multiplier for exploration (precedent: `docs/benchmarks/n150_contact_sheet.png`).
+3. **Audio-reactive parameter mapping** — let audio envelopes drive visual params via the
+   existing shared `arc_state(t)` timeline. Builds on existing infra, no new deps.
+4. **GPU frame *synthesis*** (not just encoding). Seed: `docs/hardware-experiments/wgpu_runtime.py`.
+   Keep in `experimental/` until portable. DEVLOG is honest that "GPU mode" today = encode only.
+5. **Provider-agnostic skill core** — a `skills/_shared/` consumed by thin per-provider
+   wrappers, so adding a 3rd AI provider is trivial. `sync.py` is the first step toward this.
+
+---
+
+## Notes on conventions observed
+- Skills must ship self-contained → templates are physical copies, hence `sync.py`.
+- `experimental/` is a permanent "habitat," not a staging area (per its README).
+- References differ per platform only for tool naming / invocation syntax.
