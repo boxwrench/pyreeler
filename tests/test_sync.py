@@ -35,6 +35,15 @@ def test_check_passes_after_sync():
 
 
 def test_shared_references_are_synced_but_divergent_ones_are_not():
+    assert sync.REFERENCE_SOURCE_DIR == REPO_ROOT / "skills" / "_shared" / "references"
+
+    for name in sync.SHARED_REFERENCES:
+        source = sync.REFERENCE_SOURCE_DIR / name
+        assert source.exists()
+        for skill in sync.SKILL_DIRS:
+            target = REPO_ROOT / "skills" / skill / "references" / name
+            assert filecmp.cmp(source, target, shallow=False)
+
     # Divergent files must NOT be in the shared set (would clobber per-platform text).
     assert "workflow.md" not in sync.SHARED_REFERENCES
     assert "vocabulary-map.md" not in sync.SHARED_REFERENCES
