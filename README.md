@@ -86,8 +86,14 @@ redistribute the copies:
 ```bash
 python3 sync.py          # copy canonical files into skills/claude and skills/codex
 python3 sync.py --check  # verify nothing has drifted (used in CI)
-pytest                   # run the test suite
+python3 graduation_check.py  # verify graduated templates are declared/tested/proven
+python3 -m pytest -q     # run the test suite
 ```
+
+A graduated template is a portable helper whose canonical source lives in
+`templates/`, is declared in `template_graduation.toml`, is distributed into both
+skill folders by `sync.py`, has at least one test path, and has at least one
+example film/demo or documented usage path.
 
 ## Using This Skill With Other AI Models
 

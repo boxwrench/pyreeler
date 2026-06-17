@@ -88,7 +88,8 @@ low-risk path).
 
 1. **Formalize template "graduation"** (ROADMAP Option 4). Graduation currently = manual
    copy. Make it: passing tests + an example film + `sync.py`. Turns a copy-paste ritual
-   into a verifiable gate. Spec/plan drafted in
+   into a verifiable gate. Implemented via `template_graduation.toml`,
+   `graduation_check.py`, and CI enforcement. Spec/plan:
    `docs/superpowers/specs/2026-06-17-template-graduation-design.md` and
    `docs/superpowers/plans/2026-06-17-template-graduation.md`.
 2. **ParameterSequence-driven batch render + comparison/contact-sheet tool.** Contact-sheet
