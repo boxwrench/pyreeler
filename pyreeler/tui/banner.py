@@ -44,6 +44,6 @@ def render_banner(text: str = "PYREELER", *, animate: bool = True) -> str:
             return ASCII_LOGO
         except Exception:
             pass  # any TTE/version problem -> fall through to the static logo
-    sys.stdout.write(_tint(ASCII_LOGO) + "\n")
+    sys.stdout.write(_tint(ASCII_LOGO.rstrip("\n")) + "\n")
     sys.stdout.flush()
     return ASCII_LOGO
