@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import subprocess
+import tempfile
 from pathlib import Path
 from typing import Any, Callable
 
@@ -44,7 +45,12 @@ def render_film(recipe, params: dict[str, Any], out_path,
 
 
 def _encode_frames(frames, out_path, runtime, fps: int) -> None:
-    """Pipe RGB frames to FFmpeg and write out_path. Stubbed in unit tests."""
+    """Pipe RGB frames to FFmpeg and write out_path. Stubbed in unit tests.
+
+    Note: frames are buffered in memory before encoding. This is fine for the
+    short films PyReeler targets; streaming straight into FFmpeg is a future
+    optimization (it would complicate per-frame progress reporting).
+    """
     if not frames:
         raise ValueError("no frames to encode")
     width, height = frames[0].size
@@ -58,10 +64,17 @@ def _encode_frames(frames, out_path, runtime, fps: int) -> None:
         "-pix_fmt", "yuv420p", "-movflags", "+faststart",
         str(out_path),
     ]
-    proc = subprocess.Popen(cmd, stdin=subprocess.PIPE)
-    assert proc.stdin is not None
-    for image in frames:
-        proc.stdin.write(image.convert("RGB").tobytes())
-    proc.stdin.close()
-    if proc.wait() != 0:
-        raise RuntimeError(f"ffmpeg exited with code {proc.returncode}")
+    # stderr -> a temp file (not a PIPE) so a chatty FFmpeg can't deadlock us
+    # while we are busy writing frames to its stdin.
+    with tempfile.TemporaryFile() as errfile:
+        proc = subprocess.Popen(cmd, stdin=subprocess.PIPE, stderr=errfile)
+        try:
+            for image in frames:
+                proc.stdin.write(image.convert("RGB").tobytes())
+        finally:
+            proc.stdin.close()  # always close, even if a write failed
+        returncode = proc.wait()
+        if returncode != 0:
+            errfile.seek(0)
+            detail = errfile.read().decode(errors="replace").strip()
+            raise RuntimeError(f"ffmpeg exited with code {returncode}: {detail}")
