@@ -56,16 +56,17 @@ def _cmd_render(args: list[str]) -> int:
         return 2
 
     # Stage 2: build the real parser with this recipe's generated flags.
+    schema = merged_params(recipe)
     parser = argparse.ArgumentParser(prog=f"pyreeler render {recipe.name}")
     parser.add_argument("recipe")
     parser.add_argument("-o", "--out", default=None)
-    for p in merged_params(recipe):
+    for p in schema:
         parser.add_argument(f"--{p.name}", default=None,
                             help=f"{p.help} (default {p.default})")
     namespace = parser.parse_args(args)
 
     overrides = {p.name: getattr(namespace, p.name)
-                 for p in merged_params(recipe)
+                 for p in schema
                  if getattr(namespace, p.name) is not None}
     try:
         params = resolve_params(recipe, overrides)
@@ -78,7 +79,11 @@ def _cmd_render(args: list[str]) -> int:
     def progress(done, total):
         print(f"\rframe {done}/{total}", end="", file=sys.stderr, flush=True)
 
-    render_film(recipe, params, out, on_progress=progress)
+    try:
+        render_film(recipe, params, out, on_progress=progress)
+    except (RuntimeError, OSError) as exc:
+        print(f"\nrender failed: {exc}", file=sys.stderr)
+        return 1
     print(f"\nwrote {out}", file=sys.stderr)
     return 0
 
@@ -89,5 +94,5 @@ def _launch_tui() -> int:
     except ImportError:
         print("The PyReeler TUI needs extra packages. Install them with:\n"
               "    pip install -r requirements-tui.txt", file=sys.stderr)
-        return 0
+        return 1
     return run_tui()
