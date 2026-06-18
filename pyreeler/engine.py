@@ -71,9 +71,13 @@ def _encode_frames(frames, out_path, runtime, fps: int) -> None:
         try:
             for image in frames:
                 proc.stdin.write(image.convert("RGB").tobytes())
+        except BrokenPipeError:
+            # FFmpeg died mid-stream; fall through to reap it and surface the
+            # real reason from its stderr (below) instead of a bare pipe error.
+            pass
         finally:
             proc.stdin.close()  # always close, even if a write failed
-        returncode = proc.wait()
+        returncode = proc.wait()  # always reap, even after a broken pipe
         if returncode != 0:
             errfile.seek(0)
             detail = errfile.read().decode(errors="replace").strip()

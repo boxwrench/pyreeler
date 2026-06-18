@@ -11,7 +11,7 @@ PARAMS = (
     Param("rho", float, 28.0, help="Lorenz rho"),
     Param("beta", float, 8 / 3, help="Lorenz beta"),
     Param("points", int, 10000, min=100, help="trajectory integration steps"),
-    Param("trail", int, 400, min=1, help="trail length in points"),
+    Param("trail", int, 10000, min=1, help="trail length in points (>=points shows the whole attractor)"),
 )
 
 
