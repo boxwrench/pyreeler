@@ -227,6 +227,21 @@ Every number in these tables was paid for in render time and disk space. The **I
 **Tested on Windows and Ubuntu Linux.**
 **macOS support is expected** (the code handles Apple Silicon and `h264_videotoolbox`) but has not been personally verified.
 
+### The two-command path (macOS/Linux)
+
+```bash
+git clone https://github.com/boxwrench/pyreeler.git && cd pyreeler
+./install.sh            # Claude Code  (use: ./install.sh codex  for Codex)
+```
+
+That checks for FFmpeg, runs `pip install -r requirements.txt` (just `numpy` +
+`pillow`), and symlinks the skill into place. The only thing it can't install for
+you is **FFmpeg itself** — see Prerequisites below. Optional capabilities (music,
+voice, SciPy filters) live in `requirements-extras.txt`: `pip install -r requirements-extras.txt`.
+
+> Windows users: install FFmpeg, run `pip install -r requirements.txt`, then use the
+> manual symlink/copy commands in the per-skill READMEs.
+
 ### Prerequisites
 
 **macOS** (untested):

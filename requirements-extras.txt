@@ -1,0 +1,6 @@
+# PyReeler optional capabilities — install only what a given film needs.
+# Each line maps to a feature tier described in the README.
+scipy>=1.7         # audio filtering, reaction-diffusion patterns
+midiutil>=1.2      # optional music: motif -> MIDI
+pyfluidsynth>=1.3  # optional music: SoundFont rendering (also needs system fluidsynth)
+edge-tts>=6.1      # optional voice synthesis
