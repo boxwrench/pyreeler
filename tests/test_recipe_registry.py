@@ -10,6 +10,17 @@ sys.path.insert(0, str(REPO_ROOT))
 from pyreeler.recipes import base  # noqa: E402
 
 
+@pytest.fixture(autouse=True)
+def _preserve_registry():
+    """Snapshot and restore REGISTRY so per-test clear()s don't leak to other files."""
+    saved = dict(base.REGISTRY)
+    try:
+        yield
+    finally:
+        base.REGISTRY.clear()
+        base.REGISTRY.update(saved)
+
+
 def _dummy_recipe(name="dummy"):
     return base.Recipe(
         name=name, summary="a test recipe", params=(),
