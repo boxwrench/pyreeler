@@ -26,6 +26,11 @@ def resolve_params(recipe: Recipe, overrides: dict[str, Any]) -> dict[str, Any]:
     resolved: dict[str, Any] = {}
     for name, p in schema.items():
         raw = overrides.get(name, p.default)
+        if raw is None:
+            # An unset optional param (None default, no override) passes through
+            # as None without coercion or bound checks.
+            resolved[name] = None
+            continue
         try:
             value = p.type(raw)
         except (TypeError, ValueError):

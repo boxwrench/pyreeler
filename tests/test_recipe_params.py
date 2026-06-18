@@ -44,3 +44,13 @@ def test_resolve_rejects_bad_choice():
 def test_resolve_rejects_unknown_param():
     with pytest.raises(P.ParamError):
         P.resolve_params(_recipe(), {"nope": 1})
+
+
+def test_resolve_rejects_below_min():
+    with pytest.raises(P.ParamError):
+        P.resolve_params(_recipe(), {"rho": -1})
+
+
+def test_resolve_rejects_bad_type_coercion():
+    with pytest.raises(P.ParamError):
+        P.resolve_params(_recipe(), {"fps": "notanumber"})
