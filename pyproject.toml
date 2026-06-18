@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pyreeler"
+version = "0.1.0"
+description = "Make short code-generated films from recipes — CLI + TUI."
+requires-python = ">=3.10"
+dependencies = ["numpy>=1.21", "pillow>=9.0"]
+
+[project.optional-dependencies]
+tui = ["textual>=0.60", "rich>=13.0", "terminaltexteffects>=0.10"]
+
+[project.scripts]
+pyreeler = "pyreeler.cli:main"
+
+[tool.setuptools]
+packages = ["pyreeler", "pyreeler.recipes", "pyreeler.tui"]
