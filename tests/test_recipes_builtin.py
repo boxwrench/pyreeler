@@ -31,3 +31,13 @@ def test_rossler_prepare_returns_trajectory():
     params = recipes.resolve_params(r, {"points": 1200})
     prepared = r.prepare(params)
     assert prepared.shape[0] == 1200 and prepared.shape[2] == 3
+
+
+def test_rossler_make_frame_is_correct_size_and_moves():
+    r = recipes.get("rossler")
+    params = recipes.resolve_params(r, {"points": 1500, "width": 200, "height": 200})
+    prepared = r.prepare(params)
+    f0 = r.make_frame(prepared, params, 0, 10)
+    f5 = r.make_frame(prepared, params, 5, 10)
+    assert isinstance(f0, Image.Image) and f0.size == (200, 200)
+    assert np.asarray(f0).tobytes() != np.asarray(f5).tobytes()
