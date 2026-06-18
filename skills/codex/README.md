@@ -6,17 +6,20 @@ PyReeler is a portable OpenAI Codex skill for designing and delivering short cod
 
 ## Installation
 
-Copy or symlink this folder to your Codex skills directory:
+**Easiest:** from the repository root, run `./install.sh codex` — it checks for
+FFmpeg, installs the core Python deps, and symlinks this skill for you.
+
+**Manual** — copy or symlink this folder to your Codex skills directory. Run these
+from the repository root:
 
 **macOS/Linux:**
 ```bash
-ln -s $(pwd)/pyreeler ~/.codex/skills/pyreeler
+ln -s "$(pwd)/skills/codex" ~/.codex/skills/pyreeler
 ```
 
-**Windows:**
+**Windows (PowerShell):**
 ```powershell
-# Copy to Codex skills directory
-copy-item -recurse .\pyreeler $env:USERPROFILE\.codex\skills\pyreeler
+Copy-Item -Recurse .\skills\codex $env:USERPROFILE\.codex\skills\pyreeler
 ```
 
 ## Usage

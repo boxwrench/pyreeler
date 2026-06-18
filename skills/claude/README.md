@@ -6,17 +6,20 @@ PyReeler is a portable Claude Code skill for designing and delivering short code
 
 ## Installation
 
-Copy or symlink this folder to your Claude Code skills directory:
+**Easiest:** from the repository root, run `./install.sh` — it checks for FFmpeg,
+installs the core Python deps, and symlinks this skill for you.
+
+**Manual** — copy or symlink this folder to your Claude Code skills directory. Run
+these from the repository root:
 
 **macOS/Linux:**
 ```bash
-ln -s $(pwd)/pyreeler-claude ~/.claude/skills/pyreeler
+ln -s "$(pwd)/skills/claude" ~/.claude/skills/pyreeler
 ```
 
-**Windows:**
+**Windows (PowerShell):**
 ```powershell
-# Copy to Claude skills directory
-copy-item -recurse .\pyreeler-claude $env:APPDATA\Claude\skills\pyreeler
+Copy-Item -Recurse .\skills\claude $env:APPDATA\Claude\skills\pyreeler
 ```
 
 ## Usage
