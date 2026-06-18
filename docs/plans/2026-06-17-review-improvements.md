@@ -1,7 +1,7 @@
 # Project Review — Improvements, Merges & Future Directions
 
 **Date:** 2026-06-17
-**Status:** Current through commit `9096383`. Five follow-up improvements are landed, committed, and passing the full gate.
+**Status:** All five future directions delivered (v1) and merged to `main` at `98c9408`. Passing the full gate (sync + graduation + pytest).
 **Purpose:** Pickup/handoff doc. Safe to clear context and resume from here.
 
 ---
@@ -119,35 +119,34 @@ low-risk path).
 
 ---
 
-## CURRENT ROADMAP STATUS (prioritized)
+## CURRENT ROADMAP STATUS (all v1 delivered)
 
-1. **Formalize template "graduation"** (ROADMAP Option 4). Graduation currently = manual
-   copy. Make it: passing tests + an example film + `sync.py`. Turns a copy-paste ritual
-   into a verifiable gate. Implemented via `template_graduation.toml`,
-   `graduation_check.py`, and CI enforcement. Spec/plan:
+1. **Formalize template "graduation"** (ROADMAP Option 4) — ✅ **delivered.** Graduation is
+   no longer a manual copy: it is passing tests + an example + `sync.py` coverage, enforced
+   via `template_graduation.toml`, `graduation_check.py`, and a CI gate. Spec/plan:
    `docs/superpowers/specs/2026-06-17-template-graduation-design.md` and
    `docs/superpowers/plans/2026-06-17-template-graduation.md`.
-2. **ParameterSequence-driven batch render + comparison/contact-sheet tool.** Contact-sheet
-   comparison is delivered as `experimental/tools/contact_sheet.py` for single-axis
-   sweeps. 2D grids and parallel variant rendering remain future work.
-3. **Audio-reactive parameter mapping** — let audio envelopes drive visual params via the
-   existing shared `arc_state(t)` timeline. Portable v1 delivered as
-   `templates/audio/audio_reactive.py` with per-frame RMS envelopes and scalar
-   mapping helpers; band-specific envelopes and beat detection remain future work.
-   Spec/plan:
+2. **ParameterSequence-driven batch render + contact-sheet tool** — ✅ **delivered (v1).**
+   Single-axis sweep comparison shipped as `experimental/tools/contact_sheet.py`.
+   2D grids and parallel variant rendering remain future work (see NEXT TASK CANDIDATES).
+   Spec/plan: `docs/superpowers/specs/2026-06-17-contact-sheet-tool-design.md` and
+   `docs/superpowers/plans/2026-06-17-contact-sheet-tool.md`.
+3. **Audio-reactive parameter mapping** — ✅ **delivered (v1).** Portable
+   `templates/audio/audio_reactive.py` with per-frame RMS envelopes and scalar mapping
+   helpers, drivable alongside the shared `arc_state(t)` timeline. Band-specific envelopes
+   and beat detection remain future work. Spec/plan:
    `docs/superpowers/specs/2026-06-17-audio-reactive-parameter-mapping-design.md`
    and `docs/superpowers/plans/2026-06-17-audio-reactive-parameter-mapping.md`.
-4. **GPU frame *synthesis*** (not just encoding). Seed: `docs/hardware-experiments/wgpu_runtime.py`.
-   Keep in `experimental/` until portable. DEVLOG is honest that "GPU mode" today = encode only.
-   Local runtime is now import-safe without `wgpu` and CI-covered for adapter/FFmpeg
-   selection behavior; actual shader rendering remains local-only. Spec/plan:
+4. **GPU frame *synthesis*** (not just encoding) — ✅ **delivered (v1, local-only).**
+   `docs/hardware-experiments/wgpu_runtime.py` is now import-safe without `wgpu` and
+   CI-covered for adapter/FFmpeg selection; actual shader rendering stays local-only until
+   portable. Spec/plan:
    `docs/superpowers/specs/2026-06-17-gpu-frame-synthesis-runtime-design.md` and
    `docs/superpowers/plans/2026-06-17-gpu-frame-synthesis-runtime.md`.
-5. **Provider-agnostic skill core** — a `skills/_shared/` consumed by thin per-provider
-   wrappers, so adding a 3rd AI provider is trivial. `skills/_shared/references/`
-   now provides the canonical source for byte-identical references, and `sync.py`
-   copies those into each provider skill. Generated provider wrappers remain future work.
-   Spec/plan:
+5. **Provider-agnostic skill core** — ✅ **delivered (v1).** `skills/_shared/references/` is
+   the canonical source for byte-identical references, and `sync.py` distributes them into
+   each provider skill — adding a 3rd provider is now thin. Generated provider wrappers
+   remain future work. Spec/plan:
    `docs/superpowers/specs/2026-06-17-provider-agnostic-skill-core-design.md` and
    `docs/superpowers/plans/2026-06-17-provider-agnostic-skill-core.md`.
 
