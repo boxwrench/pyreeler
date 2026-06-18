@@ -48,7 +48,7 @@ PALETTES = {
 
 # Standard knobs every recipe inherits, prepended to its specific params.
 STANDARD_PARAMS = (
-    Param("duration", float, 30.0, min=1, help="film length in seconds"),
+    Param("duration", float, 30.0, min=0.1, help="film length in seconds"),
     Param("fps", int, 24, min=1, help="frames per second"),
     Param("width", int, 854, min=16, help="frame width in pixels"),
     Param("height", int, 480, min=16, help="frame height in pixels"),
