@@ -1,16 +1,46 @@
-<img src="assets/logo/pyreeler_logo.png" width="120" align="right" alt="PyReeler logo">
+<div align="center">
+  <img src="assets/readme/banner.svg" alt="PyReeler — code-generated cinema, conjured from math" width="100%">
+</div>
 
 # PyReeler
 
-PyReeler is a portable skill for designing and delivering short code-generated films, loops, and experimental motion pieces. Available for both **OpenAI Codex** and **Claude Code**.
+> *Give an AI a render farm and it makes a music video. Give it a few hundred lines of NumPy and a sense of restraint, and it makes a **film**.*
 
-It is intentionally skill-first rather than framework-first. The portable package stays lightweight, readable, and dependable across common modern hardware.
+**PyReeler turns an AI assistant into a director of short, code-generated cinema** — loops, rituals, glitch-poems, and experimental motion pieces conjured entirely from math, pixels, and procedural sound. No model weights. No stock footage. No "prompt and pray." Just code that knows how to *pace itself*.
 
-It is built around a simple rule set:
-- Make a full-duration preview first
-- Keep previews cheap by lowering fidelity before lowering runtime
-- Judge the piece on arc, motif development, pacing, and landing
-- Only upscale after preview approval
+It runs as a portable skill for both **OpenAI Codex** and **Claude Code**. Skill-first, not framework-first: the whole package stays lightweight, readable, and stubborn about working on the hardware you already own.
+
+### The House Rules
+
+PyReeler believes a film is an *arc*, not a wallpaper. So it follows a small creed:
+
+- 🎬 **Preview the whole thing first** — full duration, every time. A great 5 seconds is not a film.
+- 🪶 **Cheap previews, fast iterations** — drop fidelity before you drop runtime. See the shape, then make it pretty.
+- 🎭 **Judge it like a critic** — arc, motif, pacing, and *the landing*. Does it end, or does it just stop?
+- ✨ **Only upscale what earns it** — pixels are a reward for a piece that already works.
+
+<div align="center"><img src="assets/readme/wave-divider.svg" alt="" width="100%"></div>
+
+## The Beauty of Math, Rendered
+
+PyReeler's whole thesis fits in two pictures. A few equations, integrated frame by frame, become something you'd hang on a wall. *(Both of these were drawn by `assets/readme/generate_readme_art.py` — the README art is code-generated too, naturally.)*
+
+<div align="center">
+  <table>
+    <tr>
+      <td align="center"><img src="assets/readme/lissajous.svg" alt="Lissajous curve" width="360"></td>
+      <td align="center"><img src="assets/readme/lorenz.svg" alt="Lorenz attractor" width="360"></td>
+    </tr>
+    <tr>
+      <td align="center"><em>A Lissajous figure — two sine waves at right angles, dancing.</em></td>
+      <td align="center"><em>The Lorenz attractor — chaos that never repeats, yet never escapes.</em></td>
+    </tr>
+  </table>
+</div>
+
+This is the feeling PyReeler chases: not "render a thing," but *make the math perform.*
+
+<div align="center"><img src="assets/readme/wave-divider.svg" alt="" width="100%"></div>
 
 ## Available Versions
 
@@ -19,9 +49,11 @@ It is built around a simple rule set:
 | **OpenAI Codex** | `skills/codex/` | `$pyreeler` |
 | **Claude Code** | `skills/claude/` | `/pyreeler` |
 
-Both versions share the same core philosophy and workflow, adapted for each AI's capabilities.
+Both versions share the same soul and workflow, adapted to each AI's quirks.
 
 ## Quick Start
+
+Talk to it like a director talks to a cinematographer — give it a feeling and an arc, not a parameter dump.
 
 ### For Codex Users
 ```text
@@ -33,15 +65,18 @@ Use $pyreeler to make a 45 second code-generated ritual film that begins calm, b
 /pyreeler make a 45 second code-generated ritual film that begins calm, becomes entrancing, and ends with a single rupture.
 ```
 
+Then watch it sweat the pacing for you.
+
 ## Featured Films
 
-[**View the Showcase Gallery on GitHub Pages**](https://boxwrench.github.io/pyreeler/)
+[**🎞️ Step into the Showcase Gallery →**](https://boxwrench.github.io/pyreeler/)
 
-Completed films with full source code (run scripts to generate videos):
-- `films/interference/` — geometric moiré patterns, 60s
-- `films/sentient-weather/` — emotional particle systems, 60s
-- `films/what-the-light-kept/` — AI memory fragment narrative, 45s
-- `films/dungeon-emergence/` — ASCII dungeon emergence, 45s
+Every frame below was born from a script you can read, run, and remix:
+
+- `films/interference/` — *geometric moiré, breathing in and out of resonance.* 60s
+- `films/sentient-weather/` — *particle systems that seem to have moods.* 60s
+- `films/what-the-light-kept/` — *an AI sifting its own memory fragments.* 45s
+- `films/dungeon-emergence/` — *a world assembling itself out of ASCII.* 45s
 
 **Note:** A small set of low-bitrate showcase clips is committed under `assets/showcase/` to power the gallery above. Full-resolution finals and preview renders are *not* tracked — `.gitignore` excludes `*.mp4`/`*.mov`/`*.avi` by default, so generate those locally and export approved finals to `~/Videos`.
 
@@ -141,12 +176,12 @@ PyReeler uses a tiered dependency model:
 - Surface the preview to the user before committing to an upscale
 - Export approved finals to `~/Videos`
 
-### File Size & Performance Lessons
+### War Stories: Things That Bit Us So They Won't Bite You
 
-The **Interference** film (geometric moiré patterns) taught us about compression — 273MB for 60s at 720p, 10x larger than typical.
+Every number in these tables was paid for in render time and disk space. The **Interference** film — all those gorgeous moiré patterns — once weighed **273MB for 60 seconds at 720p**. That's 10× heavier than it had any right to be. Here's what we learned dragging it back down to earth.
 
-#### Content That Bloates File Size
-| Content Type | Why It Bloates | Mitigation |
+#### Content That Bloats File Size
+| Content Type | Why It Bloats | Mitigation |
 |--------------|----------------|------------|
 | **Fine line patterns** (grids, moiré) | High-frequency noise, hard to compress | CRF 28, add slight blur/glow, lower resolution |
 | **Film grain / noise** | Random data, no temporal redundancy | Use consistent seed, reduce noise amplitude |
@@ -184,6 +219,8 @@ The **Interference** film (geometric moiré patterns) taught us about compressio
 | 1920x1080 canvas | Use 1600x900 | Faster render, less memory |
 | Recalculating lines | Cache quantized angles | Faster + consistent |
 | Combined | All above | 273MB → 61MB (78% smaller)
+
+<div align="center"><img src="assets/readme/wave-divider.svg" alt="" width="100%"></div>
 
 ## Installing
 
@@ -225,3 +262,13 @@ See the individual skill folders for detailed installation instructions.
 MIT License. See [LICENSE](LICENSE).
 
 If you adapt or redistribute PyReeler, please preserve the original copyright and license notice.
+
+---
+
+<div align="center">
+
+*Made for people who think a `for` loop can be a camera move.*
+
+**Now go make something that ends well.** 🎬
+
+</div>
