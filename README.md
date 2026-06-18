@@ -67,6 +67,24 @@ Use $pyreeler to make a 45 second code-generated ritual film that begins calm, b
 
 Then watch it sweat the pacing for you.
 
+<div align="center"><img src="assets/readme/wave-divider.svg" alt="" width="100%"></div>
+
+## Use It Without an AI (CLI)
+
+PyReeler also ships a deterministic command-line renderer — no AI, no API cost,
+fully offline. Pick a recipe, turn the knobs, render:
+
+```bash
+python3 -m pyreeler list                                   # see available recipes
+python3 -m pyreeler render lorenz --duration 30 -o butterfly.mp4
+python3 -m pyreeler render rossler --c 5.7 --palette amber -o scroll.mp4
+```
+
+Every recipe exposes typed, range-checked flags (`--rho`, `--fps`, `--palette`, …) —
+run `python3 -m pyreeler render <recipe> -h` to see them. Core deps are just
+`numpy` + `pillow` + FFmpeg. An interactive TUI front-end (phosphor banner and all)
+is on the way.
+
 ## Featured Films
 
 [**🎞️ Step into the Showcase Gallery →**](https://boxwrench.github.io/pyreeler/)
