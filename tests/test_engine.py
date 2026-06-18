@@ -50,7 +50,7 @@ def test_render_film_iterates_all_frames_and_reports_progress(tmp_path, monkeypa
 def test_render_film_writes_real_mp4(tmp_path):
     import pyreeler.recipes as recipes
     r = recipes.get("lorenz")
-    params = recipes.resolve_params(r, {"duration": 0.5, "fps": 4, "points": 800,
+    params = recipes.resolve_params(r, {"duration": 1.0, "fps": 4, "points": 800,
                                         "width": 160, "height": 120})
     out = engine.render_film(r, params, tmp_path / "lorenz.mp4")
     assert out.exists() and out.stat().st_size > 0
