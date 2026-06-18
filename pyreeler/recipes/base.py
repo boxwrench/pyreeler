@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from typing import Any, Callable
 
 
-class UnknownRecipeError(KeyError):
+class UnknownRecipeError(LookupError):
     """Raised when a recipe name is not in the registry."""
 
 
@@ -33,7 +33,7 @@ class Recipe:
 
     name: str
     summary: str
-    params: tuple
+    params: tuple[Param, ...]
     prepare: Callable
     make_frame: Callable
 
