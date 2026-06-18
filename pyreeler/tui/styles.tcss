@@ -1,0 +1,36 @@
+Screen {
+    background: #0d1117;
+    color: #39ff14;
+}
+
+#sidebar {
+    width: 28;
+    border: round #1f8f3a;
+}
+
+#detail {
+    border: round #1f8f3a;
+    padding: 1 2;
+}
+
+.heading {
+    color: #d6ffcc;
+    text-style: bold;
+}
+
+ListView {
+    background: #0d1117;
+}
+
+ListView > ListItem.--highlight {
+    background: #15311c;
+}
+
+Input {
+    border: tall #1f8f3a;
+}
+
+Button {
+    background: #1f8f3a;
+    color: #d6ffcc;
+}
