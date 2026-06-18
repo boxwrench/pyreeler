@@ -72,8 +72,9 @@ class Param:
 class Recipe:
     name: str
     summary: str
-    params: tuple[Param, ...]                         # recipe-specific knobs
-    make_frame: Callable[[dict, int, int], "Image"]   # (params, frame_idx, total) -> PIL.Image
+    params: tuple[Param, ...]                              # recipe-specific knobs
+    prepare: Callable[[dict], Any]                         # precompute shared data once (e.g. trajectory)
+    make_frame: Callable[[Any, dict, int, int], "Image"]   # (prepared, params, frame_idx, total) -> PIL.Image
 ```
 
 - **Standard params** (shared by every recipe, defined once as `STANDARD_PARAMS`):
@@ -82,20 +83,27 @@ class Recipe:
   `palette` (str choices: `phosphor`, `amber`, `ice`, `mono`; default `phosphor`).
 - A recipe's full param set = `STANDARD_PARAMS + recipe.params`. The merged set
   drives both CLI flag generation and the TUI form.
-- `make_frame(params, frame_idx, total)` is pure: given resolved params and the
-  frame index, return one `PIL.Image` of size `(width, height)`. Time/rotation is
-  derived from `frame_idx / total`. This keeps recipes stateless and parallel-safe.
+- **Two-phase render so the expensive math runs once, not per frame:**
+  - `prepare(params)` precomputes and returns shared, picklable data (the attractor
+    trajectory array). Called once per render.
+  - `make_frame(prepared, params, frame_idx, total)` is pure: given the precomputed
+    data, resolved params, and the frame index, return one `PIL.Image` of size
+    `(width, height)`. Time/rotation derives from `frame_idx / total`. Because it
+    only reads `prepared` (a numpy array) + plain params, it is parallel-safe: the
+    engine's worker closure pickles `prepared` cleanly.
 - `REGISTRY: dict[str, Recipe]`; `register(recipe)` adds to it; `get(name)` raises
   `KeyError`-derived `UnknownRecipeError` (with close-match suggestions) on miss.
 
 ### v1 recipes
-- **lorenz** — `experimental.tools.attractors.generate_lorenz(...)` for the
-  trajectory + `render_frame_color(...)` per frame, rotating over `frame_idx/total`.
-  Params: `sigma` (default 10), `rho` (28), `beta` (2.667), `points` (10000),
-  `trail` (400).
+- **lorenz** — `prepare` calls `experimental.tools.attractors.generate_lorenz(...)`
+  for the trajectory; `make_frame` plots the rotating trail with a palette-aware
+  scatter (the recipe owns its plotting so it can honor `palette`, rather than using
+  `render_frame_color`'s fixed velocity coloring). Params: `sigma` (default 10),
+  `rho` (28), `beta` (2.667), `points` (10000), `trail` (400).
 - **rossler** — same shape via `generate_rossler(...)`. Params: `a` (0.2),
   `b` (0.2), `c` (5.7), `points` (10000), `trail` (400).
-Both need only numpy+pillow.
+Both need only numpy+pillow. The recipes reuse `attractors.rotate_points` for the
+frame rotation.
 
 ## Render engine
 
@@ -105,9 +113,10 @@ def render_film(recipe: Recipe, params: dict, out_path: Path,
     ...
 ```
 - `total = round(params["duration"] * params["fps"])`.
+- `prepared = recipe.prepare(params)` (precompute the trajectory once).
 - `runtime = detect_render_runtime()` (from `templates/video/render_runtime.py`).
 - Frames via `ordered_frame_map(range(total), frame_fn, runtime.workers)` where
-  `frame_fn(i) = recipe.make_frame(params, i, total)`.
+  `frame_fn(i) = recipe.make_frame(prepared, params, i, total)`.
 - Frames are encoded to `out_path` (mp4) via the existing `ffmpeg_utils` helpers /
   `runtime` encoder settings, piping frames to FFmpeg.
 - `on_progress(done, total)` is invoked per completed frame (CLI: text/Rich bar;
@@ -181,9 +190,9 @@ existing CI (numpy+pillow+pytest, no FFmpeg, no Textual) stays green.
 
 1. **Registry:** `register`/`get` round-trip; `STANDARD_PARAMS` merged into a
    recipe's full schema; unknown name raises `UnknownRecipeError` with suggestions.
-2. **Recipes:** `lorenz`/`rossler` `make_frame(params, 0, total)` returns a
-   `PIL.Image` of exactly `(width, height)`; a couple of distinct frame indices
-   produce different images (motion). No FFmpeg needed.
+2. **Recipes:** with `prepared = recipe.prepare(params)`, `make_frame(prepared,
+   params, 0, total)` returns a `PIL.Image` of exactly `(width, height)`; two
+   distinct frame indices produce different images (motion). No FFmpeg needed.
 3. **Param validation:** out-of-range numeric and bad `choices` value raise the
    documented validation error; in-range passes.
 4. **Engine:** with `_encode_frames` stubbed, `render_film` iterates the right number
