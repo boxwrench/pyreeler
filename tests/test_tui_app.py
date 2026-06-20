@@ -26,3 +26,56 @@ def test_app_mounts_and_lists_recipes():
             assert "recipe-lorenz" in ids
             assert "recipe-rossler" in ids
     asyncio.run(body())
+
+
+def test_escape_is_bound_as_back_out_key():
+    bindings = PyReelerApp.BINDINGS
+    assert any(binding.key == "escape" and binding.action == "quit" for binding in bindings)
+
+
+def test_selecting_recipe_populates_summary_and_form():
+    async def body():
+        app = PyReelerApp()
+        async with app.run_test() as pilot:
+            await pilot.pause()
+            from textual.widgets import Input, Static
+            # on_mount loads the first recipe; summary is non-empty
+            assert app.query_one("#summary", Static).content
+            assert "output:" in str(app.query_one("#status", Static).content)
+            # the form has one Input per merged param of the selected recipe
+            from pyreeler.recipes import get, merged_params
+            recipe = get(app._current_name)
+            inputs = app.query("#form Input")
+            assert len(inputs) == len(merged_params(recipe))
+            # a known recipe-specific field is present and prefilled with its default
+            rho = app.query_one("#param-rho", Input)
+            assert rho.value == "28.0"
+    asyncio.run(body())
+
+
+def test_collect_params_reads_form_values():
+    async def body():
+        app = PyReelerApp()
+        async with app.run_test() as pilot:
+            await pilot.pause()
+            from textual.widgets import Input
+            app.query_one("#param-rho", Input).value = "30"
+            app.query_one("#param-duration", Input).value = "2"
+            params = app._collect_params()
+            assert params["rho"] == 30.0
+            assert params["duration"] == 2.0
+    asyncio.run(body())
+
+
+def test_bad_param_shows_error_in_status():
+    async def body():
+        app = PyReelerApp()
+        async with app.run_test() as pilot:
+            await pilot.pause()
+            from textual.widgets import Input, Static
+            app.query_one("#param-palette", Input).value = "chartreuse"
+            app._start_render()  # invalid -> should set status, not raise
+            await pilot.pause()
+            status = str(app.query_one("#status", Static).content)
+            assert "palette" in status
+    asyncio.run(body())

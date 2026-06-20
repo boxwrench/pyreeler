@@ -44,16 +44,32 @@ This is the feeling PyReeler chases: not "render a thing," but *make the math pe
 
 ## Available Versions
 
-| Version | Location | Invoke With |
-|---------|----------|-------------|
-| **OpenAI Codex** | `skills/codex/` | `$pyreeler` |
-| **Claude Code** | `skills/claude/` | `/pyreeler` |
+PyReeler has three ways to use it:
 
-Both versions share the same soul and workflow, adapted to each AI's quirks.
+| Version | What It Is | Location | Start With |
+|---------|------------|----------|------------|
+| **Local CLI + TUI** | Offline recipe renderer with an animated terminal UI | `pyreeler/` | `python3 -m pyreeler` |
+| **Claude Code skill** | AI-assisted film workflow for Claude Code | `skills/claude/` | `/pyreeler` |
+| **OpenAI Codex skill** | AI-assisted film workflow for Codex | `skills/codex/` | `$pyreeler` |
+
+The two AI skill versions share the same core workflow and templates, including
+the reusable PYREELER terminal banner template. The local CLI/TUI is the
+deterministic recipe browser and renderer you can run without an AI.
 
 ## Quick Start
 
 Talk to it like a director talks to a cinematographer — give it a feeling and an arc, not a parameter dump.
+
+### Install the AI Skill
+
+From the repository root:
+
+```bash
+./install.sh          # installs the Claude Code skill, invoked with /pyreeler
+./install.sh codex    # installs the Codex skill, invoked with $pyreeler
+```
+
+Install both if you use both assistants.
 
 ### For Codex Users
 ```text
@@ -82,8 +98,11 @@ python3 -m pyreeler render rossler --c 5.7 --palette amber -o scroll.mp4
 
 Every recipe exposes typed, range-checked flags (`--rho`, `--fps`, `--palette`, …) —
 run `python3 -m pyreeler render <recipe> -h` to see them. Core deps are just
-`numpy` + `pillow` + FFmpeg. An interactive TUI front-end (phosphor banner and all)
-is on the way.
+`numpy` + `pillow` + FFmpeg.
+
+Prefer it interactive? `pip install -r requirements-tui.txt` then run **`pyreeler`**
+with no arguments for the full TUI — a phosphor PYREELER banner, a recipe browser, a
+live parameter form, and a render progress bar with a Sparkline.
 
 ## Featured Films
 
@@ -245,20 +264,72 @@ Every number in these tables was paid for in render time and disk space. The **I
 **Tested on Windows and Ubuntu Linux.**
 **macOS support is expected** (the code handles Apple Silicon and `h264_videotoolbox`) but has not been personally verified.
 
-### The two-command path (macOS/Linux)
+### macOS/Linux: AI Skills
 
 ```bash
 git clone https://github.com/boxwrench/pyreeler.git && cd pyreeler
-./install.sh            # Claude Code  (use: ./install.sh codex  for Codex)
+./install.sh          # Claude Code skill -> ~/.claude/skills/pyreeler
+./install.sh codex    # Codex skill      -> ~/.codex/skills/pyreeler
 ```
 
-That checks for FFmpeg, runs `pip install -r requirements.txt` (just `numpy` +
-`pillow`), and symlinks the skill into place. The only thing it can't install for
-you is **FFmpeg itself** — see Prerequisites below. Optional capabilities (music,
-voice, SciPy filters) live in `requirements-extras.txt`: `pip install -r requirements-extras.txt`.
+Run one or both installer commands depending on which assistant you use. The
+installer checks for FFmpeg, runs `pip install -r requirements.txt` (just `numpy`
++ `pillow`), and symlinks the selected skill into place. The only thing it can't
+install for you is **FFmpeg itself** — see Prerequisites below.
 
-> Windows users: install FFmpeg, run `pip install -r requirements.txt`, then use the
-> manual symlink/copy commands in the per-skill READMEs.
+After install:
+
+```text
+/pyreeler     # Claude Code
+$pyreeler     # OpenAI Codex
+```
+
+Optional capabilities (music, voice, SciPy filters) live in
+`requirements-extras.txt`:
+
+```bash
+python3 -m pip install -r requirements-extras.txt
+```
+
+### Local CLI + Animated TUI
+
+The local renderer is separate from the AI skill invocation. From the repository
+root:
+
+```bash
+python3 -m pip install -r requirements.txt
+python3 -m pyreeler list
+python3 -m pyreeler render lorenz --duration 30 -o butterfly.mp4
+```
+
+For the animated terminal UI:
+
+```bash
+python3 -m pip install -r requirements-tui.txt
+python3 -m pyreeler
+```
+
+### Windows: Manual Skill Install
+
+Windows users should install FFmpeg, run Python deps from the repository root,
+then copy the desired skill folder:
+
+```powershell
+python -m pip install -r requirements.txt
+
+# Claude Code
+Copy-Item -Recurse .\skills\claude $env:APPDATA\Claude\skills\pyreeler
+
+# OpenAI Codex
+Copy-Item -Recurse .\skills\codex $env:USERPROFILE\.codex\skills\pyreeler
+```
+
+For the local animated TUI on Windows:
+
+```powershell
+python -m pip install -r requirements-tui.txt
+python -m pyreeler
+```
 
 ### Prerequisites
 
@@ -278,17 +349,8 @@ sudo apt-get install ffmpeg
 - Install [FFmpeg](https://ffmpeg.org/download.html) and add to PATH
 - Optional: Install [FluidSynth](https://github.com/FluidSynth/fluidsynth/releases)
 
-### Codex
-Copy or symlink `skills/codex/` to your Codex skills directory:
-- **macOS/Linux**: `~/.codex/skills/`
-- **Windows**: `%USERPROFILE%\.codex\skills\`
-
-### Claude Code
-Copy or symlink `skills/claude/` to your Claude Code skills directory:
-- **macOS/Linux**: `~/.claude/skills/`
-- **Windows**: `%APPDATA%\Claude\skills\`
-
-See the individual skill folders for detailed installation instructions.
+See the individual skill folders for detailed installation instructions:
+`skills/claude/README.md` and `skills/codex/README.md`.
 
 ## License
 

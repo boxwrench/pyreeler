@@ -30,6 +30,14 @@ Invoke the skill with `/pyreeler`:
 /pyreeler make a 45 second code-generated ritual film that begins calm, becomes entrancing, and ends with a single rupture.
 ```
 
+To browse the built-in recipe renderer with the animated PYREELER launch banner,
+open a terminal at the repository root and run:
+
+```bash
+python3 -m pip install -r requirements-tui.txt
+python3 -m pyreeler
+```
+
 ## Contents
 
 - `SKILL.md`: core skill instructions
@@ -37,6 +45,7 @@ Invoke the skill with `/pyreeler`:
 - `references/audio-pipeline.md`: code-first guidance for procedural sound, stem design, mixing, and FFmpeg handoff
 - `templates/audio/`: starter modules for procedural foley, optional scoring, optional voice, and stem mixing
 - `templates/video/`: starter modules for portable render-runtime selection, encoder validation, and worker defaults
+- `templates/tui/banner.py`: reusable PYREELER launch animation for terminal-facing helpers
 - `agents/claude.yaml`: Claude Code skill metadata
 
 ## Examples
