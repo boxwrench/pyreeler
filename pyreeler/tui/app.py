@@ -24,7 +24,10 @@ class PyReelerApp(App):
 
     CSS_PATH = "styles.tcss"
     TITLE = "PyReeler"
-    BINDINGS = [Binding("escape", "quit", "Back", priority=True)]
+    BINDINGS = [
+        Binding("escape", "quit", "Back", priority=True),
+        Binding("slash", "search", "Search"),
+    ]
     _current_name: str = ""
 
     def compose(self) -> ComposeResult:
@@ -32,6 +35,7 @@ class PyReelerApp(App):
         with Horizontal(id="main"):
             with Vertical(id="sidebar"):
                 yield Label("RECIPES", classes="heading")
+                yield Input(placeholder="filter…", id="recipe-search")
                 yield ListView(
                     *[
                         ListItem(Label(r.name), id=f"{RECIPE_PREFIX}{r.name}")
@@ -59,6 +63,29 @@ class PyReelerApp(App):
             name = item.id[len(RECIPE_PREFIX):]
             if name != self._current_name:
                 await self._load_recipe(name)
+
+    async def on_input_changed(self, event: Input.Changed) -> None:
+        if event.input.id == "recipe-search":
+            await self._apply_filter(event.value)
+
+    async def _apply_filter(self, query: str) -> None:
+        q = query.strip().lower()
+        matches = [r for r in list_recipes()
+                   if q in r.name.lower() or q in r.summary.lower()]
+        lst = self.query_one("#recipe-list", ListView)
+        await lst.clear()
+        for r in matches:
+            await lst.append(
+                ListItem(Label(r.name), id=f"{RECIPE_PREFIX}{r.name}"))
+        if matches:
+            names = [r.name for r in matches]
+            target = self._current_name if self._current_name in names else names[0]
+            if target != self._current_name:
+                await self._load_recipe(target)
+            lst.index = names.index(target)
+
+    def action_search(self) -> None:
+        self.set_focus(self.query_one("#recipe-search", Input))
 
     async def _load_recipe(self, name: str) -> None:
         recipe = get(name)

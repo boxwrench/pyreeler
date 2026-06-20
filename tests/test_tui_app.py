@@ -97,3 +97,18 @@ def test_bad_numeric_param_shows_error_in_status():
             status = str(app.query_one("#status", Static).content)
             assert "rho" in status
     asyncio.run(body())
+
+
+def test_search_filters_recipe_list():
+    async def body():
+        app = PyReelerApp()
+        async with app.run_test() as pilot:
+            await pilot.pause()
+            from textual.widgets import ListView
+            await app._apply_filter("ross")
+            ids = [item.id for item in app.query_one("#recipe-list", ListView).query("ListItem")]
+            assert ids == ["recipe-rossler"]
+            await app._apply_filter("")  # cleared -> all back
+            ids = [item.id for item in app.query_one("#recipe-list", ListView).query("ListItem")]
+            assert "recipe-lorenz" in ids and "recipe-rossler" in ids
+    asyncio.run(body())
