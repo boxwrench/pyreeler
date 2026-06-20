@@ -54,3 +54,52 @@ def test_stepped_value_recovers_from_unparseable_current():
     p = Param("fps", int, 24, min=1, step=1)
     # garbage current resets to default (24) then steps up
     assert fields.stepped_value("abc", p, +1) == "25"
+
+
+def test_make_field_picks_the_right_widget():
+    assert isinstance(fields.make_field(Param("palette", str, "phosphor",
+                                              choices=("phosphor", "amber"))),
+                      fields.ChoiceField)
+    assert isinstance(fields.make_field(Param("rho", float, 28.0)),
+                      fields.NumberField)
+    assert isinstance(fields.make_field(Param("label", str, "hi")),
+                      fields.TextField)
+
+
+def test_choice_field_cycles_and_never_leaves_choices():
+    p = Param("palette", str, "amber", choices=("phosphor", "amber", "ice"))
+    f = fields.ChoiceField(p)
+    assert f.param_value == "amber"
+    f.cycle(1)
+    assert f.param_value == "ice"
+    f.cycle(1)  # wraps
+    assert f.param_value == "phosphor"
+    f.cycle(-1)  # wraps backward
+    assert f.param_value == "ice"
+    assert f.param_value in p.choices
+
+
+def test_number_field_bump_steps_and_clamps():
+    # Textual's Input cannot exist outside an app, so mount one NumberField in a
+    # tiny harness app and drive it through a pilot.
+    import asyncio
+    from textual.app import App, ComposeResult
+    from textual.widgets import Input
+
+    class _Harness(App):
+        def compose(self) -> ComposeResult:
+            yield fields.NumberField(Param("duration", float, 30.0, min=1, step=1.0))
+
+    async def body():
+        app = _Harness()
+        async with app.run_test() as pilot:
+            await pilot.pause()
+            field = app.query_one(fields.NumberField)
+            assert field.param_value == "30"
+            field._bump(-1)
+            assert field.param_value == "29"
+            app.query_one(Input).value = "1"
+            field._bump(-1)  # clamped at min
+            assert field.param_value == "1"
+
+    asyncio.run(body())
