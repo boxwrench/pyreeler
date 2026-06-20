@@ -15,6 +15,7 @@ from textual.widgets import (
 from ..output import next_output_path
 from ..recipes import get, list_recipes, merged_params, resolve_params, ParamError
 from .fields import ParamField, make_field
+from .player import open_in_player
 
 RECIPE_PREFIX = "recipe-"
 
@@ -27,8 +28,10 @@ class PyReelerApp(App):
     BINDINGS = [
         Binding("escape", "quit", "Back", priority=True),
         Binding("slash", "search", "Search"),
+        Binding("p", "play", "Play"),
     ]
     _current_name: str = ""
+    _last_output: "Path | None" = None
 
     def compose(self) -> ComposeResult:
         yield Header()
@@ -47,6 +50,7 @@ class PyReelerApp(App):
                 yield Static("", id="summary")
                 yield Vertical(id="form")
                 yield Button("Render", id="render-btn", variant="success")
+                yield Button("Play", id="play-btn", disabled=True)
                 yield ProgressBar(id="progress", total=100, show_eta=False)
                 yield Sparkline([], id="spark")
                 yield Static("", id="status")
@@ -113,6 +117,8 @@ class PyReelerApp(App):
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "render-btn":
             self._start_render()
+        elif event.button.id == "play-btn":
+            self.action_play()
 
     def _start_render(self) -> None:
         try:
@@ -147,7 +153,19 @@ class PyReelerApp(App):
         spark.data = list(spark.data or []) + [done]
 
     def _on_done(self, out) -> None:
+        self._last_output = out
+        self.query_one("#play-btn", Button).disabled = False
         self.query_one("#status", Static).update(f"wrote {out}")
+
+    def action_play(self) -> None:
+        if not self._last_output or not Path(self._last_output).exists():
+            self.query_one("#status", Static).update("nothing to play yet")
+            return
+        try:
+            open_in_player(Path(self._last_output))
+        except OSError as exc:
+            self.query_one("#status", Static).update(
+                f"cannot open {self._last_output}: {exc}")
 
     def _on_error(self, exc) -> None:
         self.query_one("#status", Static).update(f"error: {exc}")

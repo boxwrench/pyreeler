@@ -112,3 +112,25 @@ def test_search_filters_recipe_list():
             ids = [item.id for item in app.query_one("#recipe-list", ListView).query("ListItem")]
             assert "recipe-lorenz" in ids and "recipe-rossler" in ids
     asyncio.run(body())
+
+
+def test_play_enables_after_render_and_opens_file(monkeypatch, tmp_path):
+    async def body():
+        app = PyReelerApp()
+        async with app.run_test() as pilot:
+            await pilot.pause()
+            from textual.widgets import Button
+            # play disabled until a render completes
+            assert app.query_one("#play-btn", Button).disabled is True
+            out = tmp_path / "lorenz.mp4"
+            out.write_bytes(b"x")
+            app._on_done(out)  # simulate a finished render
+            await pilot.pause()
+            assert app.query_one("#play-btn", Button).disabled is False
+            opened = {}
+            import pyreeler.tui.app as appmod
+            monkeypatch.setattr(appmod, "open_in_player",
+                                lambda p: opened.update(path=p))
+            app.action_play()
+            assert opened["path"] == out
+    asyncio.run(body())
