@@ -286,7 +286,7 @@ Copy or symlink `skills/codex/` to your Codex skills directory:
 ### Claude Code
 Copy or symlink `skills/claude/` to your Claude Code skills directory:
 - **macOS/Linux**: `~/.claude/skills/`
-- **Windows**: `%APPDATA%\Claude\skills\`
+- **Windows**: `%USERPROFILE%\.claude\skills\` (i.e. `~/.claude/skills/`). Native symlinks need admin or Developer Mode; a directory junction works without elevation: `mklink /J "%USERPROFILE%\.claude\skills\pyreeler" "<repo>\skills\claude"`
 
 See the individual skill folders for detailed installation instructions.
 

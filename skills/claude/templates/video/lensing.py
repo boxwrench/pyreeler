@@ -90,4 +90,6 @@ def apply_lensing(layer: Image.Image,
             ch[y1, x0] * (1 - fx) *      fy  +
             ch[y1, x1] *      fx  *      fy
         )
-    return Image.fromarray(np.clip(out, 0, 255).astype(np.uint8), mode=layer.mode)
+    # mode is inferred from the array shape (HxWx4 -> RGBA); passing mode= is
+    # deprecated in Pillow 11 and removed in Pillow 13.
+    return Image.fromarray(np.clip(out, 0, 255).astype(np.uint8))
