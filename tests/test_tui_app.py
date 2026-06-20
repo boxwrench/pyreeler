@@ -134,3 +134,40 @@ def test_play_enables_after_render_and_opens_file(monkeypatch, tmp_path):
             app.action_play()
             assert opened["path"] == out
     asyncio.run(body())
+
+
+def test_play_with_no_render_shows_hint(monkeypatch):
+    async def body():
+        import pyreeler.tui.app as appmod
+        called = {}
+        monkeypatch.setattr(appmod, "open_in_player",
+                            lambda p: called.update(path=p))
+        app = PyReelerApp()
+        async with app.run_test() as pilot:
+            await pilot.pause()
+            from textual.widgets import Static
+            app.action_play()
+            await pilot.pause()
+            status = str(app.query_one("#status", Static).content)
+            assert "nothing to play yet" in status
+            assert "path" not in called
+    asyncio.run(body())
+
+
+def test_play_surfaces_open_error(monkeypatch, tmp_path):
+    async def body():
+        import pyreeler.tui.app as appmod
+        monkeypatch.setattr(appmod, "open_in_player",
+                            lambda p: (_ for _ in ()).throw(OSError("boom")))
+        app = PyReelerApp()
+        async with app.run_test() as pilot:
+            await pilot.pause()
+            from textual.widgets import Static
+            out = tmp_path / "lorenz.mp4"
+            out.write_bytes(b"x")
+            app._last_output = out
+            app.action_play()
+            await pilot.pause()
+            status = str(app.query_one("#status", Static).content)
+            assert "cannot open" in status
+    asyncio.run(body())
