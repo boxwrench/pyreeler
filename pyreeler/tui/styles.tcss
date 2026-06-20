@@ -34,3 +34,29 @@ Button {
     background: #1f8f3a;
     color: #d6ffcc;
 }
+
+.param-field {
+    height: auto;
+    align: left middle;
+}
+
+.param-label {
+    width: 10;
+    color: #d6ffcc;
+}
+
+.step-btn, .cycle-btn {
+    width: 3;
+    min-width: 3;
+    background: #1f8f3a;
+    color: #d6ffcc;
+}
+
+.choice-value {
+    width: 1fr;
+    color: #d6ffcc;
+}
+
+.param-field Input {
+    width: 1fr;
+}
