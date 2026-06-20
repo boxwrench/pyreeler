@@ -108,7 +108,9 @@ run `python3 -m pyreeler render <recipe> -h` to see them. Core deps are just
 
 Prefer it interactive? `pip install -r requirements-tui.txt` then run **`python3 -m pyreeler`**
 with no arguments for the full TUI — a phosphor PYREELER banner, a recipe browser, a
-live parameter form, and a render progress bar with a Sparkline. Renders land in
+live parameter form (with `[-]`/`[+]` steppers, a `‹ ›` palette cycler, and a
+recipe filter box — press `p` to play the finished render), and a render progress
+bar with a Sparkline. Renders land in
 `~/Videos` with auto-incrementing names (`lorenz.mp4`, `lorenz-2.mp4`, …), so a new
 render never overwrites an earlier one.
 
