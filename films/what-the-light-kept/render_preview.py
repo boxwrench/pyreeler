@@ -18,8 +18,8 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
 
-SKILL_ROOT = Path(r"C:\Users\wests\.codex\skills\pyreeler")
-sys.path.insert(0, str(SKILL_ROOT / "templates"))
+REPO_ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(REPO_ROOT / "templates"))
 
 from video.render_runtime import detect_render_runtime
 from audio.audio_engine import mix_stems, place_stem, write_mono_wav

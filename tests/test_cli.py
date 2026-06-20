@@ -31,6 +31,24 @@ def test_render_maps_flags_to_resolved_params(monkeypatch, tmp_path):
     assert captured["out"] == tmp_path / "f.mp4"
 
 
+def test_render_without_out_defaults_to_videos_and_never_clobbers(monkeypatch, tmp_path):
+    # ~/Videos resolves via $HOME on POSIX; sandbox it.
+    monkeypatch.setenv("HOME", str(tmp_path))
+    captured = {}
+    monkeypatch.setattr(cli, "render_film",
+                        lambda recipe, params, out, on_progress=None: captured.update(out=out))
+    # no -o -> lands under ~/Videos with the plain base name
+    rc = cli.main(["render", "lorenz", "--duration", "1", "--fps", "2"])
+    assert rc == 0
+    assert captured["out"] == tmp_path / "Videos" / "lorenz.mp4"
+    # the CLI created the destination dir for us
+    assert (tmp_path / "Videos").is_dir()
+    # once a render exists there, the next default render must not overwrite it
+    (tmp_path / "Videos" / "lorenz.mp4").touch()
+    cli.main(["render", "lorenz", "--duration", "1", "--fps", "2"])
+    assert captured["out"] == tmp_path / "Videos" / "lorenz-2.mp4"
+
+
 def test_render_unknown_recipe_exits_nonzero(capsys):
     rc = cli.main(["render", "loranz"])
     assert rc != 0

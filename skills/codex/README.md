@@ -30,12 +30,21 @@ Invoke the skill with `$pyreeler`:
 Use $pyreeler to make a 45 second code-generated ritual film that begins calm, becomes entrancing, and ends with a single rupture.
 ```
 
+To browse the built-in recipe renderer with the animated PYREELER launch banner,
+open a terminal at the repository root and run:
+
+```bash
+python3 -m pip install -r requirements-tui.txt
+python3 -m pyreeler
+```
+
 ## Contents
 
 - `SKILL.md`: core skill instructions
 - `references/`: workflow and creative references
 - `references/audio-pipeline.md`: code-first guidance for procedural sound, stem design, mixing, and FFmpeg handoff
-- `templates/`: lightweight starter modules for reusable audio structure
+- `templates/`: lightweight starter modules for reusable audio, video, and TUI structure
+- `templates/tui/banner.py`: reusable PYREELER launch animation for terminal-facing helpers
 - `agents/openai.yaml`: UI metadata for skill lists and chips
 
 ## Examples

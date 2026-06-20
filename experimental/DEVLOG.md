@@ -14,7 +14,7 @@ Chronological log of experiments, findings, and technique development.
 - Successfully executed complete 30-second demo film
 
 **Film Output:**
-- ✅ `C:\Users\wests\Videos\main_skill_demo.mp4` - **46.6 MB, 30 seconds**
+- ✅ `~/Videos/main_skill_demo.mp4` - **46.6 MB, 30 seconds**
 
 **Demonstration Coverage:**
 | Reference Document | Concepts Shown |

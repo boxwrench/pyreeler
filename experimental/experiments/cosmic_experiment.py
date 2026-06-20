@@ -281,7 +281,7 @@ class SelfHealer:
 if __name__ == "__main__":
     W, H = 1280, 720
     try:
-        font = ImageFont.truetype("C:/Windows/Fonts/consola.ttf", 26)
+        font = ImageFont.truetype(os.environ.get("PYREEL_FONT") or "DejaVuSansMono.ttf", 26)
     except:
         font = ImageFont.load_default()
         

@@ -56,7 +56,7 @@
     "workers": 4,
     "requested_workers": 4,
     "parallel_mode": "thread",
-    "ffmpeg_path": "C:\\Users\\wests\\AppData\\Roaming\\Python\\Python314\\site-packages\\imageio_ffmpeg\\binaries\\ffmpeg-win-x86_64-v7.1.exe",
+    "ffmpeg_path": "imageio_ffmpeg bundled ffmpeg-win-x86_64-v7.1.exe",
     "audio_pipeline": "numpy_procedural_stems",
     "requested_voice_pipeline": "edge_tts",
     "voice_pipeline": "edge_tts_primary",

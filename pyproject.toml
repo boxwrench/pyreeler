@@ -12,8 +12,5 @@ dependencies = ["numpy>=1.21", "pillow>=9.0"]
 [project.optional-dependencies]
 tui = ["textual>=0.60", "rich>=13.0", "terminaltexteffects>=0.10"]
 
-[project.scripts]
-pyreeler = "pyreeler.cli:main"
-
 [tool.setuptools]
 packages = ["pyreeler", "pyreeler.recipes", "pyreeler.tui"]

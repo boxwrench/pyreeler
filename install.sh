@@ -30,8 +30,24 @@ else
 fi
 
 # 2. Core Python deps (numpy, pillow).
-echo "  Installing core Python deps from requirements.txt ..."
-python3 -m pip install -r "$REPO_ROOT/requirements.txt"
+#    Skip if they already import; otherwise install best-effort. A failure here
+#    (e.g. PEP 668 "externally-managed-environment") must NOT abort the symlink
+#    below, which is the real point of this script.
+if python3 -c "import numpy, PIL" >/dev/null 2>&1; then
+  echo "  [ok] core Python deps (numpy, pillow) already available"
+else
+  echo "  Installing core Python deps from requirements.txt ..."
+  if python3 -m pip install -r "$REPO_ROOT/requirements.txt" 2>/dev/null \
+     || python3 -m pip install --user -r "$REPO_ROOT/requirements.txt" 2>/dev/null \
+     || python3 -m pip install --break-system-packages -r "$REPO_ROOT/requirements.txt" 2>/dev/null; then
+    echo "  [ok] installed core Python deps"
+  else
+    echo "  [warn] could not auto-install numpy/pillow (managed Python?)."
+    echo "         Install them yourself, then re-run if needed:"
+    echo "           python3 -m pip install -r \"$REPO_ROOT/requirements.txt\""
+    echo "         or in a virtualenv:  python3 -m venv .venv && . .venv/bin/activate && pip install -r requirements.txt"
+  fi
+fi
 
 # 3. Symlink the skill into place.
 mkdir -p "$(dirname "$DEST")"

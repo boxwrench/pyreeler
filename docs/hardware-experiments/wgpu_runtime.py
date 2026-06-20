@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import sys
+import os
+import shutil
 from dataclasses import dataclass
 from typing import Any
 from pathlib import Path
@@ -24,10 +26,10 @@ class LocalShaderRuntime:
 
 def resolve_local_ffmpeg_candidates(extra_candidates=None):
     candidates = list(extra_candidates or [])
-    candidates += [
-        Path(r"C:\pinokio\api\facefusion-pinokio.git\.env\Library\bin\ffmpeg.exe"),
-        Path(r"C:\pinokio\api\wan2gp.git\app\ffmpeg_bins\ffmpeg.exe"),
-    ]
+    if os.environ.get("PYREEL_FFMPEG"):
+        candidates.append(Path(os.environ["PYREEL_FFMPEG"]))
+    if shutil.which("ffmpeg"):
+        candidates.append(Path(shutil.which("ffmpeg")))
     found = []
     for candidate in candidates:
         if candidate.exists():

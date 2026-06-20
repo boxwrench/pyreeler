@@ -22,8 +22,9 @@ from pathlib import Path
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 
-# Add pyreeler-claude templates to path
-sys.path.insert(0, "C:/pyreeler-claude")
+# Add repository templates to path
+REPO_ROOT = Path(__file__).resolve().parents[3]
+sys.path.insert(0, str(REPO_ROOT))
 from templates.video.render_runtime import detect_render_runtime
 from templates.video.parallel_render import ordered_frame_map
 from templates.audio.audio_engine import mix_stems, write_mono_wav

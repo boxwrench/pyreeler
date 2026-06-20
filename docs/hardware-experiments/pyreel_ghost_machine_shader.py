@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import math
 import multiprocessing as mp
+import os
 import struct
 import subprocess
 import sys
@@ -18,7 +19,8 @@ import wgpu
 
 sys.dont_write_bytecode = True
 
-TEMPLATES_ROOT = Path.home() / ".codex" / "skills" / "pyreeler" / "templates"
+REPO_ROOT = Path(__file__).resolve().parents[2]
+TEMPLATES_ROOT = REPO_ROOT / "templates"
 if str(TEMPLATES_ROOT) not in sys.path:
     sys.path.insert(0, str(TEMPLATES_ROOT))
 
@@ -251,23 +253,29 @@ def resolve_ffmpeg_path() -> str:
 @lru_cache(maxsize=None)
 def get_font(size: int, role: str = "regular") -> ImageFont.FreeTypeFont:
     candidates = []
+    if os.environ.get("PYREEL_FONT"):
+        candidates.append(os.environ["PYREEL_FONT"])
     if role == "large":
         candidates.extend(
             [
-                Path("C:/Windows/Fonts/lucon.ttf"),
-                Path("C:/Windows/Fonts/consolab.ttf"),
+                "lucon.ttf",
+                "consolab.ttf",
             ]
         )
     candidates.extend(
         [
-            Path("C:/Windows/Fonts/consola.ttf"),
-            Path("C:/Windows/Fonts/lucon.ttf"),
-            Path("C:/Windows/Fonts/cour.ttf"),
+            "DejaVuSansMono.ttf",
+            "DejaVuSansMono-Bold.ttf",
+            "consola.ttf",
+            "lucon.ttf",
+            "cour.ttf",
         ]
     )
     for candidate in candidates:
-        if candidate.exists():
-            return ImageFont.truetype(str(candidate), size=size)
+        try:
+            return ImageFont.truetype(candidate, size=size)
+        except OSError:
+            pass
     return ImageFont.load_default()
 
 
