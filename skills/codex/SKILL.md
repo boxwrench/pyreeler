@@ -18,12 +18,14 @@ Keep only the workflow rules that reliably improve the result: make a full-durat
 5. Read `references/three-d-and-lensing.md` when the piece involves perceived depth, rotating geometry, per-face textures, or gravitational-lensing effects.
 6. Read `references/workflow.md` before implementation and follow the production rules exactly.
 7. For Python-based video renders, prefer `templates/video/render_runtime.py` to obtain the ffmpeg path, validated encoder choice, and conservative worker count. Do not hardcode `h264_nvenc`, `h264_qsv`, or fixed worker pools in portable scripts when the runtime helper can be used instead.
-8. Before implementation, verify that the chosen renderer or template actually supports the brief fields and behaviors you plan to rely on. Patch the implementation or narrow the brief before rendering if there is a mismatch.
-9. For multi-act pieces (>15s), prefer a single `arc_state(t)` timeline consumed by both visuals and audio. Gate the first preview render with `templates/video/self_healing.py` when the renderer relies on randomized parameters.
-10. Build the fastest credible full-duration preview first. Do not jump straight to a high-resolution final.
-11. Review the preview with the user, focusing on arc, motif development, pacing, and whether the final move lands. If the piece is flat, repetitive, or off-mode, change structure or behavior before raising fidelity.
-12. After preview approval, offer an upscale choice instead of assuming final resolution.
-13. Export approved final outputs to `~/Videos`.
+8. If building a terminal-facing helper, launcher, or local demo for PyReeler, reuse `templates/tui/banner.py` for the PYREELER launch animation instead of recreating a banner. The TerminalTextEffects path is optional and falls back safely.
+9. If the user asks to browse recipes interactively or see the animated local TUI, direct them to the repository root and run `python3 -m pyreeler` after installing `requirements-tui.txt`.
+10. Before implementation, verify that the chosen renderer or template actually supports the brief fields and behaviors you plan to rely on. Patch the implementation or narrow the brief before rendering if there is a mismatch.
+11. For multi-act pieces (>15s), prefer a single `arc_state(t)` timeline consumed by both visuals and audio. Gate the first preview render with `templates/video/self_healing.py` when the renderer relies on randomized parameters.
+12. Build the fastest credible full-duration preview first. Do not jump straight to a high-resolution final.
+13. Review the preview with the user, focusing on arc, motif development, pacing, and whether the final move lands. If the piece is flat, repetitive, or off-mode, change structure or behavior before raising fidelity.
+14. After preview approval, offer an upscale choice instead of assuming final resolution.
+15. Export approved final outputs to `~/Videos`.
 
 ## Creative Standard
 
@@ -91,3 +93,4 @@ Keep only the workflow rules that reliably improve the result: make a full-durat
   - `lensing.py`: `apply_lensing` Schwarzschild-style radial warp for starfields and backgrounds.
   - `text_track.py`: terminal-style narration timeline (typed lines, scrolling, isolated punchline, keystroke events for audio sync).
   - `self_healing.py`: multi-sample-frame contrast audit with parameter re-rolling. Use as a pre-render gate for randomized renderers.
+- `templates/tui/banner.py`: reusable PYREELER terminal launch banner with TerminalTextEffects animation and a static fallback.

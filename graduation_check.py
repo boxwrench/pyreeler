@@ -67,7 +67,9 @@ def validate(entries: list[TemplateEntry], repo_root: Path) -> list[str]:
 
         kind_from_path = _kind_from_template_path(rel_path)
         if kind_from_path is None:
-            problems.append(f"{rel_path} is not under templates/audio or templates/video")
+            problems.append(
+                f"{rel_path} is not under templates/audio, templates/video, or templates/tui"
+            )
         elif entry.kind != kind_from_path:
             problems.append(
                 f"{rel_path} kind {entry.kind} does not match {kind_from_path} path"
@@ -102,6 +104,8 @@ def _kind_from_template_path(path: str) -> str | None:
         return "audio"
     if path.startswith("templates/video/"):
         return "video"
+    if path.startswith("templates/tui/"):
+        return "tui"
     return None
 
 

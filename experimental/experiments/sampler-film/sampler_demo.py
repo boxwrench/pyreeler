@@ -27,6 +27,7 @@ Output:
 from __future__ import annotations
 
 import os
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -56,7 +57,7 @@ TOTAL_FRAMES = FPS * TOTAL_DURATION
 W, H = 854, 480  # 480p for faster rendering
 CANVAS_W, CANVAS_H = 1067, 600  # 1.25x viewport for camera movement
 
-FFMPEG_PATH = r"C:\pinokio\bin\miniconda\Library\bin\ffmpeg.exe"
+FFMPEG_PATH = os.environ.get("PYREEL_FFMPEG") or shutil.which("ffmpeg") or "ffmpeg"
 
 # =============================================================================
 # PRECOMPUTED TRAJECTORIES (Computed once at startup)

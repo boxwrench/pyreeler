@@ -1,0 +1,67 @@
+Screen {
+    background: #0d1117;
+    color: #39ff14;
+}
+
+#sidebar {
+    width: 28;
+    border: round #1f8f3a;
+}
+
+#detail {
+    border: round #1f8f3a;
+    padding: 1 2;
+}
+
+.heading {
+    color: #d6ffcc;
+    text-style: bold;
+}
+
+ListView {
+    background: #0d1117;
+}
+
+ListView > ListItem.--highlight {
+    background: #15311c;
+}
+
+Input {
+    border: tall #1f8f3a;
+}
+
+Button {
+    background: #1f8f3a;
+    color: #d6ffcc;
+}
+
+.param-field {
+    height: auto;
+    align: left middle;
+}
+
+.param-label {
+    width: 10;
+    color: #d6ffcc;
+}
+
+.step-btn, .cycle-btn {
+    width: 3;
+    min-width: 3;
+    background: #1f8f3a;
+    color: #d6ffcc;
+}
+
+.choice-value {
+    width: 1fr;
+    color: #d6ffcc;
+}
+
+.param-field Input {
+    width: 1fr;
+}
+
+#recipe-search {
+    border: tall #1f8f3a;
+    margin: 0 0 1 0;
+}

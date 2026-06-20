@@ -9,7 +9,7 @@
 ## How to resume
 
 ```bash
-cd ~/Desktop/github/pyreeler
+cd /path/to/pyreeler
 git status                 # should be clean after the latest committed task
 python3 sync.py --check    # should print "in sync"
 python3 graduation_check.py

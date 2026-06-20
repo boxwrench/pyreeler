@@ -21,6 +21,7 @@ class Param:
     max: Any = None
     choices: tuple = ()
     help: str = ""
+    step: Any = None  # TUI stepper increment hint; ignored by CLI and validation
 
 
 @dataclass(frozen=True)
@@ -48,8 +49,8 @@ PALETTES = {
 
 # Standard knobs every recipe inherits, prepended to its specific params.
 STANDARD_PARAMS = (
-    Param("duration", float, 30.0, min=1, help="film length in seconds"),
-    Param("fps", int, 24, min=1, help="frames per second"),
+    Param("duration", float, 30.0, min=1, help="film length in seconds", step=1.0),
+    Param("fps", int, 24, min=1, help="frames per second", step=1),
     Param("width", int, 854, min=16, help="frame width in pixels"),
     Param("height", int, 480, min=16, help="frame height in pixels"),
     Param("palette", str, "phosphor", choices=tuple(PALETTES), help="color palette"),
