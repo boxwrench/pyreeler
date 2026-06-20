@@ -33,3 +33,29 @@ def effective_step(param: Param):
     if is_int:
         return max(1, int(round(nice)))
     return max(nice, 1e-9)
+
+
+def _format(value) -> str:
+    """Render a number without trailing-zero noise (28.0 -> '28')."""
+    if isinstance(value, float):
+        return f"{value:.6f}".rstrip("0").rstrip(".") or "0"
+    return str(value)
+
+
+def stepped_value(current: str, param: Param, delta: int) -> str:
+    """Apply `delta * effective_step` to `current`, clamp to bounds, format.
+
+    `delta` is +1 or -1. An unparseable `current` resets to the param default
+    before stepping, so the control can never get wedged.
+    """
+    step = effective_step(param)
+    try:
+        value = param.type(current)
+    except (TypeError, ValueError):
+        value = param.default
+    value = value + delta * step
+    if param.min is not None and value < param.min:
+        value = param.min
+    if param.max is not None and value > param.max:
+        value = param.max
+    return _format(param.type(value))

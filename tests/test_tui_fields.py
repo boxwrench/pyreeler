@@ -31,3 +31,26 @@ def test_effective_step_is_magnitude_aware_for_floats():
 def test_effective_step_zero_default_falls_back():
     assert fields.effective_step(Param("z", int, 0)) == 1
     assert fields.effective_step(Param("z", float, 0.0)) == pytest.approx(0.1)
+
+
+def test_format_trims_float_noise():
+    assert fields._format(28.0) == "28"
+    assert fields._format(0.01) == "0.01"
+    assert fields._format(10) == "10"
+
+
+def test_stepped_value_increments_by_effective_step():
+    p = Param("rho", float, 28.0)
+    assert fields.stepped_value("28", p, +1) == "29"
+    assert fields.stepped_value("28", p, -1) == "27"
+
+
+def test_stepped_value_clamps_to_bounds():
+    p = Param("duration", float, 30.0, min=1, step=1.0)
+    assert fields.stepped_value("1", p, -1) == "1"  # min clamp
+
+
+def test_stepped_value_recovers_from_unparseable_current():
+    p = Param("fps", int, 24, min=1, step=1)
+    # garbage current resets to default (24) then steps up
+    assert fields.stepped_value("abc", p, +1) == "25"
