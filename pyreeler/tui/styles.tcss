@@ -60,3 +60,8 @@ Button {
 .param-field Input {
     width: 1fr;
 }
+
+#recipe-search {
+    border: tall #1f8f3a;
+    margin: 0 0 1 0;
+}
