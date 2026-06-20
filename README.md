@@ -100,9 +100,11 @@ Every recipe exposes typed, range-checked flags (`--rho`, `--fps`, `--palette`, 
 run `python3 -m pyreeler render <recipe> -h` to see them. Core deps are just
 `numpy` + `pillow` + FFmpeg.
 
-Prefer it interactive? `pip install -r requirements-tui.txt` then run **`pyreeler`**
+Prefer it interactive? `pip install -r requirements-tui.txt` then run **`python3 -m pyreeler`**
 with no arguments for the full TUI — a phosphor PYREELER banner, a recipe browser, a
-live parameter form, and a render progress bar with a Sparkline.
+live parameter form, and a render progress bar with a Sparkline. Renders land in
+`~/Videos` with auto-incrementing names (`lorenz.mp4`, `lorenz-2.mp4`, …), so a new
+render never overwrites an earlier one.
 
 ## Featured Films
 
@@ -261,6 +263,8 @@ Every number in these tables was paid for in render time and disk space. The **I
 
 ## Installing
 
+**Requires Python 3.10+ and FFmpeg on your `PATH`.** (`numpy` + `pillow` are installed for you; FFmpeg is the one external tool you must install yourself — see Prerequisites below.)
+
 **Tested on Windows and Ubuntu Linux.**
 **macOS support is expected** (the code handles Apple Silicon and `h264_videotoolbox`) but has not been personally verified.
 
@@ -293,8 +297,9 @@ python3 -m pip install -r requirements-extras.txt
 
 ### Local CLI + Animated TUI
 
-The local renderer is separate from the AI skill invocation. From the repository
-root:
+The local renderer is separate from the AI skill invocation. It needs **Python
+3.10+** and **FFmpeg** on your `PATH` (the `render` step shells out to it). From
+the repository root:
 
 ```bash
 python3 -m pip install -r requirements.txt

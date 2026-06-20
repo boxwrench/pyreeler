@@ -67,6 +67,23 @@ def test_collect_params_reads_form_values():
     asyncio.run(body())
 
 
+def test_output_path_targets_videos_and_never_overwrites(tmp_path, monkeypatch):
+    # Path.home() resolves via $HOME on POSIX, so we can sandbox the dir.
+    monkeypatch.setenv("HOME", str(tmp_path))
+    videos = tmp_path / "Videos"
+    videos.mkdir()
+    app = PyReelerApp()
+    # clean slate -> the plain base name under ~/Videos
+    assert app._output_path("lorenz") == videos / "lorenz.mp4"
+    # _output_path is read-only: probing must not create the file
+    assert not (videos / "lorenz.mp4").exists()
+    # once names are taken, it walks to the next free suffix instead of clobbering
+    (videos / "lorenz.mp4").touch()
+    assert app._output_path("lorenz") == videos / "lorenz-2.mp4"
+    (videos / "lorenz-2.mp4").touch()
+    assert app._output_path("lorenz") == videos / "lorenz-3.mp4"
+
+
 def test_bad_param_shows_error_in_status():
     async def body():
         app = PyReelerApp()

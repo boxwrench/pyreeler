@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import math
 import os
+import shutil
 import subprocess
 import sys
 from dataclasses import dataclass
@@ -23,10 +24,10 @@ from typing import List, Tuple
 import numpy as np
 from PIL import Image, ImageDraw
 
-# External tool paths
-FFMPEG_PATH = r"C:\pinokio\bin\miniconda\Library\bin\ffmpeg.exe"
-FLUIDSYNTH_PATH = r"C:\Users\wests\.fluidsynth\bin\fluidsynth.exe"
-SOUNDFONT_PATH = r"C:\Users\wests\.fluidsynth\TimGM6mb.sf2"
+# External tool paths. Override with env vars when local installs are not on PATH.
+FFMPEG_PATH = os.environ.get("PYREEL_FFMPEG", "ffmpeg")
+FLUIDSYNTH_PATH = os.environ.get("PYREEL_FLUIDSYNTH", "fluidsynth")
+SOUNDFONT_PATH = os.environ.get("PYREEL_SOUNDFONT", "")
 
 
 # =============================================================================
@@ -373,20 +374,22 @@ def generate_midi_score(midi_path: Path, duration: float = DURATION) -> None:
 
 def render_midi_with_fluidsynth(midi_path: Path, wav_path: Path) -> bool:
     """Render MIDI to WAV using FluidSynth with a SoundFont."""
-    fluidsynth_bin = Path(FLUIDSYNTH_PATH)
-    if not fluidsynth_bin.exists():
-        print(f"Warning: FluidSynth not found at {fluidsynth_bin}")
+    fluidsynth_bin = shutil.which(FLUIDSYNTH_PATH) or (
+        FLUIDSYNTH_PATH if Path(FLUIDSYNTH_PATH).exists() else None
+    )
+    if fluidsynth_bin is None:
+        print(f"Warning: FluidSynth not found: {FLUIDSYNTH_PATH}")
         return False
 
     sf2_path = Path(SOUNDFONT_PATH)
     if not sf2_path.exists():
-        print(f"Warning: SoundFont not found at {sf2_path}")
+        print("Warning: SoundFont not configured. Set PYREEL_SOUNDFONT.")
         return False
 
     print(f"  Using SoundFont: {sf2_path}")
 
     cmd = [
-        fluidsynth_bin,
+        str(fluidsynth_bin),
         "-ni",
         str(sf2_path),
         str(midi_path),

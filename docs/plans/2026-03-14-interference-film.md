@@ -15,7 +15,7 @@
 | File | Purpose |
 |------|---------|
 | `interference_preview.py` | Main film generation script (creates this file) |
-| `C:/Users/wests/Videos/interference_preview.mp4` | Output video file |
+| `~/Videos/interference_preview.mp4` | Output video file |
 
 ---
 
@@ -56,8 +56,8 @@ LINE_COLOR = (255, 255, 255)
 ALT_LINE_COLOR = (224, 255, 255)  # Light cyan
 
 # FFmpeg path (adjust if needed)
-FFMPEG_PATH = r"C:\pinokio\bin\miniconda\Library\bin\ffmpeg.exe"
-OUTPUT_PATH = Path(r"C:\Users\wests\Videos\interference_preview.mp4")
+FFMPEG_PATH = "ffmpeg"
+OUTPUT_PATH = Path.home() / "Videos" / "interference_preview.mp4"
 ```
 
 - [ ] **Step 2: Add GridLayer dataclass**
@@ -77,7 +77,7 @@ class GridLayer:
 
 - [ ] **Step 3: Verify imports work**
 
-Run: `cd C:/Github/pyreeler && python -c "import numpy; from PIL import Image; print('OK')"`
+Run from the repository root: `python -c "import numpy; from PIL import Image; print('OK')"`
 Expected: `OK`
 
 ---
@@ -718,11 +718,11 @@ def render_film() -> None:
 - [ ] **Step 1: Run full render (accept long runtime)**
 
 Run: `python interference_preview.py`
-Expected: Progress updates every 5%, then audio generation, then muxing. Final message: `Done! Final output: C:\Users\wests\Videos\interference_preview.mp4`
+Expected: Progress updates every 5%, then audio generation, then muxing. Final message points to `~/Videos/interference_preview.mp4`.
 
 - [ ] **Step 2: Verify output file exists and plays**
 
-Run: `ls -lh "C:/Users/wests/Videos/interference_preview.mp4"`
+Run: `ls -lh "$HOME/Videos/interference_preview.mp4"`
 Expected: File exists, size > 10MB for 60s video.
 
 - [ ] **Step 3: Quick visual validation**
@@ -769,7 +769,7 @@ git commit -m "feat: complete Interference film — 60s geometric moiré pattern
 
 ## Notes for Implementer
 
-1. **FFmpeg path**: The script uses `C:\pinokio\bin\miniconda\Library\bin\ffmpeg.exe`. If this doesn't exist on your system, update `FFMPEG_PATH` to point to your FFmpeg installation.
+1. **FFmpeg path**: The script uses `ffmpeg` on `PATH`. If needed, set `PYREEL_FFMPEG` to point to your FFmpeg installation.
 
 2. **Performance**: Rendering 1440 frames will take time (estimate 5-15 minutes depending on CPU). The script shows progress every 5 seconds.
 
