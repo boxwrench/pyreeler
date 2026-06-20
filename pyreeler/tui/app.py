@@ -69,6 +69,8 @@ class PyReelerApp(App):
                 await self._load_recipe(name)
 
     async def on_input_changed(self, event: Input.Changed) -> None:
+        # Load-bearing guard: every Input.Changed in the app lands here, including
+        # param-field keystrokes — only filter on the search box.
         if event.input.id == "recipe-search":
             await self._apply_filter(event.value)
 

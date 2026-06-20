@@ -57,6 +57,8 @@ def stepped_value(current: str, param: Param, delta: int) -> str:
         value = param.type(current)
     except (TypeError, ValueError):
         value = param.default
+    if value is None:
+        value = 0
     value = value + delta * step
     if param.min is not None and value < param.min:
         value = param.min
