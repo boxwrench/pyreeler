@@ -10,6 +10,7 @@ from .recipes import (
     UnknownRecipeError, ParamError,
 )
 from .engine import render_film
+from .output import next_output_path
 
 
 def main(argv=None) -> int:
@@ -74,7 +75,14 @@ def _cmd_render(args: list[str]) -> int:
         print(exc, file=sys.stderr)
         return 2
 
-    out = Path(namespace.out) if namespace.out else Path(f"{recipe.name}.mp4")
+    # Explicit -o is honored verbatim (scriptable, may overwrite). With no -o we
+    # default to ~/Videos with a name that never clobbers an earlier render —
+    # the same destination and policy the TUI uses (pyreeler.output).
+    if namespace.out:
+        out = Path(namespace.out)
+    else:
+        out = next_output_path(recipe.name)
+        out.parent.mkdir(parents=True, exist_ok=True)
 
     def progress(done, total):
         print(f"\rframe {done}/{total}", end="", file=sys.stderr, flush=True)

@@ -12,6 +12,7 @@ from textual.widgets import (
     Static,
 )
 
+from ..output import next_output_path
 from ..recipes import get, list_recipes, merged_params, resolve_params, ParamError
 
 RECIPE_PREFIX = "recipe-"
@@ -127,16 +128,10 @@ class PyReelerApp(App):
         self.query_one("#status", Static).update(f"error: {exc}")
 
     def _output_path(self, recipe_name: str) -> Path:
-        """Next free path under ~/Videos so renders never overwrite each other:
-        ``lorenz.mp4``, then ``lorenz-2.mp4``, ``lorenz-3.mp4``, ... Read-only
-        (no directory is created here); the render step makes the dir."""
-        out_dir = Path.home() / "Videos"
-        candidate = out_dir / f"{recipe_name}.mp4"
-        n = 2
-        while candidate.exists():
-            candidate = out_dir / f"{recipe_name}-{n}.mp4"
-            n += 1
-        return candidate
+        """Next free path under ~/Videos so renders never overwrite each other.
+        Read-only (no directory is created here); the render step makes the dir.
+        Shared with the CLI's default-output path via ``pyreeler.output``."""
+        return next_output_path(recipe_name)
 
 
 def run() -> int:

@@ -307,6 +307,10 @@ python3 -m pyreeler list
 python3 -m pyreeler render lorenz --duration 30 -o butterfly.mp4
 ```
 
+Pass `-o` to choose the exact output path (it's written as-is). Without `-o`,
+renders land in `~/Videos` with auto-incrementing names (`lorenz.mp4`,
+`lorenz-2.mp4`, …) — the same no-overwrite policy the TUI uses.
+
 For the animated terminal UI:
 
 ```bash
