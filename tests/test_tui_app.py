@@ -39,17 +39,18 @@ def test_selecting_recipe_populates_summary_and_form():
         async with app.run_test() as pilot:
             await pilot.pause()
             from textual.widgets import Input, Static
-            # on_mount loads the first recipe; summary is non-empty
+            from pyreeler.tui.fields import ParamField, ChoiceField
             assert app.query_one("#summary", Static).content
             assert "output:" in str(app.query_one("#status", Static).content)
-            # the form has one Input per merged param of the selected recipe
             from pyreeler.recipes import get, merged_params
             recipe = get(app._current_name)
-            inputs = app.query("#form Input")
-            assert len(inputs) == len(merged_params(recipe))
-            # a known recipe-specific field is present and prefilled with its default
+            # one ParamField per merged param
+            assert len(app.query(ParamField)) == len(merged_params(recipe))
+            # rho is a numeric field whose inner Input keeps id param-rho
             rho = app.query_one("#param-rho", Input)
-            assert rho.value == "28.0"
+            assert rho.value == "28"
+            # palette is a cycler, not an Input
+            assert isinstance(app.query_one("#field-palette", ParamField), ChoiceField)
     asyncio.run(body())
 
 
@@ -84,15 +85,15 @@ def test_output_path_targets_videos_and_never_overwrites(tmp_path, monkeypatch):
     assert app._output_path("lorenz") == videos / "lorenz-3.mp4"
 
 
-def test_bad_param_shows_error_in_status():
+def test_bad_numeric_param_shows_error_in_status():
     async def body():
         app = PyReelerApp()
         async with app.run_test() as pilot:
             await pilot.pause()
             from textual.widgets import Input, Static
-            app.query_one("#param-palette", Input).value = "chartreuse"
+            app.query_one("#param-rho", Input).value = "not-a-number"
             app._start_render()  # invalid -> should set status, not raise
             await pilot.pause()
             status = str(app.query_one("#status", Static).content)
-            assert "palette" in status
+            assert "rho" in status
     asyncio.run(body())

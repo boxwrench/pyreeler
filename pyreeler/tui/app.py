@@ -14,6 +14,7 @@ from textual.widgets import (
 
 from ..output import next_output_path
 from ..recipes import get, list_recipes, merged_params, resolve_params, ParamError
+from .fields import ParamField, make_field
 
 RECIPE_PREFIX = "recipe-"
 
@@ -65,22 +66,19 @@ class PyReelerApp(App):
         self.query_one("#summary", Static).update(recipe.summary)
         form = self.query_one("#form", Vertical)
         await form.remove_children()
-        widgets = []
-        for p in merged_params(recipe):
-            widgets.append(Label(p.name, classes="param-label"))
-            widgets.append(Input(value=str(p.default), id=f"param-{p.name}"))
-        if widgets:
-            await form.mount(*widgets)
+        fields = [make_field(p) for p in merged_params(recipe)]
+        if fields:
+            await form.mount(*fields)
         self.query_one("#status", Static).update(
             f"output: {self._output_path(recipe.name)}"
         )
 
     def _collect_params(self) -> dict:
-        """Read the form inputs into a validated params dict."""
+        """Read the form fields into a validated params dict."""
         recipe = get(self._current_name)
         overrides = {}
         for p in merged_params(recipe):
-            value = self.query_one(f"#param-{p.name}", Input).value.strip()
+            value = self.query_one(f"#field-{p.name}", ParamField).param_value.strip()
             if value:
                 overrides[p.name] = value
         return resolve_params(recipe, overrides)
