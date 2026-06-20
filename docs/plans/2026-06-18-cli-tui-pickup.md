@@ -106,8 +106,9 @@ New `pyreeler/` package:
   `_FrameJob` for multiprocessing; `_encode_frames` reaps FFmpeg + surfaces its stderr.
 - `cli.py` + `__main__.py` — `list` / `render` with per-recipe generated typed flags;
   no-arg launches the TUI via the `_launch_tui()` seam (Plan 2 fills `pyreeler/tui/app.py:run`).
-- `pyproject.toml` (console entry `pyreeler` + `tui` extra), `requirements-tui.txt`,
-  `pyreeler/tui/__init__.py` placeholder.
+- `pyproject.toml` (`tui` extra), `requirements-tui.txt`, `pyreeler/tui/__init__.py`.
+  (The original `pyreeler` console-script entry was later removed in favor of the
+  canonical `python3 -m pyreeler`; the TUI package is now built, not a placeholder.)
 
 **Recipe rendering note:** the plotter uses rotation-invariant centered framing + a gamma
 glow lift; default `trail` shows the full attractor. A `render lorenz` produces a centered,

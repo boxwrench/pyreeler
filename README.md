@@ -2,6 +2,12 @@
   <img src="assets/readme/banner.svg" alt="PyReeler — code-generated cinema, conjured from math" width="100%">
 </div>
 
+<div align="center">
+
+[**🎞️ Step into the Showcase Gallery →**](https://boxwrench.github.io/pyreeler/)
+
+</div>
+
 # PyReeler
 
 > *Give an AI a render farm and it makes a music video. Give it a few hundred lines of NumPy and a sense of restraint, and it makes a **film**.*
@@ -107,8 +113,6 @@ live parameter form, and a render progress bar with a Sparkline. Renders land in
 render never overwrites an earlier one.
 
 ## Featured Films
-
-[**🎞️ Step into the Showcase Gallery →**](https://boxwrench.github.io/pyreeler/)
 
 Every frame below was born from a script you can read, run, and remix:
 
