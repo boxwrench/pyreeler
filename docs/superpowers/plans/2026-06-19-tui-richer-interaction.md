@@ -316,12 +316,29 @@ def test_choice_field_cycles_and_never_leaves_choices():
 
 
 def test_number_field_bump_steps_and_clamps():
-    f = fields.NumberField(Param("duration", float, 30.0, min=1, step=1.0))
-    f._bump(-1)
-    assert f.param_value == "29"
-    f._input.value = "1"
-    f._bump(-1)  # clamped at min
-    assert f.param_value == "1"
+    # Textual's Input cannot exist outside an app, so mount one NumberField in a
+    # tiny harness app and drive it through a pilot.
+    import asyncio
+    from textual.app import App, ComposeResult
+    from textual.widgets import Input
+
+    class _Harness(App):
+        def compose(self) -> ComposeResult:
+            yield fields.NumberField(Param("duration", float, 30.0, min=1, step=1.0))
+
+    async def body():
+        app = _Harness()
+        async with app.run_test() as pilot:
+            await pilot.pause()
+            field = app.query_one(fields.NumberField)
+            assert field.param_value == "30"
+            field._bump(-1)
+            assert field.param_value == "29"
+            app.query_one(Input).value = "1"
+            field._bump(-1)  # clamped at min
+            assert field.param_value == "1"
+
+    asyncio.run(body())
 ```
 
 - [ ] **Step 2: Run test to verify it fails**
@@ -355,20 +372,23 @@ class ParamField(Horizontal):
 
 
 class TextField(ParamField):
-    """Free-text / optional param: a plain Input (today's behavior)."""
+    """Free-text / optional param: a plain Input (today's behavior).
+
+    Note: Textual's Input cannot be constructed outside an app, so it is created
+    in compose() and read through `query_one(Input)` rather than cached.
+    """
 
     def __init__(self, param: Param) -> None:
         super().__init__(param)
-        default = "" if param.default is None else str(param.default)
-        self._input = Input(value=default, id=f"param-{param.name}")
+        self._default = "" if param.default is None else str(param.default)
 
     def compose(self) -> ComposeResult:
         yield Label(self.param.name, classes="param-label")
-        yield self._input
+        yield Input(value=self._default, id=f"param-{self.param.name}")
 
     @property
     def param_value(self) -> str:
-        return self._input.value
+        return self.query_one(Input).value
 
 
 class ChoiceField(ParamField):
@@ -409,24 +429,30 @@ class ChoiceField(ParamField):
 
 
 class NumberField(ParamField):
-    """Numeric param: [-] Input [+]. Typing is still allowed."""
+    """Numeric param: [-] Input [+]. Typing is still allowed.
+
+    Input is created in compose() (Textual forbids it outside an app) and read
+    through `query_one(Input)`, so the displayed value is always the source of
+    truth — no cached copy to drift.
+    """
 
     def __init__(self, param: Param) -> None:
         super().__init__(param)
-        self._input = Input(value=_format(param.default), id=f"param-{param.name}")
+        self._default = _format(param.default)
 
     def compose(self) -> ComposeResult:
         yield Label(self.param.name, classes="param-label")
         yield Button("-", id=f"dec-{self.param.name}", classes="step-btn")
-        yield self._input
+        yield Input(value=self._default, id=f"param-{self.param.name}")
         yield Button("+", id=f"inc-{self.param.name}", classes="step-btn")
 
     @property
     def param_value(self) -> str:
-        return self._input.value
+        return self.query_one(Input).value
 
     def _bump(self, delta: int) -> None:
-        self._input.value = stepped_value(self._input.value, self.param, delta)
+        inp = self.query_one(Input)
+        inp.value = stepped_value(inp.value, self.param, delta)
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == f"dec-{self.param.name}":
