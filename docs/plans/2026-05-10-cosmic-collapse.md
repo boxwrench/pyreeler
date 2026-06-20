@@ -1059,17 +1059,17 @@ In `cosmic_collapse.py`, after the `TextTrack` class:
 
 ```python
 def _load_font(size: int = 22) -> ImageFont.ImageFont:
-    for path in [
-        "C:/Windows/Fonts/consola.ttf",
-        "C:/Windows/Fonts/cour.ttf",
-        "/Library/Fonts/Menlo.ttc",
-        "/usr/share/fonts/truetype/dejavu/DejaVuSansMono-Bold.ttf",
-    ]:
-        if os.path.exists(path):
-            try:
-                return ImageFont.truetype(path, size)
-            except Exception:
-                pass
+    for path in filter(None, [
+        os.environ.get("PYREEL_FONT"),
+        "DejaVuSansMono-Bold.ttf",
+        "DejaVuSansMono.ttf",
+        "consola.ttf",
+        "cour.ttf",
+    ]):
+        try:
+            return ImageFont.truetype(path, size)
+        except Exception:
+            pass
     return ImageFont.load_default()
 
 
@@ -1514,13 +1514,13 @@ Add at the bottom of `cosmic_collapse.py`, just above `if __name__ == "__main__"
 # ---------- Full Render Pipeline ----------
 
 FFMPEG_CANDIDATES = [
+    os.environ.get("PYREEL_FFMPEG"),
     "ffmpeg",
-    r"C:\pinokio\bin\miniconda\Library\bin\ffmpeg.exe",
 ]
 
 
 def _ffmpeg_path() -> str:
-    for path in FFMPEG_CANDIDATES:
+    for path in filter(None, FFMPEG_CANDIDATES):
         try:
             subprocess.run([path, "-version"], capture_output=True, check=True)
             return path

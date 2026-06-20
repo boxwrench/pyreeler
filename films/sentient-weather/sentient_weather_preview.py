@@ -36,18 +36,7 @@ class RenderRuntime:
 
 def detect_render_runtime():
     """Detect runtime with smoke test validation."""
-    # Check local tuned paths first (this hardware: RTX 5070 Ti)
-    local_paths = [
-        r"C:\pinokio\bin\miniconda\Library\bin\ffmpeg.exe",
-        r"C:\ProgramData\chocolatey\bin\ffmpeg.exe",
-    ]
-    ffmpeg = None
-    for path in local_paths:
-        if os.path.exists(path):
-            ffmpeg = path
-            break
-    if not ffmpeg:
-        ffmpeg = shutil.which("ffmpeg") or "ffmpeg"
+    ffmpeg = os.environ.get("PYREEL_FFMPEG") or shutil.which("ffmpeg") or "ffmpeg"
     # Test ffmpeg exists
     result = subprocess.run([ffmpeg, "-version"], capture_output=True)
     if result.returncode != 0:

@@ -17,7 +17,7 @@
 ## How to resume (commands)
 
 ```bash
-cd ~/Desktop/github/pyreeler
+cd /path/to/pyreeler
 git status                       # expect clean, on main
 python3 -m pytest -q             # expect all pass (76+)
 python3 sync.py --check && python3 graduation_check.py   # both clean
@@ -42,7 +42,7 @@ spec-compliance review and a code-quality review before marking each task done).
 
 **Resume commands:**
 ```bash
-cd ~/Desktop/github/pyreeler
+cd /path/to/pyreeler
 git checkout feat/recipe-tui
 git log --oneline main..HEAD     # expect the 3 commits below
 python3 -m pytest -q             # expect 79 passed (76 core + 3 TUI; deps are installed)

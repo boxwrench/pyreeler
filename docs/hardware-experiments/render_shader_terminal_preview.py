@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import os
 import struct
 import subprocess
 import sys
@@ -129,13 +130,18 @@ def parse_args():
 
 def resolve_font():
     candidates = [
-        Path("C:/Windows/Fonts/consola.ttf"),
-        Path("C:/Windows/Fonts/lucon.ttf"),
-        Path("C:/Windows/Fonts/cour.ttf"),
+        os.environ.get("PYREEL_FONT"),
+        "DejaVuSansMono.ttf",
+        "consola.ttf",
+        "lucon.ttf",
+        "cour.ttf",
     ]
-    for candidate in candidates:
-        if candidate.exists():
+    for candidate in filter(None, candidates):
+        try:
+            ImageFont.truetype(candidate, 16)
             return str(candidate)
+        except OSError:
+            pass
     raise FileNotFoundError("No monospaced font found for terminal overlay.")
 
 

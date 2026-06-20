@@ -1,8 +1,8 @@
 # PyReeler Devlog
 
 > **Historical note:** This devlog records development as it happened on the
-> original Windows authoring machine, so paths below (`C:\Github\pyreeler`,
-> `C:\Users\wests\...`) and the `narrative_preview_smoke.py` benchmark harness
+> original Windows authoring machine, so historical local paths and the
+> `narrative_preview_smoke.py` benchmark harness
 > are **not part of this repository**. The benchmark numbers are kept for
 > reference; they are not reproducible from a fresh clone. For the current,
 > runnable workflow see the **Development** section of `README.md`
@@ -10,17 +10,17 @@
 
 ## Current Repo State
 
-`C:\Github\pyreeler` is the working repository for both Codex and Claude variants of the PyReeler skill:
+The working repository contains both Codex and Claude variants of the PyReeler skill:
 
 - `pyreeler-codex/` - OpenAI Codex skill (invoked as `$pyreeler`)
 - `pyreeler-claude/` - Claude Code skill (invoked as `/pyreeler`)
 
-Previous render outputs, frame dumps, smoke artifacts, temp skill copies, and scratch scripts were archived to `C:\Github\pyreeler_archive_20260313`.
+Previous render outputs, frame dumps, smoke artifacts, temp skill copies, and scratch scripts were archived outside this repository.
 
 There are three relevant locations for skill development:
-- **Working repo**: `C:\Github\pyreeler` (this repository)
-- **Portable source**: `C:\Users\wests\Downloads\pyreeler` (sharable package source)
-- **Installed skill**: `C:\Users\wests\.codex\skills\pyreeler` (active Codex skill)
+- **Working repo**: this repository
+- **Portable source**: local package checkout
+- **Installed skill**: local assistant skill directory
 
 Development workflow: edit portable source → sync to installed skill → benchmark → validate in fresh session.
 
@@ -109,8 +109,8 @@ Mirrored to `skills/codex/` and top-level `templates/`.
 Use `narrative_preview_smoke.py` for rapid inner-loop testing:
 
 ```powershell
-python C:\Github\pyreeler\narrative_preview_smoke.py cpu short
-python C:\Github\pyreeler\narrative_preview_smoke.py portable_auto_multi short
+python narrative_preview_smoke.py cpu short
+python narrative_preview_smoke.py portable_auto_multi short
 ```
 
 This verifies the installed portable code directly, avoiding fresh-session generation overhead.
@@ -118,11 +118,11 @@ This verifies the installed portable code directly, avoiding fresh-session gener
 ### Full Benchmark Suite
 
 ```powershell
-python C:\Github\pyreeler\narrative_preview_smoke.py cpu full
-python C:\Github\pyreeler\narrative_preview_smoke.py portable_auto full
-python C:\Github\pyreeler\narrative_preview_smoke.py portable_auto_multi full
-python C:\Github\pyreeler\narrative_preview_smoke.py gpu full
-python C:\Github\pyreeler\narrative_preview_smoke.py gpu_multi full
+python narrative_preview_smoke.py cpu full
+python narrative_preview_smoke.py portable_auto full
+python narrative_preview_smoke.py portable_auto_multi full
+python narrative_preview_smoke.py gpu full
+python narrative_preview_smoke.py gpu_multi full
 ```
 
 Purpose: compare end-to-end preview runtime, separate encoder effects from frame-generation effects.

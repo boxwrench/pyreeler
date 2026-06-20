@@ -64,9 +64,12 @@ class PyReelerApp(App):
         self.query_one("#summary", Static).update(recipe.summary)
         form = self.query_one("#form", Vertical)
         await form.remove_children()
+        widgets = []
         for p in merged_params(recipe):
-            form.mount(Label(p.name, classes="param-label"))
-            form.mount(Input(value=str(p.default), id=f"param-{p.name}"))
+            widgets.append(Label(p.name, classes="param-label"))
+            widgets.append(Input(value=str(p.default), id=f"param-{p.name}"))
+        if widgets:
+            await form.mount(*widgets)
         self.query_one("#status", Static).update(
             f"output: {self._output_path(recipe.name)}"
         )
@@ -95,6 +98,7 @@ class PyReelerApp(App):
         total = max(1, round(params["duration"] * params["fps"]))
         self.query_one("#progress", ProgressBar).update(total=total, progress=0)
         out = self._output_path(recipe.name)
+        out.parent.mkdir(parents=True, exist_ok=True)
         self.query_one("#status", Static).update(f"rendering to {out}...")
         self._render_worker(recipe, params, out)
 
@@ -123,7 +127,16 @@ class PyReelerApp(App):
         self.query_one("#status", Static).update(f"error: {exc}")
 
     def _output_path(self, recipe_name: str) -> Path:
-        return Path(f"{recipe_name}.mp4").resolve()
+        """Next free path under ~/Videos so renders never overwrite each other:
+        ``lorenz.mp4``, then ``lorenz-2.mp4``, ``lorenz-3.mp4``, ... Read-only
+        (no directory is created here); the render step makes the dir."""
+        out_dir = Path.home() / "Videos"
+        candidate = out_dir / f"{recipe_name}.mp4"
+        n = 2
+        while candidate.exists():
+            candidate = out_dir / f"{recipe_name}-{n}.mp4"
+            n += 1
+        return candidate
 
 
 def run() -> int:

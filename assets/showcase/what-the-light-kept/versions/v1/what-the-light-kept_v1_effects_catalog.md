@@ -12,7 +12,7 @@ Running catalog of reusable effects, motifs, and audio behaviors from this piece
   - slight harmonic doubling
   - fast envelopes with tiny gaps
   - light delayed smear for electronic character
-  - Code references: [render_preview.py](/C:/Github/pyreeler/assets/showcase/what-the-light-kept/render_preview.py#L378), [render_preview.py](/C:/Github/pyreeler/assets/showcase/what-the-light-kept/render_preview.py#L472)
+  - Code references: `assets/showcase/what-the-light-kept/render_preview.py` lines 378, 472
 - Notes:
   - this is the `r2d2-like` machine-speaking texture you called out
   - the final `me?` is now intended to use real `edge-tts` voice rather than robot talk
@@ -27,7 +27,7 @@ Running catalog of reusable effects, motifs, and audio behaviors from this piece
   - medium particle count
   - point-size variation with occasional horizontal streaks
   - light blur over a crisp particle pass
-  - Code references: [render_preview.py](/C:/Github/pyreeler/assets/showcase/what-the-light-kept/render_preview.py#L134), [render_preview.py](/C:/Github/pyreeler/assets/showcase/what-the-light-kept/render_preview.py#L197)
+  - Code references: `assets/showcase/what-the-light-kept/render_preview.py` lines 134, 197
 - Notes:
   - this is not a NumPy particle simulation
   - the motion logic is mostly math plus Pillow drawing
@@ -41,7 +41,7 @@ Running catalog of reusable effects, motifs, and audio behaviors from this piece
   - denser, finer particles than `rough particles`
   - stronger blur and lower alpha
   - hybrid heart/brain silhouette with residual swirl motion
-  - Code references: [render_preview.py](/C:/Github/pyreeler/assets/showcase/what-the-light-kept/render_preview.py#L265)
+  - Code references: `assets/showcase/what-the-light-kept/render_preview.py` line 265
 
 ## Rupture Glitch
 
@@ -52,7 +52,7 @@ Running catalog of reusable effects, motifs, and audio behaviors from this piece
   - NumPy-backed row shifting
   - red/cyan channel separation
   - line density tied to rupture intensity
-  - Code references: [render_preview.py](/C:/Github/pyreeler/assets/showcase/what-the-light-kept/render_preview.py#L310)
+  - Code references: `assets/showcase/what-the-light-kept/render_preview.py` line 310
 - Notes:
   - this is definitely a NumPy-driven effect
 
