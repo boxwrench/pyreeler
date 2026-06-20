@@ -30,7 +30,7 @@ REPO_ROOT = Path(__file__).resolve().parent
 SKILL_DIRS = ("claude", "codex")
 
 # Template subfolders under the canonical top-level templates/ directory.
-TEMPLATE_SUBDIRS = ("audio", "video")
+TEMPLATE_SUBDIRS = ("audio", "video", "tui")
 
 # Reference docs that are identical across skills and should stay in lockstep.
 # Per-platform docs (workflow.md, vocabulary-map.md) are intentionally excluded.

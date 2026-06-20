@@ -19,7 +19,7 @@ import sync  # noqa: E402
 def test_sync_makes_skill_templates_identical_to_canonical():
     sync.sync()
     for skill in sync.SKILL_DIRS:
-        for sub in ("audio", "video"):
+        for sub in sync.TEMPLATE_SUBDIRS:
             canonical = REPO_ROOT / "templates" / sub
             target = REPO_ROOT / "skills" / skill / "templates" / sub
             match, mismatch, errors = filecmp.cmpfiles(

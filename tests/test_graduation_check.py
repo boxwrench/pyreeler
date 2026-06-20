@@ -76,7 +76,10 @@ def test_validate_reports_missing_template_path():
 def test_validate_reports_path_outside_templates():
     problems = validate([_valid_entry(path="README.md")], REPO_ROOT)
 
-    assert "README.md is not under templates/audio or templates/video" in problems
+    assert (
+        "README.md is not under templates/audio, templates/video, or templates/tui"
+        in problems
+    )
 
 
 def test_validate_reports_kind_path_mismatch():
