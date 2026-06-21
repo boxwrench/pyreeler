@@ -98,11 +98,13 @@ fully offline. Pick a recipe, turn the knobs, render:
 
 ```bash
 python3 -m pyreeler list                                   # see available recipes
+python3 -m pyreeler info aizawa                            # read the math and description of a recipe
 python3 -m pyreeler render lorenz --duration 30 -o butterfly.mp4
 python3 -m pyreeler render rossler --c 5.7 --palette amber -o scroll.mp4
+python3 -m pyreeler render aizawa --thickness 3 -o thick_swirl.mp4
 ```
 
-Every recipe exposes typed, range-checked flags (`--rho`, `--fps`, `--palette`, …) —
+Every recipe exposes typed, range-checked flags (`--rho`, `--fps`, `--palette`, `--thickness`, …) —
 run `python3 -m pyreeler render <recipe> -h` to see them. Core deps are just
 `numpy` + `pillow` + FFmpeg.
 
