@@ -31,7 +31,14 @@ def resolve_ffmpeg(ffmpeg_path=None) -> str:
     found = shutil.which("ffmpeg")
     if found:
         return found
-    raise FileNotFoundError("Could not resolve ffmpeg. Pass an explicit ffmpeg path.")
+    try:
+        import imageio_ffmpeg
+        exe = imageio_ffmpeg.get_ffmpeg_exe()
+        if exe:
+            return exe
+    except ImportError:
+        pass
+    raise FileNotFoundError("Could not resolve ffmpeg. Install it to your system PATH, or run `pip install imageio-ffmpeg`.")
 
 
 def encoder_smoke_test(ffmpeg_path, encoder: str, width: int = 320, height: int = 180, fps: int = 15, seconds: float = 0.25) -> bool:
