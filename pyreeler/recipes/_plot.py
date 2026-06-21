@@ -7,7 +7,7 @@ from PIL import Image
 from experimental.tools.attractors import rotate_points
 
 
-def scatter_trail(trajectory, frame_idx, total, width, height, trail, color):
+def scatter_trail(trajectory, frame_idx, total, width, height, trail, color, thickness=1):
     """Plot the trail window ending at this frame, rotated and color-tinted.
 
     Args:
@@ -16,6 +16,7 @@ def scatter_trail(trajectory, frame_idx, total, width, height, trail, color):
         width, height: output size in pixels.
         trail: number of trailing points to draw.
         color: (r, g, b) tint for the accumulated intensity.
+        thickness: line thickness (default 1).
 
     Returns:
         An (width x height) RGB PIL.Image.
@@ -54,8 +55,20 @@ def scatter_trail(trajectory, frame_idx, total, width, height, trail, color):
         x = (nx * span_x + margin).astype(int)
         y = (ny * span_y + margin).astype(int)
         weight = np.linspace(0.15, 1.0, pts.shape[0]).astype(np.float32)
-        inside = (x >= 0) & (x < width) & (y >= 0) & (y < height)
-        np.add.at(buf, (y[inside], x[inside]), weight[inside])
+        
+        if thickness <= 1:
+            inside = (x >= 0) & (x < width) & (y >= 0) & (y < height)
+            np.add.at(buf, (y[inside], x[inside]), weight[inside])
+        else:
+            rad = thickness / 2.0
+            r_ceil = int(np.ceil(rad))
+            for dy in range(-r_ceil, r_ceil + 1):
+                for dx in range(-r_ceil, r_ceil + 1):
+                    if dy*dy + dx*dx <= rad*rad:
+                        y_off = y + dy
+                        x_off = x + dx
+                        inside = (x_off >= 0) & (x_off < width) & (y_off >= 0) & (y_off < height)
+                        np.add.at(buf, (y_off[inside], x_off[inside]), weight[inside])
 
     peak = float(buf.max())
     if peak > 0:

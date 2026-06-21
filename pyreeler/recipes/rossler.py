@@ -27,11 +27,18 @@ def _make_frame(prepared, params, frame_idx, total):
         prepared, frame_idx, total,
         params["width"], params["height"], params["trail"],
         PALETTES[params["palette"]],
+        thickness=params["thickness"],
     )
 
 
 RECIPE = register(Recipe(
     name="rossler",
     summary="Rossler strange attractor — a single smooth scroll.",
+    description=(
+        "The Rössler attractor is the attractor for the Rössler system, a system of three "
+        "non-linear ordinary differential equations originally studied by Otto Rössler. "
+        "These differential equations define a continuous-time dynamical system that exhibits "
+        "chaotic dynamics associated with the fractal properties of the attractor."
+    ),
     params=PARAMS, prepare=_prepare, make_frame=_make_frame,
 ))

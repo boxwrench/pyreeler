@@ -20,6 +20,8 @@ def main(argv=None) -> int:
     command = argv[0]
     if command == "list":
         return _cmd_list()
+    if command == "info":
+        return _cmd_info(argv[1:])
     if command == "render":
         return _cmd_render(argv[1:])
     # Unknown command: let argparse produce a helpful usage/error.
@@ -32,6 +34,8 @@ def _build_parser() -> argparse.ArgumentParser:
         prog="pyreeler", description="Make code-generated films from recipes.")
     sub = parser.add_subparsers(dest="command")
     sub.add_parser("list", help="list available recipes")
+    info = sub.add_parser("info", help="show information about a recipe")
+    info.add_argument("recipe", help="recipe name (see `pyreeler list`)")
     render = sub.add_parser("render", help="render a recipe to an mp4")
     render.add_argument("recipe", help="recipe name (see `pyreeler list`)")
     render.add_argument("-o", "--out", default=None, help="output path")
@@ -41,6 +45,27 @@ def _build_parser() -> argparse.ArgumentParser:
 def _cmd_list() -> int:
     for recipe in list_recipes():
         print(f"{recipe.name:12} {recipe.summary}")
+    return 0
+
+
+def _cmd_info(args: list[str]) -> int:
+    parser = argparse.ArgumentParser(prog="pyreeler info")
+    parser.add_argument("recipe")
+    namespace = parser.parse_args(args)
+    try:
+        recipe = get(namespace.recipe)
+    except UnknownRecipeError as exc:
+        print(exc, file=sys.stderr)
+        return 2
+
+    print(f"Recipe: {recipe.name}")
+    print(f"Summary: {recipe.summary}")
+    if getattr(recipe, "description", None):
+        print(f"\n{recipe.description}")
+    print("\nParameters:")
+    schema = merged_params(recipe)
+    for p in schema:
+        print(f"  --{p.name:10} {p.help} (default: {p.default})")
     return 0
 
 
