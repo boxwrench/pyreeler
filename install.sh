@@ -17,10 +17,6 @@ case "$TARGET" in
   codex)  SKILL_DIR="$REPO_ROOT/skills/codex";  DEST="$HOME/.codex/skills/pyreeler"; INVOKE="\$pyreeler" ;;
   cli)
     echo "PyReeler installer -> standalone app"
-    if ! command -v ffmpeg >/dev/null 2>&1; then
-      echo "  [!!] ffmpeg not found. Install it first (e.g. brew install ffmpeg or apt-get install ffmpeg)"
-      exit 1
-    fi
     echo "  Installing standalone CLI/TUI via pip..."
     if python3 -m pip install -e "$REPO_ROOT[tui]" 2>/dev/null \
        || python3 -m pip install --user -e "$REPO_ROOT[tui]" 2>/dev/null \
