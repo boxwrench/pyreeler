@@ -247,6 +247,125 @@ def generate_rossler(
     return trajectory
 
 
+def aizawa_step(x, y, z, a=0.95, b=0.7, c=0.6, d=3.5, e=0.25, f=0.1, dt=0.01):
+    """Single integration step of Aizawa equations."""
+    dx = ((z - b) * x - d * y) * dt
+    dy = (d * x + (z - b) * y) * dt
+    dz = (c + a * z - z**3 / 3 - (x**2 + y**2) * (1 + e * z) + f * z * x**3) * dt
+    return x + dx, y + dy, z + dz
+
+
+def thomas_step(x, y, z, b=0.208186, dt=0.01):
+    """Single integration step of Thomas cyclically symmetric equations."""
+    dx = (np.sin(y) - b * x) * dt
+    dy = (np.sin(z) - b * y) * dt
+    dz = (np.sin(x) - b * z) * dt
+    return x + dx, y + dy, z + dz
+
+
+def generate_aizawa(
+    n_points: int = 10000,
+    n_particles: int = 1,
+    a: float = 0.95,
+    b: float = 0.7,
+    c: float = 0.6,
+    d: float = 3.5,
+    e: float = 0.25,
+    f: float = 0.1,
+    dt: float = 0.01
+) -> np.ndarray:
+    """Generate Aizawa attractor trajectory."""
+    np.random.seed(42)
+    positions = np.random.randn(n_particles, 3) * 0.1 + np.array([0.1, 0, 0])
+    trajectory = np.zeros((n_points, n_particles, 3))
+
+    for i in range(n_points):
+        for p in range(n_particles):
+            x, y, z = positions[p]
+            positions[p] = aizawa_step(x, y, z, a, b, c, d, e, f, dt)
+        trajectory[i] = positions.copy()
+
+    return trajectory
+
+
+def generate_thomas(
+    n_points: int = 10000,
+    n_particles: int = 1,
+    b: float = 0.208186,
+    dt: float = 0.01
+) -> np.ndarray:
+    """Generate Thomas cyclically symmetric attractor trajectory."""
+    np.random.seed(42)
+    positions = np.random.randn(n_particles, 3) * 0.1 + np.array([1, 1, 1])
+    trajectory = np.zeros((n_points, n_particles, 3))
+
+    for i in range(n_points):
+        for p in range(n_particles):
+            x, y, z = positions[p]
+            positions[p] = thomas_step(x, y, z, b, dt)
+        trajectory[i] = positions.copy()
+
+    return trajectory
+
+
+def halvorsen_step(x, y, z, a=1.89, dt=0.01):
+    """Single integration step of Halvorsen equations."""
+    dx = (-a * x - 4 * y - 4 * z - y**2) * dt
+    dy = (-a * y - 4 * z - 4 * x - z**2) * dt
+    dz = (-a * z - 4 * x - 4 * y - x**2) * dt
+    return x + dx, y + dy, z + dz
+
+
+def chen_step(x, y, z, a=40.0, b=3.0, c=28.0, dt=0.005):
+    """Single integration step of Chen equations."""
+    dx = a * (y - x) * dt
+    dy = ((c - a) * x - x * z + c * y) * dt
+    dz = (x * y - b * z) * dt
+    return x + dx, y + dy, z + dz
+
+
+def generate_halvorsen(
+    n_points: int = 10000,
+    n_particles: int = 1,
+    a: float = 1.89,
+    dt: float = 0.01
+) -> np.ndarray:
+    """Generate Halvorsen attractor trajectory."""
+    np.random.seed(42)
+    positions = np.random.randn(n_particles, 3) * 0.1 + np.array([1, 0, 0])
+    trajectory = np.zeros((n_points, n_particles, 3))
+
+    for i in range(n_points):
+        for p in range(n_particles):
+            x, y, z = positions[p]
+            positions[p] = halvorsen_step(x, y, z, a, dt)
+        trajectory[i] = positions.copy()
+
+    return trajectory
+
+
+def generate_chen(
+    n_points: int = 10000,
+    n_particles: int = 1,
+    a: float = 40.0,
+    b: float = 3.0,
+    c: float = 28.0,
+    dt: float = 0.005
+) -> np.ndarray:
+    """Generate Chen attractor trajectory."""
+    np.random.seed(42)
+    positions = np.random.randn(n_particles, 3) * 0.1 + np.array([5, 10, 10])
+    trajectory = np.zeros((n_points, n_particles, 3))
+
+    for i in range(n_points):
+        for p in range(n_particles):
+            x, y, z = positions[p]
+            positions[p] = chen_step(x, y, z, a, b, c, dt)
+        trajectory[i] = positions.copy()
+
+    return trajectory
+
+
 def rotate_points(points, angle_x=0, angle_y=0, angle_z=0):
     """Rotate points around origin.
 

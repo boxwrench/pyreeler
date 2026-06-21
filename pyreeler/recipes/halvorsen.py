@@ -1,24 +1,22 @@
-"""Lorenz strange attractor recipe."""
+"""Halvorsen attractor recipe."""
 from __future__ import annotations
 
-from experimental.tools.attractors import generate_lorenz
+from experimental.tools.attractors import generate_halvorsen
 
 from .base import Param, Recipe, PALETTES, register
 from ._plot import scatter_trail
 
 PARAMS = (
-    Param("sigma", float, 10.0, help="Lorenz sigma"),
-    Param("rho", float, 28.0, help="Lorenz rho"),
-    Param("beta", float, 8 / 3, help="Lorenz beta"),
+    Param("a", float, 1.89, help="Halvorsen a parameter"),
     Param("points", int, 10000, min=100, help="trajectory integration steps"),
     Param("trail", int, 10000, min=1, help="trail length in points (>=points shows the whole attractor)"),
 )
 
 
 def _prepare(params):
-    return generate_lorenz(
+    return generate_halvorsen(
         n_points=params["points"], n_particles=1,
-        sigma=params["sigma"], rho=params["rho"], beta=params["beta"],
+        a=params["a"],
     )
 
 
@@ -32,12 +30,12 @@ def _make_frame(prepared, params, frame_idx, total):
 
 
 RECIPE = register(Recipe(
-    name="lorenz",
-    summary="Lorenz strange attractor — the iconic butterfly.",
+    name="halvorsen",
+    summary="Halvorsen strange attractor.",
     description=(
-        "The Lorenz system is a system of ordinary differential equations first studied by "
-        "Edward Lorenz. It is notable for having chaotic solutions for certain parameter values "
-        "and initial conditions. The shape of the Lorenz attractor resembles a butterfly."
+        "The Halvorsen attractor is a cyclically symmetric 3D strange attractor. "
+        "It exhibits complex chaotic dynamics and features three intersecting lobes "
+        "reminiscent of a three-leaf clover in its phase space."
     ),
     params=PARAMS, prepare=_prepare, make_frame=_make_frame,
 ))

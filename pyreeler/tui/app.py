@@ -96,7 +96,12 @@ class PyReelerApp(App):
     async def _load_recipe(self, name: str) -> None:
         recipe = get(name)
         self._current_name = name
-        self.query_one("#summary", Static).update(recipe.summary)
+        
+        text = recipe.summary
+        if getattr(recipe, "description", None):
+            text += f"\n\n{recipe.description}"
+        self.query_one("#summary", Static).update(text)
+        
         form = self.query_one("#form", Vertical)
         await form.remove_children()
         fields = [make_field(p) for p in merged_params(recipe)]

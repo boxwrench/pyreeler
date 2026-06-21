@@ -37,6 +37,7 @@ class Recipe:
     params: tuple[Param, ...]
     prepare: Callable
     make_frame: Callable
+    description: str = ""
 
 
 # Palette name -> RGB. Phosphor matches the site/README (#39ff14).
@@ -54,6 +55,7 @@ STANDARD_PARAMS = (
     Param("width", int, 854, min=16, help="frame width in pixels"),
     Param("height", int, 480, min=16, help="frame height in pixels"),
     Param("palette", str, "phosphor", choices=tuple(PALETTES), help="color palette"),
+    Param("thickness", int, 1, min=1, help="line thickness", step=1),
 )
 
 REGISTRY: dict[str, Recipe] = {}
