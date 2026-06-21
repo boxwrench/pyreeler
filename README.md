@@ -272,7 +272,7 @@ Every number in these tables was paid for in render time and disk space. The **I
 
 ## Installing
 
-**Requires Python 3.10+ and FFmpeg on your `PATH`.** (`numpy` + `pillow` are installed for you; FFmpeg is the one external tool you must install yourself — see Prerequisites below.)
+**Requires Python 3.10+**. FFmpeg is used to encode the final video. If FFmpeg is not found on your `PATH`, PyReeler will automatically download a lightweight static binary using `imageio-ffmpeg` behind the scenes.
 
 **Tested on Windows and Ubuntu Linux.**
 **macOS support is expected** (the code handles Apple Silicon and `h264_videotoolbox`) but has not been personally verified.
@@ -286,9 +286,7 @@ git clone https://github.com/boxwrench/pyreeler.git && cd pyreeler
 ```
 
 Run one or both installer commands depending on which assistant you use. The
-installer checks for FFmpeg, runs `pip install -r requirements.txt` (just `numpy`
-+ `pillow`), and symlinks the selected skill into place. The only thing it can't
-install for you is **FFmpeg itself** — see Prerequisites below.
+installer runs `pip install` and symlinks the selected skill into place.
 
 After install:
 
@@ -349,7 +347,19 @@ python -m pip install -r requirements-tui.txt
 python -m pyreeler
 ```
 
+### Building a Standalone Binary
+
+You can compile PyReeler into a single, double-clickable executable (no Python required) using [PyInstaller](https://pyinstaller.org/). When built this way, PyInstaller will automatically package the `imageio-ffmpeg` binary directly inside your executable, making it completely standalone.
+
+```bash
+python3 -m pip install pyinstaller
+python3 -m PyInstaller --name PyReeler --onefile pyreeler/__main__.py 
+```
+The compiled executable will be generated in the `dist/` directory.
+
 ### Prerequisites
+
+FFmpeg is the engine that encodes the final `.mp4` video. PyReeler will auto-download a minimal FFmpeg binary via `imageio-ffmpeg` if you don't have one. However, if you prefer to use your system's hardware-accelerated FFmpeg, you can install it manually:
 
 **macOS** (untested):
 ```bash
