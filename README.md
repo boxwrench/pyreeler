@@ -73,6 +73,7 @@ From the repository root:
 ```bash
 ./install.sh          # installs the Claude Code skill, invoked with /pyreeler
 ./install.sh codex    # installs the Codex skill, invoked with $pyreeler
+./install.sh cli      # installs the standalone pyreeler CLI/TUI globally
 ```
 
 Install both if you use both assistants.

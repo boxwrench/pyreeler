@@ -14,3 +14,6 @@ tui = ["textual>=0.60", "rich>=13.0", "terminaltexteffects>=0.10"]
 
 [tool.setuptools]
 packages = ["pyreeler", "pyreeler.recipes", "pyreeler.tui"]
+
+[project.scripts]
+pyreeler = "pyreeler.cli:main"
