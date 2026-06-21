@@ -3,6 +3,7 @@
 #
 #   ./install.sh            # installs the Claude Code skill (default)
 #   ./install.sh codex      # installs the OpenAI Codex skill
+#   ./install.sh cli        # installs the standalone pyreeler CLI/TUI app
 #
 # It checks for FFmpeg, installs the core Python deps, and symlinks the skill
 # into your assistant's skills directory. Windows users: see README → Installing.
@@ -14,7 +15,24 @@ TARGET="${1:-claude}"
 case "$TARGET" in
   claude) SKILL_DIR="$REPO_ROOT/skills/claude"; DEST="$HOME/.claude/skills/pyreeler"; INVOKE="/pyreeler" ;;
   codex)  SKILL_DIR="$REPO_ROOT/skills/codex";  DEST="$HOME/.codex/skills/pyreeler"; INVOKE="\$pyreeler" ;;
-  *) echo "Usage: ./install.sh [claude|codex]"; exit 1 ;;
+  cli)
+    echo "PyReeler installer -> standalone app"
+    if ! command -v ffmpeg >/dev/null 2>&1; then
+      echo "  [!!] ffmpeg not found. Install it first (e.g. brew install ffmpeg or apt-get install ffmpeg)"
+      exit 1
+    fi
+    echo "  Installing standalone CLI/TUI via pip..."
+    if python3 -m pip install -e "$REPO_ROOT[tui]" 2>/dev/null \
+       || python3 -m pip install --user -e "$REPO_ROOT[tui]" 2>/dev/null \
+       || python3 -m pip install --break-system-packages -e "$REPO_ROOT[tui]" 2>/dev/null; then
+      echo "  [ok] Successfully installed pyreeler. Run 'pyreeler' to start the TUI."
+    else
+      echo "  [!!] Failed to install pyreeler CLI."
+      exit 1
+    fi
+    exit 0
+    ;;
+  *) echo "Usage: ./install.sh [claude|codex|cli]"; exit 1 ;;
 esac
 
 echo "PyReeler installer -> $TARGET"
