@@ -62,6 +62,18 @@ The two AI skill versions share the same core workflow and templates, including
 the reusable PYREELER terminal banner template. The local CLI/TUI is the
 deterministic recipe browser and renderer you can run without an AI.
 
+## Current Milestone
+
+The current milestone is a **dependable PyReeler v0.1 local renderer**. Feature
+expansion is paused while the project proves a clean wheel installation, correct
+runtime module and TUI data inclusion, documented FFmpeg fallback behavior, and a
+memory-safe streaming render path.
+
+The immediate next task and acceptance checks live in the
+[current working plan](docs/plans/CURRENT.md). Research notes and
+`experimental/ROADMAP.md` are idea inventories, not committed product scope.
+
+
 ## Quick Start
 
 Talk to it like a director talks to a cinematographer — give it a feeling and an arc, not a parameter dump.

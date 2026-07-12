@@ -1,3 +1,8 @@
+> **Historical planning record:** This infrastructure-first backlog has been
+> superseded by [the current working plan](CURRENT.md). It is retained for context;
+> its ordered tasks are not committed scope.
+
+
 # Remaining Roadmap Implementation Plan
 
 **Date:** 2026-06-17
