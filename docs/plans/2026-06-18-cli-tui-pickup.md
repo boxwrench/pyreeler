@@ -1,3 +1,8 @@
+> **Historical record:** The TUI work described as in progress below was later
+> completed and merged to `main`. Do not use this document to determine current
+> scope or resume work. See the [current working plan](CURRENT.md).
+
+
 # PyReeler CLI + TUI — Pickup / Resume Doc
 
 **Updated:** 2026-06-18
