@@ -41,6 +41,10 @@ launch the TUI. Verify the documented PyInstaller path separately.
    progress, cleanup, and useful stderr.
 4. Validate the milestone in a clean environment and record the result.
 
+Implementation packets for milestone steps 1 and 2 are ready in the
+[v0.1 release-boundary agent batch](2026-07-12-v0.1-release-boundary-agent-batch.md).
+
+
 Keep the streaming refactor isolated. Validate a real short render, broken-pipe and
 FFmpeg-error behavior, and approximately steady memory on a longer render.
 

@@ -1,4 +1,5 @@
-# PyReeler core dependencies — everything the portable templates actually import.
-# Plus FFmpeg on your PATH, installed separately (see README → Installing).
+# PyReeler core dependencies, including a portable FFmpeg fallback.
+# A system FFmpeg remains preferred when one is available on PATH.
 numpy>=1.21
 pillow>=9.0
+imageio-ffmpeg>=0.4.0

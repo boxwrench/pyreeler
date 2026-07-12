@@ -128,6 +128,29 @@ recipe filter box — press `p` to play the finished render), and a render progr
 bar with a Sparkline. Renders land in
 `~/Videos` with auto-incrementing names (`lorenz.mp4`, `lorenz-2.mp4`, …), so a new
 render never overwrites an earlier one.
+### Install the released wheel
+
+Install the supported CLI artifact into a regular environment with:
+
+```bash
+python3 -m pip install pyreeler
+pyreeler list
+```
+
+For the interactive interface, install the wheel's TUI extra:
+
+```bash
+python3 -m pip install "pyreeler[tui]"
+pyreeler
+```
+
+Contributors working from a checkout can instead use an editable install. This is
+for development only; release behavior is verified from a built wheel outside the
+repository:
+
+```bash
+python3 -m pip install -e .
+```
 
 ## Featured Films
 
@@ -284,7 +307,8 @@ Every number in these tables was paid for in render time and disk space. The **I
 
 ## Installing
 
-**Requires Python 3.10+**. FFmpeg is used to encode the final video. If FFmpeg is not found on your `PATH`, PyReeler will automatically download a lightweight static binary using `imageio-ffmpeg` behind the scenes.
+**Requires Python 3.10+**. FFmpeg encodes the final video. PyReeler prefers
+FFmpeg on your `PATH` and otherwise uses the declared `imageio-ffmpeg` fallback.
 
 **Tested on Windows and Ubuntu Linux.**
 **macOS support is expected** (the code handles Apple Silicon and `h264_videotoolbox`) but has not been personally verified.
@@ -317,8 +341,8 @@ python3 -m pip install -r requirements-extras.txt
 ### Local CLI + Animated TUI
 
 The local renderer is separate from the AI skill invocation. It needs **Python
-3.10+** and **FFmpeg** on your `PATH` (the `render` step shells out to it). From
-the repository root:
+3.10+**; its declared dependencies include a portable FFmpeg fallback. From the
+repository root:
 
 ```bash
 python3 -m pip install -r requirements.txt
@@ -339,8 +363,9 @@ python3 -m pyreeler
 
 ### Windows: Manual Skill Install
 
-Windows users should install FFmpeg, run Python deps from the repository root,
-then copy the desired skill folder:
+Windows users should install the Python dependencies from the repository root,
+then copy the desired skill folder. System FFmpeg is optional but preferred for
+hardware-accelerated encoding:
 
 ```powershell
 python -m pip install -r requirements.txt
@@ -361,13 +386,17 @@ python -m pyreeler
 
 ### Building a Standalone Binary
 
-You can compile PyReeler into a single, double-clickable executable (no Python required) using [PyInstaller](https://pyinstaller.org/). When built this way, PyInstaller will automatically package the `imageio-ffmpeg` binary directly inside your executable, making it completely standalone.
+A PyInstaller build is possible, but binary bundling is not verified by the v0.1
+release checks. Treat the FFmpeg binary as a manual bundling concern; the command
+below is a development starting point, not a standalone-distribution guarantee.
 
 ```bash
 python3 -m pip install pyinstaller
-python3 -m PyInstaller --name PyReeler --onefile pyreeler/__main__.py 
+python3 -m PyInstaller --name PyReeler --onefile pyreeler/__main__.py
 ```
-The compiled executable will be generated in the `dist/` directory.
+
+The compiled executable is generated in the `dist/` directory. Verify FFmpeg
+resolution on the target system before distributing it.
 
 ### Prerequisites
 

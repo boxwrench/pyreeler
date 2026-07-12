@@ -1,5 +1,6 @@
 # PyReeler TUI extras (the interactive front-end). Install with:
 #     pip install -r requirements-tui.txt
+-r requirements.txt
 textual>=0.60
 rich>=13.0
 terminaltexteffects>=0.10

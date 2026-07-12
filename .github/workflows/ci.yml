@@ -16,7 +16,7 @@ jobs:
           python-version: "3.12"
 
       - name: Install dependencies
-        run: python -m pip install --upgrade pip numpy pillow pytest
+        run: python -m pip install --upgrade pip build pytest .
 
       - name: Verify skill files are in sync with canonical sources
         run: python sync.py --check
@@ -26,3 +26,6 @@ jobs:
 
       - name: Run test suite
         run: pytest -q
+
+      - name: Smoke test installed wheel
+        run: python scripts/smoke_wheel.py --exercise-fallback
