@@ -41,7 +41,7 @@ def test_load_repo_manifest_includes_current_python_templates():
     entries = load_manifest(REPO_ROOT / "template_graduation.toml")
     declared = {entry.path for entry in entries}
     current_templates = {
-        str(path.relative_to(REPO_ROOT))
+        path.relative_to(REPO_ROOT).as_posix()
         for path in (REPO_ROOT / "templates").glob("*/*.py")
     }
 

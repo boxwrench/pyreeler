@@ -13,9 +13,10 @@ def test_linux_uses_xdg_open(monkeypatch):
     monkeypatch.setattr(player.sys, "platform", "linux")
     monkeypatch.setattr(player.subprocess, "Popen",
                         lambda args, **kw: calls.update(args=args))
-    player.open_in_player(Path("/tmp/x.mp4"))
+    path = Path("/tmp/x.mp4")
+    player.open_in_player(path)
     assert calls["args"][0] == "xdg-open"
-    assert calls["args"][1] == "/tmp/x.mp4"
+    assert calls["args"][1] == str(path)
 
 
 def test_macos_uses_open(monkeypatch):

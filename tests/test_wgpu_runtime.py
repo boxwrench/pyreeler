@@ -31,11 +31,15 @@ def test_is_wgpu_available_returns_bool():
     assert isinstance(module.is_wgpu_available(), bool)
 
 
-def test_pick_discrete_adapter_without_wgpu_has_clear_error():
+def test_pick_discrete_adapter_without_wgpu_has_clear_error(monkeypatch):
     module = load_wgpu_runtime()
 
+    def missing_wgpu():
+        raise RuntimeError("Install wgpu to use local shader rendering.")
+
+    monkeypatch.setattr(module, "_load_wgpu", missing_wgpu)
     with pytest.raises(RuntimeError, match="Install wgpu to use local shader rendering"):
-        module.pick_discrete_adapter(wgpu_module=None)
+        module.pick_discrete_adapter()
 
 
 class FakeAdapter:
