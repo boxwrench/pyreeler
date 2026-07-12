@@ -7,13 +7,17 @@ name = "pyreeler"
 version = "0.1.0"
 description = "Make short code-generated films from recipes — CLI + TUI."
 requires-python = ">=3.10"
-dependencies = ["numpy>=1.21", "pillow>=9.0"]
+dependencies = ["numpy>=1.21", "pillow>=9.0", "imageio-ffmpeg>=0.4.0"]
 
 [project.optional-dependencies]
-tui = ["textual>=0.60", "rich>=13.0", "terminaltexteffects>=0.10", "imageio-ffmpeg>=0.4.0"]
+tui = ["textual>=0.60", "rich>=13.0", "terminaltexteffects>=0.10"]
 
-[tool.setuptools]
-packages = ["pyreeler", "pyreeler.recipes", "pyreeler.tui"]
+[tool.setuptools.packages.find]
+include = ["pyreeler*", "templates.video*", "experimental.tools*"]
+namespaces = true
+
+[tool.setuptools.package-data]
+"pyreeler.tui" = ["styles.tcss"]
 
 [project.scripts]
 pyreeler = "pyreeler.cli:main"

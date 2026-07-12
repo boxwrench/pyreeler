@@ -33,22 +33,17 @@ esac
 
 echo "PyReeler installer -> $TARGET"
 
-# 1. FFmpeg is the one hard external dependency.
+# 1. Prefer system FFmpeg; the dependency install below provides a fallback.
 if command -v ffmpeg >/dev/null 2>&1; then
-  echo "  [ok] ffmpeg: $(command -v ffmpeg)"
+  echo "  [ok] ffmpeg source: system ($(command -v ffmpeg))"
 else
-  echo "  [!!] ffmpeg not found. Install it first, then re-run:"
-  echo "         macOS:  brew install ffmpeg"
-  echo "         Linux:  sudo apt-get install ffmpeg"
-  exit 1
+  echo "  [info] system ffmpeg not found; checking the Python fallback"
 fi
 
-# 2. Core Python deps (numpy, pillow).
-#    Skip if they already import; otherwise install best-effort. A failure here
-#    (e.g. PEP 668 "externally-managed-environment") must NOT abort the symlink
-#    below, which is the real point of this script.
-if python3 -c "import numpy, PIL" >/dev/null 2>&1; then
-  echo "  [ok] core Python deps (numpy, pillow) already available"
+# 2. Core Python deps, including imageio-ffmpeg.
+#    Try the common PEP 668 alternatives before validating the resolver below.
+if python3 -c "import numpy, PIL, imageio_ffmpeg" >/dev/null 2>&1; then
+  echo "  [ok] core Python deps already available"
 else
   echo "  Installing core Python deps from requirements.txt ..."
   if python3 -m pip install -r "$REPO_ROOT/requirements.txt" 2>/dev/null \
@@ -63,7 +58,20 @@ else
   fi
 fi
 
-# 3. Symlink the skill into place.
+# 3. Resolve FFmpeg after dependency installation and report the selected source.
+if ! command -v ffmpeg >/dev/null 2>&1; then
+  IMAGEIO_FFMPEG="$(python3 -c 'import imageio_ffmpeg; print(imageio_ffmpeg.get_ffmpeg_exe())' 2>/dev/null || true)"
+  if [ -n "$IMAGEIO_FFMPEG" ] && [ -x "$IMAGEIO_FFMPEG" ]; then
+    echo "  [ok] ffmpeg source: imageio-ffmpeg ($IMAGEIO_FFMPEG)"
+  else
+    echo "  [!!] Could not resolve FFmpeg from the system PATH or imageio-ffmpeg."
+    echo "       Install dependencies with: python3 -m pip install -r \"$REPO_ROOT/requirements.txt\""
+    echo "       Or install system FFmpeg, then re-run."
+    exit 1
+  fi
+fi
+
+# 4. Symlink the skill into place.
 mkdir -p "$(dirname "$DEST")"
 if [ -e "$DEST" ] || [ -L "$DEST" ]; then
   echo "  [skip] $DEST already exists. Remove it and re-run to relink."
