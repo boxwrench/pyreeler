@@ -8,12 +8,11 @@ from dataclasses import dataclass
 
 
 PORTABLE_ENCODER_ORDER = (
-    "h264_qsv",
     "h264_nvenc",
     "h264_amf",
-    "h264_videotoolbox",
     "libx264",
 )
+ENCODER_SMOKE_TIMEOUT_SECONDS = 5
 
 
 @dataclass(frozen=True)
@@ -59,7 +58,16 @@ def encoder_smoke_test(ffmpeg_path, encoder: str, width: int = 320, height: int 
         "null",
         "-",
     ]
-    result = subprocess.run(cmd, capture_output=True, text=True, check=False)
+    try:
+        result = subprocess.run(
+            cmd,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=ENCODER_SMOKE_TIMEOUT_SECONDS,
+        )
+    except (subprocess.TimeoutExpired, OSError):
+        return False
     return result.returncode == 0
 
 
@@ -68,87 +76,9 @@ def pick_portable_video_encoder(ffmpeg_path, encoder_order=PORTABLE_ENCODER_ORDE
     for encoder in encoder_order:
         if encoder_smoke_test(ffmpeg_path, encoder):
             return encoder
-    return "libx264"
+    candidates = ", ".join(encoder_order)
+    raise RuntimeError(f"No working FFmpeg video encoder found; attempted: {candidates}")
 
-
-def detect_nvidia() -> bool:
-    nvidia_smi = shutil.which("nvidia-smi")
-    if not nvidia_smi:
-        return False
-    result = subprocess.run(
-        [nvidia_smi, "--query-gpu=name", "--format=csv,noheader"],
-        capture_output=True,
-        text=True,
-        timeout=5,
-        check=False,
-    )
-    if result.returncode != 0:
-        return False
-    return "NVIDIA" in result.stdout
-
-
-def detect_windows_gpu_vendor() -> str | None:
-    powershell = shutil.which("powershell")
-    if not powershell:
-        return None
-    result = subprocess.run(
-        [
-            powershell,
-            "-NoProfile",
-            "-Command",
-            "(Get-CimInstance Win32_VideoController | Select-Object -ExpandProperty Name) -join \"`n\"",
-        ],
-        capture_output=True,
-        text=True,
-        timeout=5,
-        check=False,
-    )
-    if result.returncode != 0:
-        return None
-    names = result.stdout.lower()
-    if "nvidia" in names:
-        return "nvidia"
-    if "intel" in names:
-        return "intel"
-    if "amd" in names or "radeon" in names:
-        return "amd"
-    return None
-
-
-def detect_linux_gpu_vendor() -> str | None:
-    cmd = shutil.which("lspci")
-    if not cmd:
-        return None
-    result = subprocess.run(
-        [cmd, "-nn"],
-        capture_output=True,
-        text=True,
-        timeout=5,
-        check=False,
-    )
-    if result.returncode != 0:
-        return None
-    text = result.stdout.lower()
-    if "8086" in text:
-        return "intel"
-    if "1002" in text or "amd" in text or "radeon" in text:
-        return "amd"
-    return None
-
-
-def detect_apple_silicon() -> bool:
-    if platform.system() != "Darwin":
-        return False
-    if platform.machine() == "arm64":
-        return True
-    result = subprocess.run(
-        ["sysctl", "-n", "sysctl.proc_translated"],
-        capture_output=True,
-        text=True,
-        timeout=5,
-        check=False,
-    )
-    return result.returncode == 0 and result.stdout.strip() == "1"
 
 
 def conservative_worker_limit(profile: str, logical_cores: int | None = None) -> int:
@@ -168,39 +98,11 @@ def conservative_worker_limit(profile: str, logical_cores: int | None = None) ->
 
 def detect_host_profile(ffmpeg_path=None) -> HardwareProfile:
     ffmpeg = resolve_ffmpeg(ffmpeg_path)
-
-    if detect_nvidia():
-        encoder = pick_portable_video_encoder(ffmpeg, ("h264_nvenc", "libx264"))
-        profile = "NVIDIA_NVENC" if encoder == "h264_nvenc" else "SAFE_MODE"
-        return HardwareProfile(profile=profile, encoder=encoder, workers=conservative_worker_limit(profile), ffmpeg_path=ffmpeg)
-
-    if detect_apple_silicon():
-        encoder = pick_portable_video_encoder(ffmpeg, ("h264_videotoolbox", "libx264"))
-        profile = "APPLE_SILICON" if encoder == "h264_videotoolbox" else "SAFE_MODE"
-        return HardwareProfile(profile=profile, encoder=encoder, workers=conservative_worker_limit(profile), ffmpeg_path=ffmpeg)
-
-    system = platform.system()
-    vendor = None
-    if system == "Windows":
-        vendor = detect_windows_gpu_vendor()
-    elif system == "Linux":
-        vendor = detect_linux_gpu_vendor()
-
-    if vendor == "intel":
-        encoder = pick_portable_video_encoder(ffmpeg, ("h264_qsv", "libx264"))
-        profile = "INTEL_QSV" if encoder == "h264_qsv" else "SAFE_MODE"
-        return HardwareProfile(profile=profile, encoder=encoder, workers=conservative_worker_limit(profile), ffmpeg_path=ffmpeg)
-    if vendor == "nvidia":
-        encoder = pick_portable_video_encoder(ffmpeg, ("h264_nvenc", "libx264"))
-        profile = "NVIDIA_NVENC" if encoder == "h264_nvenc" else "SAFE_MODE"
-        return HardwareProfile(profile=profile, encoder=encoder, workers=conservative_worker_limit(profile), ffmpeg_path=ffmpeg)
-    if vendor == "amd":
-        encoder = pick_portable_video_encoder(ffmpeg, ("h264_amf", "libx264"))
-        profile = "AMD_AMF" if encoder == "h264_amf" else "SAFE_MODE"
-        return HardwareProfile(profile=profile, encoder=encoder, workers=conservative_worker_limit(profile), ffmpeg_path=ffmpeg)
-
     encoder = pick_portable_video_encoder(ffmpeg)
-    profile = "SAFE_MODE" if encoder == "libx264" else "GENERIC_ACCEL"
+    profile = {
+        "h264_nvenc": "NVIDIA_NVENC",
+        "h264_amf": "AMD_AMF",
+    }.get(encoder, "SAFE_MODE")
     return HardwareProfile(profile=profile, encoder=encoder, workers=conservative_worker_limit(profile), ffmpeg_path=ffmpeg)
 
 

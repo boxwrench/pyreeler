@@ -1,7 +1,7 @@
 # PyReeler Current Working Plan
 
 **Set:** 2026-07-12 after the Ponytail/YAGNI audit
-**Status:** v0.1 milestone complete; post-release test baseline green
+**Status:** v0.1 milestone complete; NVIDIA/AMD encoder-selection batch complete
 
 This plan supersedes the ordered, infrastructure-first backlog in
 `2026-06-17-remaining-roadmap-implementation.md`. That document is retained as
@@ -34,13 +34,24 @@ All four milestone steps are complete. The first post-v0.1 maintenance batch als
 restored a cross-platform green baseline: 110 tests pass, provider sync passes,
 and the graduation manifest remains a required CI gate.
 
+## Completed Batch: Capability-first NVIDIA/AMD Encoding
+
+Replace vendor-name inference with bounded FFmpeg encode smoke tests. Selection
+tries NVIDIA NVENC, then AMD AMF, and retains `libx264 -preset veryfast` as the
+CPU safety fallback. Intel QSV, Apple VideoToolbox, and VAAPI are parked for a
+focused pull request or demonstrated request with suitable validation hardware.
+
+The batch tasks and acceptance criteria are recorded in the
+[NVIDIA/AMD encoder selection agent batch](2026-07-12-nvidia-amd-encoder-selection-agent-batch.md).
+
+Completed on 2026-07-12 with 122 tests passing, both repository gates green,
+and installed-wheel renders passing with system and imageio FFmpeg sources.
+
 ## Evaluate After v0.1
 
 These are candidates, not an automatic queue:
 
 - Consolidate the duplicate package/template banner.
-- Prototype FFmpeg-smoke-test-first encoder selection and compare it across actual
-  platforms before replacing vendor detection.
 - Replace duplicate experimental copies of canonical references with links.
 - Add direct behavioral tests where runtime helpers have only sync coverage.
 - Add recipes or templates only for a specific film the current set cannot express.

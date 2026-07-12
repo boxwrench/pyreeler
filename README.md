@@ -240,7 +240,7 @@ The `templates/` folder provides lightweight starters, not a full framework:
 - `voice.py`: optional `edge-tts` helper
 - `audio_engine.py`: simple stem placement, ducking, mastering, and WAV export
 - `audio_reactive.py`: per-frame RMS envelopes for audio-driven visual parameters
-- `ffmpeg_utils.py`: host-profile detection, encoder smoke tests, and conservative worker heuristics
+- `ffmpeg_utils.py`: encoder capability smoke tests and conservative worker heuristics
 - `render_runtime.py`: one-call portable render defaults for encoder, ffmpeg path, and worker count
 - `parallel_render.py`: multiprocess frame rendering with ordered output (Claude version)
 
@@ -310,8 +310,11 @@ Every number in these tables was paid for in render time and disk space. The **I
 **Requires Python 3.10+**. FFmpeg encodes the final video. PyReeler prefers
 FFmpeg on your `PATH` and otherwise uses the declared `imageio-ffmpeg` fallback.
 
-**Tested on Windows and Ubuntu Linux.**
-**macOS support is expected** (the code handles Apple Silicon and `h264_videotoolbox`) but has not been personally verified.
+**Tested on Windows and Ubuntu Linux.** Hardware encoding support is deliberately
+narrow: PyReeler smoke-tests NVIDIA NVENC, then AMD AMF, and uses
+`libx264 -preset veryfast` as its dependable CPU fallback. Intel QSV, Apple
+VideoToolbox, and VAAPI are parked until a focused contribution or demonstrated
+request can be validated on suitable hardware.
 
 ### macOS/Linux: AI Skills
 
