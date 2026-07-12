@@ -1,7 +1,7 @@
 # PyReeler Current Working Plan
 
 **Set:** 2026-07-12 after the Ponytail/YAGNI audit
-**Status:** v0.1 milestone complete; follow-up candidates awaiting selection
+**Status:** v0.1 milestone complete; post-release test baseline green
 
 This plan supersedes the ordered, infrastructure-first backlog in
 `2026-06-17-remaining-roadmap-implementation.md`. That document is retained as
@@ -30,16 +30,15 @@ Completed on 2026-07-12. Packaging, fallback alignment, ordered frame streaming,
 and clean-artifact validation are recorded in the
 [v0.1 milestone validation](2026-07-12-v0.1-milestone-validation.md).
 
-All four milestone steps are complete. No item under **Evaluate After v0.1** is
-automatically authorized by this completion.
+All four milestone steps are complete. The first post-v0.1 maintenance batch also
+restored a cross-platform green baseline: 110 tests pass, provider sync passes,
+and the graduation manifest remains a required CI gate.
 
 ## Evaluate After v0.1
 
 These are candidates, not an automatic queue:
 
 - Consolidate the duplicate package/template banner.
-- Decide whether `graduation_check.py` merits a required CI gate; preserve
-  `sync.py --check` and behavioral tests.
 - Prototype FFmpeg-smoke-test-first encoder selection and compare it across actual
   platforms before replacing vendor detection.
 - Replace duplicate experimental copies of canonical references with links.

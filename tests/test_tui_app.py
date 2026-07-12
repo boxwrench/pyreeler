@@ -14,6 +14,16 @@ sys.path.insert(0, str(REPO_ROOT))
 from pyreeler.tui.app import PyReelerApp  # noqa: E402
 
 
+async def select_recipe(app, name):
+    """Select a recipe explicitly so tests do not depend on registry ordering."""
+    from textual.widgets import ListView
+
+    recipes = app.query_one("#recipe-list", ListView)
+    items = list(recipes.query("ListItem"))
+    recipes.index = next(i for i, item in enumerate(items) if item.id == f"recipe-{name}")
+    await app._load_recipe(name)
+
+
 def test_app_mounts_and_lists_recipes():
     async def body():
         app = PyReelerApp()
@@ -46,6 +56,7 @@ def test_selecting_recipe_populates_summary_and_form():
             recipe = get(app._current_name)
             # one ParamField per merged param
             assert len(app.query(ParamField)) == len(merged_params(recipe))
+            await select_recipe(app, "lorenz")
             # rho is a numeric field whose inner Input keeps id param-rho
             rho = app.query_one("#param-rho", Input)
             assert rho.value == "28"
@@ -60,6 +71,7 @@ def test_collect_params_reads_form_values():
         async with app.run_test() as pilot:
             await pilot.pause()
             from textual.widgets import Input
+            await select_recipe(app, "lorenz")
             app.query_one("#param-rho", Input).value = "30"
             app.query_one("#param-duration", Input).value = "2"
             params = app._collect_params()
@@ -69,8 +81,8 @@ def test_collect_params_reads_form_values():
 
 
 def test_output_path_targets_videos_and_never_overwrites(tmp_path, monkeypatch):
-    # Path.home() resolves via $HOME on POSIX, so we can sandbox the dir.
-    monkeypatch.setenv("HOME", str(tmp_path))
+    # Patch the API directly: Path.home() does not consistently honor HOME on Windows.
+    monkeypatch.setattr(Path, "home", classmethod(lambda cls: tmp_path))
     videos = tmp_path / "Videos"
     videos.mkdir()
     app = PyReelerApp()
@@ -91,6 +103,7 @@ def test_bad_numeric_param_shows_error_in_status():
         async with app.run_test() as pilot:
             await pilot.pause()
             from textual.widgets import Input, Static
+            await select_recipe(app, "lorenz")
             app.query_one("#param-rho", Input).value = "not-a-number"
             app._start_render()  # invalid -> should set status, not raise
             await pilot.pause()
