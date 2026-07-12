@@ -32,28 +32,27 @@ def render_film(recipe, params: dict[str, Any], out_path,
     runtime = detect_render_runtime()
     job = _FrameJob(recipe, params, prepared, total)
 
-    frames = []
-    for done, image in enumerate(
-        ordered_frame_map(range(total), job, runtime.workers), start=1
-    ):
-        frames.append(image)
-        if on_progress is not None:
-            on_progress(done, total)
+    def frames():
+        for done, image in enumerate(
+            ordered_frame_map(range(total), job, runtime.workers), start=1
+        ):
+            yield image
+            if on_progress is not None:
+                on_progress(done, total)
 
-    _encode_frames(frames, out_path, runtime, int(params["fps"]))
+    _encode_frames(frames(), out_path, runtime, int(params["fps"]))
     return out_path
 
 
 def _encode_frames(frames, out_path, runtime, fps: int) -> None:
-    """Pipe RGB frames to FFmpeg and write out_path. Stubbed in unit tests.
-
-    Note: frames are buffered in memory before encoding. This is fine for the
-    short films PyReeler targets; streaming straight into FFmpeg is a future
-    optimization (it would complicate per-frame progress reporting).
-    """
-    if not frames:
+    """Stream RGB frames into FFmpeg without retaining the whole film."""
+    frames = iter(frames)
+    try:
+        first = next(frames)
+    except StopIteration:
         raise ValueError("no frames to encode")
-    width, height = frames[0].size
+
+    width, height = first.size
     ffmpeg = runtime.ffmpeg_path or "ffmpeg"
     cmd = [
         ffmpeg, "-y",
@@ -64,21 +63,38 @@ def _encode_frames(frames, out_path, runtime, fps: int) -> None:
         "-pix_fmt", "yuv420p", "-movflags", "+faststart",
         str(out_path),
     ]
-    # stderr -> a temp file (not a PIPE) so a chatty FFmpeg can't deadlock us
-    # while we are busy writing frames to its stdin.
+    # stderr -> a temp file (not a PIPE) so a chatty FFmpeg cannot deadlock us.
     with tempfile.TemporaryFile() as errfile:
         proc = subprocess.Popen(cmd, stdin=subprocess.PIPE, stderr=errfile)
+        broken_pipe = False
+        frame_error = None
         try:
-            for image in frames:
+            for image in _prepend(first, frames):
                 proc.stdin.write(image.convert("RGB").tobytes())
         except BrokenPipeError:
-            # FFmpeg died mid-stream; fall through to reap it and surface the
-            # real reason from its stderr (below) instead of a bare pipe error.
-            pass
+            broken_pipe = True
+        except BaseException as exc:
+            frame_error = exc
         finally:
-            proc.stdin.close()  # always close, even if a write failed
-        returncode = proc.wait()  # always reap, even after a broken pipe
+            close = getattr(frames, "close", None)
+            if close is not None:
+                close()
+            try:
+                proc.stdin.close()
+            except BrokenPipeError:
+                broken_pipe = True
+
+        returncode = proc.wait()
         if returncode != 0:
             errfile.seek(0)
             detail = errfile.read().decode(errors="replace").strip()
             raise RuntimeError(f"ffmpeg exited with code {returncode}: {detail}")
+        if broken_pipe:
+            raise RuntimeError("ffmpeg closed its input pipe before encoding completed")
+        if frame_error is not None:
+            raise frame_error
+
+
+def _prepend(first, rest):
+    yield first
+    yield from rest

@@ -1,7 +1,7 @@
 # PyReeler Current Working Plan
 
 **Set:** 2026-07-12 after the Ponytail/YAGNI audit
-**Status:** Authoritative current plan
+**Status:** v0.1 milestone complete; follow-up candidates awaiting selection
 
 This plan supersedes the ordered, infrastructure-first backlog in
 `2026-06-17-remaining-roadmap-implementation.md`. That document is retained as
@@ -24,29 +24,14 @@ outside the repository checkout and renders without retaining a whole film in me
 - Provider sync and focused behavioral tests remain green.
 - CI includes an installed-wheel smoke test, not only source-tree tests.
 
-### Immediate next task
+### Milestone result
 
-Add an artifact-install smoke test first, observe its failures, and make the
-smallest packaging corrections needed. Do not add a plugin or packaging abstraction.
+Completed on 2026-07-12. Packaging, fallback alignment, ordered frame streaming,
+and clean-artifact validation are recorded in the
+[v0.1 milestone validation](2026-07-12-v0.1-milestone-validation.md).
 
-Validation should build a wheel, install it into a temporary environment outside
-the checkout, run `list`, `info`, and a one-second low-resolution render, then
-launch the TUI. Verify the documented PyInstaller path separately.
-
-### Milestone sequence
-
-1. Prove and correct the wheel's package/module/data boundary.
-2. Align FFmpeg fallback dependencies, installer behavior, and documentation.
-3. Stream `ordered_frame_map()` results directly to FFmpeg while preserving order,
-   progress, cleanup, and useful stderr.
-4. Validate the milestone in a clean environment and record the result.
-
-Implementation packets for milestone steps 1 and 2 are ready in the
-[v0.1 release-boundary agent batch](2026-07-12-v0.1-release-boundary-agent-batch.md).
-
-
-Keep the streaming refactor isolated. Validate a real short render, broken-pipe and
-FFmpeg-error behavior, and approximately steady memory on a longer render.
+All four milestone steps are complete. No item under **Evaluate After v0.1** is
+automatically authorized by this completion.
 
 ## Evaluate After v0.1
 

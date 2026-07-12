@@ -42,7 +42,7 @@ def main() -> int:
         run([sys.executable, "-m", "venv", str(venv)], cwd=root)
         executable = venv / ("Scripts/python.exe" if os.name == "nt" else "bin/python")
         wheel = next(dist.glob("pyreeler-*.whl"))
-        run([str(executable), "-m", "pip", "install", str(wheel)], cwd=work)
+        run([str(executable), "-m", "pip", "install", f"{wheel}[tui]"], cwd=work)
 
         env = os.environ.copy()
         env.pop("PYTHONPATH", None)
@@ -59,6 +59,20 @@ def main() -> int:
             "assert p.is_file(), p; print(installed); print(p)"
         )
         run([str(executable), "-c", probe], cwd=work, env=env)
+        tui_probe = """
+import asyncio
+from pyreeler.tui.app import PyReelerApp
+
+async def main():
+    app = PyReelerApp()
+    async with app.run_test() as pilot:
+        await pilot.pause()
+        assert app._current_name
+        print(f"TUI launched with recipe: {app._current_name}")
+
+asyncio.run(main())
+"""
+        run([str(executable), "-c", tui_probe], cwd=work, env=env)
 
         if not args.skip_render:
             source_probe = (
