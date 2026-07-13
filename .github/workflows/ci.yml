@@ -30,7 +30,7 @@ jobs:
           python-version: ${{ matrix.python }}
 
       - name: Install dependencies
-        run: python -m pip install --upgrade pip build pytest .
+        run: python -m pip install --upgrade pip build pytest tomli .
 
       - name: Verify skill files are in sync with canonical sources
         run: python sync.py --check
@@ -39,7 +39,7 @@ jobs:
         run: python graduation_check.py
 
       - name: Run test suite
-        run: pytest -q
+        run: python -m pytest -q
 
       - name: Smoke test installed wheel
         if: matrix.wheel_smoke
