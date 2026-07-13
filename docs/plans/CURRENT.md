@@ -1,7 +1,7 @@
 # PyReeler Current Working Plan
 
 **Set:** 2026-07-12 after the Ponytail/YAGNI audit
-**Status:** v0.1 milestone complete; TUI banner canonicalized
+**Status:** v0.1 milestone complete; critical helper behavior proven
 
 This plan supersedes the ordered, infrastructure-first backlog in
 `2026-06-17-remaining-roadmap-implementation.md`. That document is retained as
@@ -57,12 +57,22 @@ without maintaining a second implementation.
 The boundary and validation are recorded in the
 [TUI banner consolidation report](2026-07-12-tui-banner-consolidation.md).
 
+## Completed Batch: Critical Helper Behavioral Proof
+
+Direct behavioral tests now cover the production-used audio engine, ordered
+parallel frame mapping, and portable render-runtime assembly. The graduation
+manifest points to those tests in addition to provider synchronization.
+
+Optional composition, voice, geometry, lensing, self-healing, and text-track
+helpers remain sync-covered until a current film, failure, or requested change
+justifies a narrower behavioral contract. See the
+[behavioral proof report](2026-07-12-critical-helper-behavioral-proof.md).
+
 ## Evaluate After v0.1
 
 These are candidates, not an automatic queue:
 
 - Replace duplicate experimental copies of canonical references with links.
-- Add direct behavioral tests where runtime helpers have only sync coverage.
 - Add recipes or templates only for a specific film the current set cannot express.
 
 ## Triggered Later
