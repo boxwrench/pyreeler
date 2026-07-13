@@ -44,7 +44,7 @@ Link creative goals to specific techniques:
 | Glitch aesthetics | Image Processing | Pixel Sorting threshold masking |
 | Data corruption beauty | Image Processing | Interval sort with noise |
 
-See [creative-lenses.md](creative-lenses.md) for guidance on choosing creative direction.
+See the canonical [creative-lenses reference](../../skills/_shared/references/creative-lenses.md) for guidance on choosing creative direction.
 
 ---
 
@@ -181,18 +181,16 @@ Proven pairings from [technique-use-cases.md](technique-use-cases.md):
 research/
 ├── INDEX.md                 # This file - categorized overview
 ├── TEMPLATE.md              # Template for new technique docs
-├── creative-lenses.md       # Choosing artistic direction
 ├── technique-use-cases.md   # Top uses by technique
-├── vocabulary-map.md        # Terminology reference
 ├── generative-video-techniques.md  # Comprehensive deep dive
 ├── strange-attractors.md    # Chaotic maps (working)
 ├── reaction-diffusion.md    # Gray-Scott RD (partial)
 ├── fm-synthesis.md          # FM audio (working)
 ├── bytebeat-audio.md        # Bytebeat audio (working)
-├── audio-pipeline.md        # Audio architecture
-├── pixel-sorting.md         # Image processing glitch art
-└── workflow.md              # Process documentation
+└── pixel-sorting.md         # Image processing glitch art
 ```
+
+Main-skill references are canonical outside this folder: [creative lenses](../../skills/_shared/references/creative-lenses.md), [audio pipeline](../../skills/_shared/references/audio-pipeline.md), and provider-specific [Codex workflow](../../skills/codex/references/workflow.md), [Codex vocabulary](../../skills/codex/references/vocabulary-map.md), [Claude workflow](../../skills/claude/references/workflow.md), and [Claude vocabulary](../../skills/claude/references/vocabulary-map.md). Choose the workflow and vocabulary pair for the provider running the skill.
 
 ---
 

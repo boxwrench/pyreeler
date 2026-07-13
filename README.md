@@ -128,19 +128,20 @@ recipe filter box — press `p` to play the finished render), and a render progr
 bar with a Sparkline. Renders land in
 `~/Videos` with auto-incrementing names (`lorenz.mp4`, `lorenz-2.mp4`, …), so a new
 render never overwrites an earlier one.
-### Install the released wheel
+### Install the local package
 
-Install the supported CLI artifact into a regular environment with:
+Until a package-index release is announced, install the supported CLI from a
+repository checkout:
 
 ```bash
-python3 -m pip install pyreeler
+python3 -m pip install .
 pyreeler list
 ```
 
-For the interactive interface, install the wheel's TUI extra:
+For the interactive interface, install the TUI extra:
 
 ```bash
-python3 -m pip install "pyreeler[tui]"
+python3 -m pip install ".[tui]"
 pyreeler
 ```
 

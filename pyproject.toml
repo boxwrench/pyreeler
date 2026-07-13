@@ -1,13 +1,32 @@
 [build-system]
-requires = ["setuptools>=61"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "pyreeler"
 version = "0.1.0"
 description = "Make short code-generated films from recipes — CLI + TUI."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [
+  {name = "Keith"},
+]
 requires-python = ">=3.10"
 dependencies = ["numpy>=1.21", "pillow>=9.0", "imageio-ffmpeg>=0.4.0"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Multimedia :: Video",
+]
+
+[project.urls]
+Homepage = "https://boxwrench.github.io/pyreeler/"
+Repository = "https://github.com/boxwrench/pyreeler"
+Changelog = "https://github.com/boxwrench/pyreeler/blob/main/CHANGELOG.md"
 
 [project.optional-dependencies]
 tui = ["textual>=0.60", "rich>=13.0", "terminaltexteffects>=0.10"]

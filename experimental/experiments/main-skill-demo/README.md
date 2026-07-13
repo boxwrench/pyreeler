@@ -8,10 +8,10 @@ A demonstration film that exercises **ALL** main skill reference documents and t
 
 | Document | Location | Concepts Demonstrated |
 |----------|----------|----------------------|
-| `creative-lenses.md` | `experimental/research/` | Genre/mode (ritual), motif (returning circle), repetition/rupture, time as material |
-| `workflow.md` | `experimental/research/` | Hardware gate, worker smoke test, preview/upscale, cleanup |
-| `audio-pipeline.md` | `experimental/research/` | Stem model (ambience, pulse, score, impacts), procedural foley, mixing |
-| `vocabulary-map.md` | `experimental/research/` | Visual systems (particles, flow, symmetry), audio systems (drone, pulse, shimmer), material (grain, phosphor) |
+| [Creative lenses](../../../skills/_shared/references/creative-lenses.md) | Canonical shared reference | Genre/mode (ritual), motif (returning circle), repetition/rupture, time as material |
+| [Codex workflow](../../../skills/codex/references/workflow.md) | Canonical Codex reference | Hardware gate, worker smoke test, preview/upscale, cleanup |
+| [Audio pipeline](../../../skills/_shared/references/audio-pipeline.md) | Canonical shared reference | Stem model (ambience, pulse, score, impacts), procedural foley, mixing |
+| [Codex vocabulary map](../../../skills/codex/references/vocabulary-map.md) | Canonical Codex reference | Visual systems (particles, flow, symmetry), audio systems (drone, pulse, shimmer), material (grain, phosphor) |
 
 ### Templates Used
 
@@ -23,7 +23,7 @@ A demonstration film that exercises **ALL** main skill reference documents and t
 | `sfx_gen.py` | Main skill + `skills/codex/` | Procedural foley (`gen_wind`, `gen_impact`, `gen_shimmer`) |
 | `composer.py` | Main skill + `skills/codex/` | Note events, MIDI writing (optional) |
 
-**Note:** All reference docs are now in `experimental/research/`. Templates are imported from the main skill installation but copied to `skills/codex/` for offline reference.
+**Note:** This demo uses the Codex-specific workflow and vocabulary references. Shared references are canonical under `skills/_shared/`; templates live under `skills/codex/` for the Codex skill distribution.
 
 ## Quick Start
 
@@ -155,7 +155,7 @@ sample = synth.fm_sample(carrier=440, modulator=220, index=2.0)
 
 To add a new section using the main skill's vocabulary:
 
-1. Pick a concept from `references/vocabulary-map.md`
+1. Pick a concept from the canonical [Codex vocabulary map](../../../skills/codex/references/vocabulary-map.md)
 2. Create a `render_frame_*()` function
 3. Add audio stem generation
 4. Register in `render_frame()` router

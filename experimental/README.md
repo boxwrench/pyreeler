@@ -32,11 +32,7 @@ experimental/
 │       ├── render.sh      # Hardware-tuned render command
 │       └── NOTES.md       # Your specific tuning and findings
 │
-├── research/              # ALL reference documentation
-│   ├── creative-lenses.md         # (from main skill)
-│   ├── workflow.md                # (from main skill)
-│   ├── audio-pipeline.md          # (from main skill)
-│   ├── vocabulary-map.md          # (from main skill)
+├── research/              # Experimental reference documentation
 │   ├── generative-video-techniques.md  # Advanced algorithms research
 │   ├── fm-synthesis.md            # Experimental techniques
 │   ├── strange-attractors.md
@@ -131,15 +127,15 @@ Content:
 - creative-lenses, workflow, audio-pipeline, vocabulary-map
 - See `experiments/main-skill-demo/`
 
-## Reference Documentation (All Included)
+## Reference Documentation
 
-The `research/` folder now contains **complete reference documentation** - both from the main skill and experimental research:
+The `research/` folder contains experimental reference documentation. Canonical main-skill references live under `skills/` and are linked here rather than copied, so experimental work does not silently retain stale guidance.
 
-**Main Skill References (copied for convenience):**
-- `creative-lenses.md` - Genre/mode, motif, repetition/rupture, time
-- `workflow.md` - Production loop, preview/upscale, hardware gate
-- `audio-pipeline.md` - Stem model, procedural foley, mixing
-- `vocabulary-map.md` - Visual/audio/temporal/material systems
+**Canonical Main Skill References:**
+- [Creative lenses](../skills/_shared/references/creative-lenses.md) - Genre/mode, motif, repetition/rupture, time
+- [Audio pipeline](../skills/_shared/references/audio-pipeline.md) - Stem model, procedural foley, mixing
+- Workflow: [Codex](../skills/codex/references/workflow.md) or [Claude](../skills/claude/references/workflow.md) - choose the provider running the skill
+- Vocabulary map: [Codex](../skills/codex/references/vocabulary-map.md) or [Claude](../skills/claude/references/vocabulary-map.md) - choose the provider running the skill
 
 **Experimental Research:**
 - `fm-synthesis.md` - FM synthesis from scratch

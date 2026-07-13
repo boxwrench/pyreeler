@@ -63,7 +63,7 @@ Match your creative goal to the right category:
 | Structured distribution | Spatial | Poisson Disk, Voronoi |
 | Analog texture | Spatial | Sand Splines |
 
-See [research/creative-lenses.md](research/creative-lenses.md) for guidance on artistic direction.
+See the canonical [creative-lenses reference](../skills/_shared/references/creative-lenses.md) for guidance on artistic direction.
 
 ---
 
