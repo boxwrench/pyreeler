@@ -1,8 +1,8 @@
-"""Reusable phosphor PYREELER launch banner for terminal-facing tools.
+"""Canonical phosphor PYREELER launch banner for terminal-facing tools.
 
 Tries TerminalTextEffects for an animated reveal when attached to a real terminal;
-always falls back to a static ASCII logo so it is safe in captured output, CI, and
-plain terminals without optional TUI dependencies.
+always falls back to a static phosphor ASCII logo so it works in the local TUI,
+captured output, CI, and standalone tools without optional TUI dependencies.
 """
 from __future__ import annotations
 
@@ -48,7 +48,7 @@ def render_banner(
             time.sleep(hold_seconds)
             return ASCII_LOGO
         except Exception:
-            pass
+            pass  # any TTE/version problem -> fall through to the static logo
     sys.stdout.write(_tint(ASCII_LOGO.rstrip("\n")) + "\n")
     sys.stdout.flush()
     if animate and sys.stdout.isatty():
