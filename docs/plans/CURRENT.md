@@ -1,7 +1,7 @@
 # PyReeler Current Working Plan
 
 **Set:** 2026-07-12 after the Ponytail/YAGNI audit
-**Status:** v0.1 milestone complete; critical helper behavior proven
+**Status:** v0.1 release acceptance complete; ready to commit and tag
 
 This plan supersedes the ordered, infrastructure-first backlog in
 `2026-06-17-remaining-roadmap-implementation.md`. That document is retained as
@@ -72,9 +72,16 @@ justifies a narrower behavioral contract. See the
 
 These are candidates, not an automatic queue:
 
-- Replace duplicate experimental copies of canonical references with links.
 - Add recipes or templates only for a specific film the current set cannot express.
 
+## Final v0.1 Release Acceptance
+
+Release metadata, compatibility CI, and stale experimental-reference cleanup are
+complete. See the [release-readiness agent batch](2026-07-12-v0.1-release-readiness-agent-batch.md).
+
+The installed-wheel TUI rendered and dispatched an eight-second Lorenz preview.
+FFprobe confirmed H.264, 320x180, 12 fps, 96 frames, eight seconds, and yuv420p;
+the no-clobber path and representative-frame visual review also passed.
 ## Triggered Later
 
 | Idea | Revisit only when |

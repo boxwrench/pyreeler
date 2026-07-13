@@ -12,7 +12,7 @@
 **Genre/Mode:** Ritual/Mythic
 **Motif:** Returning circle
 **Core Move:** Rupture at peak, then return
-**Inspiration:** `creative-lenses.md`
+**Inspiration:** canonical [creative-lenses reference](../../../skills/_shared/references/creative-lenses.md)
 
 > "Ritual or mythic work: recurrence, ceremony, symmetry, invocation, escalation through repetition"
 
@@ -22,7 +22,7 @@ The piece establishes a recurring circular motif in the opening, escalates throu
 
 ## Reference Document Implementation
 
-### creative-lenses.md
+### [Creative lenses](../../../skills/_shared/references/creative-lenses.md)
 
 | Concept | Implementation |
 |---------|----------------|
@@ -37,7 +37,7 @@ The piece establishes a recurring circular motif in the opening, escalates throu
 - *What makes it specific?* The rupture/return structure, chromatic aberration
 - *What move will viewers remember?* The inversion at 25s
 
-### workflow.md
+### [Codex workflow](../../../skills/codex/references/workflow.md)
 
 | Step | Implementation |
 |------|----------------|
@@ -51,7 +51,7 @@ The piece establishes a recurring circular motif in the opening, escalates throu
 | **8. Deliver** | Write to `~/Videos/` |
 | **9. Cleanup** | Delete `temp_frames/` directory |
 
-### audio-pipeline.md
+### [Audio pipeline](../../../skills/_shared/references/audio-pipeline.md)
 
 **Stem model:**
 
@@ -67,7 +67,7 @@ The piece establishes a recurring circular motif in the opening, escalates throu
 - Normalize to -0.5dB peak
 - Ducking: impacts naturally cut through due to timing
 
-### vocabulary-map.md
+### [Codex vocabulary map](../../../skills/codex/references/vocabulary-map.md)
 
 **Visual systems:**
 - particles/swarm → Rotating geometric field (0-10s)
@@ -147,7 +147,7 @@ DEFAULT_RESOLUTION = (854, 480)        # Preview
 
 ## Would Try Next Time
 
-1. **Text overlays** - Terminal language, warnings (vocabulary-map.md)
+1. **Text overlays** - Terminal language and warnings from the [Codex vocabulary map](../../../skills/codex/references/vocabulary-map.md)
 2. **CRT effects** - Scanlines, phosphor decay curves
 3. **Cellular automata** - Growth systems for organic section
 4. **Bytebeat** - Demoscene-style audio for glitch section

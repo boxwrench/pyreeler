@@ -19,10 +19,10 @@ Chronological log of experiments, findings, and technique development.
 **Demonstration Coverage:**
 | Reference Document | Concepts Shown |
 |-------------------|----------------|
-| `creative-lenses.md` | Ritual mode, returning circle motif, rupture at peak |
-| `workflow.md` | Hardware gate, worker smoke test, preview, cleanup |
-| `audio-pipeline.md` | 4-stem model (ambience, pulse, score, impacts) |
-| `vocabulary-map.md` | Particles/swarm, flow fields, symmetry, phosphor glow |
+| [Creative lenses](../skills/_shared/references/creative-lenses.md) | Ritual mode, returning circle motif, rupture at peak |
+| [Codex workflow](../skills/codex/references/workflow.md) | Hardware gate, worker smoke test, preview, cleanup |
+| [Audio pipeline](../skills/_shared/references/audio-pipeline.md) | 4-stem model (ambience, pulse, score, impacts) |
+| [Codex vocabulary](../skills/codex/references/vocabulary-map.md) | Particles/swarm, flow fields, symmetry, phosphor glow |
 
 **All Templates Used:**
 - `render_runtime.py` - Runtime detection (with fallback)
@@ -183,7 +183,7 @@ and reproducible parameter automation - filling gaps in the technique taxonomy.
 ## 2026-03-16: Research Documentation Consolidated
 
 **Changes:**
-- Copied ALL main skill references to `experimental/research/`
+- Copied all main-skill references to `experimental/research/` (historical; these copies were later removed in favor of canonical links)
   - `creative-lenses.md`
   - `workflow.md`
   - `audio-pipeline.md`
@@ -307,10 +307,10 @@ All research lives in one place - no need to reference main skill docs separatel
 **Reference Documents Covered:**
 | Document | Concepts Demonstrated |
 |----------|----------------------|
-| `creative-lenses.md` | Genre/mode (ritual), motif, repetition/rupture, time |
-| `workflow.md` | Hardware gate, worker smoke test, preview, upscale, cleanup |
-| `audio-pipeline.md` | Stem model (4 stems), procedural foley, mixing |
-| `vocabulary-map.md` | Visual/audio/temporal/material systems |
+| [Creative lenses](../skills/_shared/references/creative-lenses.md) | Genre/mode (ritual), motif, repetition/rupture, time |
+| [Codex workflow](../skills/codex/references/workflow.md) | Hardware gate, worker smoke test, preview, upscale, cleanup |
+| [Audio pipeline](../skills/_shared/references/audio-pipeline.md) | Stem model (4 stems), procedural foley, mixing |
+| [Codex vocabulary](../skills/codex/references/vocabulary-map.md) | Visual/audio/temporal/material systems |
 
 **Templates Used (ALL):**
 - `templates/video/render_runtime.py` - Hardware detection
