@@ -2,7 +2,7 @@
 path = "templates/audio/audio_engine.py"
 kind = "audio"
 status = "graduated"
-tests = ["tests/test_sync.py"]
+tests = ["tests/test_sync.py", "tests/test_audio_engine.py"]
 examples = ["films/what-the-light-kept/render_preview.py", "films/dungeon-emergence/dungeon_emergence_production.py"]
 notes = "Stem placement, ducking, mixing, and WAV export used by completed films."
 
@@ -66,7 +66,7 @@ notes = "Schwarzschild-style radial displacement documented for cosmic-collapse 
 path = "templates/video/parallel_render.py"
 kind = "video"
 status = "graduated"
-tests = ["tests/test_sync.py"]
+tests = ["tests/test_sync.py", "tests/test_parallel_render.py"]
 examples = ["experimental/experiments/main-skill-demo/main_skill_demo.py"]
 notes = "Ordered multiprocess frame rendering used by the main skill demo."
 
@@ -74,7 +74,7 @@ notes = "Ordered multiprocess frame rendering used by the main skill demo."
 path = "templates/video/render_runtime.py"
 kind = "video"
 status = "graduated"
-tests = ["tests/test_sync.py"]
+tests = ["tests/test_sync.py", "tests/test_render_runtime.py"]
 examples = ["films/what-the-light-kept/render_preview.py", "films/dungeon-emergence/dungeon_emergence_production.py", "experimental/experiments/main-skill-demo/main_skill_demo.py"]
 notes = "Portable render defaults used by completed films and the main skill demo."
 
