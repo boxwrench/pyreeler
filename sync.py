@@ -43,10 +43,15 @@ SHARED_REFERENCES = (
 # Canonical source for references that are byte-identical across providers.
 REFERENCE_SOURCE_DIR = REPO_ROOT / "skills" / "_shared" / "references"
 
+# The polished local TUI banner is also the canonical reusable banner. It is
+# copied through templates/tui so installed skills remain self-contained.
+BANNER_SOURCE = REPO_ROOT / "pyreeler" / "tui" / "banner.py"
+BANNER_TEMPLATE = REPO_ROOT / "templates" / "tui" / "banner.py"
+
 
 def _file_pairs() -> list[tuple[Path, Path]]:
     """Return (source, target) pairs for every file sync manages."""
-    pairs: list[tuple[Path, Path]] = []
+    pairs: list[tuple[Path, Path]] = [(BANNER_SOURCE, BANNER_TEMPLATE)]
 
     for skill in SKILL_DIRS:
         for sub in TEMPLATE_SUBDIRS:

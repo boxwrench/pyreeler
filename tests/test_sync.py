@@ -47,3 +47,10 @@ def test_shared_references_are_synced_but_divergent_ones_are_not():
     # Divergent files must NOT be in the shared set (would clobber per-platform text).
     assert "workflow.md" not in sync.SHARED_REFERENCES
     assert "vocabulary-map.md" not in sync.SHARED_REFERENCES
+
+
+def test_packaged_tui_banner_is_the_canonical_reusable_banner():
+    assert sync.BANNER_SOURCE == REPO_ROOT / "pyreeler" / "tui" / "banner.py"
+    assert sync.BANNER_TEMPLATE == REPO_ROOT / "templates" / "tui" / "banner.py"
+    assert (sync.BANNER_SOURCE, sync.BANNER_TEMPLATE) in sync._file_pairs()
+    assert sync.BANNER_SOURCE.read_bytes() == sync.BANNER_TEMPLATE.read_bytes()

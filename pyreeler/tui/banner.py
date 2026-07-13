@@ -1,7 +1,8 @@
-"""Phosphor PYREELER launch banner for the TUI.
+"""Canonical phosphor PYREELER launch banner for terminal-facing tools.
 
 Tries TerminalTextEffects for an animated reveal when attached to a real terminal;
-always falls back to a static phosphor ASCII logo so it works (and tests) anywhere.
+always falls back to a static phosphor ASCII logo so it works in the local TUI,
+captured output, CI, and standalone tools without optional TUI dependencies.
 """
 from __future__ import annotations
 
