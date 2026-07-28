@@ -111,13 +111,13 @@ def _kind_from_template_path(path: str) -> str | None:
 
 def _current_template_paths(repo_root: Path) -> set[str]:
     templates_dir = repo_root / "templates"
-    return {str(path.relative_to(repo_root)) for path in templates_dir.glob("*/*.py")}
+    return {path.relative_to(repo_root).as_posix() for path in templates_dir.glob("*/*.py")}
 
 
 def _sync_managed_sources(repo_root: Path) -> set[str]:
     if repo_root != sync.REPO_ROOT.resolve():
         return set()
-    return {str(src.relative_to(repo_root)) for src, _ in sync._file_pairs()}
+    return {src.relative_to(repo_root).as_posix() for src, _ in sync._file_pairs()}
 
 
 def _path_exists_under_repo(repo_root: Path, rel_path: str) -> bool:

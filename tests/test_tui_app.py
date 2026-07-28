@@ -68,8 +68,9 @@ def test_collect_params_reads_form_values():
 
 
 def test_output_path_targets_videos_and_never_overwrites(tmp_path, monkeypatch):
-    # Path.home() resolves via $HOME on POSIX, so we can sandbox the dir.
+    # Path.home() resolves via $HOME on POSIX / %USERPROFILE% on Windows; sandbox it.
     monkeypatch.setenv("HOME", str(tmp_path))
+    monkeypatch.setenv("USERPROFILE", str(tmp_path))
     videos = tmp_path / "Videos"
     videos.mkdir()
     app = PyReelerApp()
