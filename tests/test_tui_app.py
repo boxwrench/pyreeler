@@ -81,7 +81,7 @@ def test_collect_params_reads_form_values():
 
 
 def test_output_path_targets_videos_and_never_overwrites(tmp_path, monkeypatch):
-    # Patch the API directly: Path.home() does not consistently honor HOME on Windows.
+    # Patch the API directly: Path.home() sandbox for testing
     monkeypatch.setattr(Path, "home", classmethod(lambda cls: tmp_path))
     videos = tmp_path / "Videos"
     videos.mkdir()

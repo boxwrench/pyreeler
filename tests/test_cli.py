@@ -32,7 +32,7 @@ def test_render_maps_flags_to_resolved_params(monkeypatch, tmp_path):
 
 
 def test_render_without_out_defaults_to_videos_and_never_clobbers(monkeypatch, tmp_path):
-    # Patch the API directly: Path.home() does not consistently honor HOME on Windows.
+    # Patch the API directly: Path.home() sandbox for testing
     monkeypatch.setattr(Path, "home", classmethod(lambda cls: tmp_path))
     captured = {}
     monkeypatch.setattr(cli, "render_film",
